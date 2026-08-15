@@ -201,7 +201,7 @@ Links resolve, render checked, report `s06.md`. **Acceptance:** checks pass; rep
 
 Source: strategy §12–§14, §22 Phase 3.
 
-### B01 — Contribution mechanics `READY`
+### B01 — Contribution mechanics `DONE`
 
 RFC process doc, label set created via `gh label`, initial `good first issue` candidates
 drafted from the repo's own known leftovers, welcome/announcement Discussion posted via API.

@@ -5,6 +5,27 @@ Newest-first. Required fields: date+unit · status · done · files · verificat
 
 ---
 
+## 2026-08-15 · S07-B01 Contribution mechanics · DONE
+
+**Done:** RFC process doc (`docs/community/rfc-process.md`: evidence bar = docs/07 §6
+precedent, Discussion-based, template included), linked from CONTRIBUTING. Label set created
+(field-report, profile, binding, core-rfc — read back via `gh label list`). Three
+`good first issue`s filed from recorded leftovers (issues #1 template slot, #2 optional
+placeholders, #3 first CI workflow — each with fix shape + verify steps). Welcome Discussion
+live in Announcements: https://github.com/elmayii/cdev/discussions/4 (install, links, the
+field-report ask, the Discussion-vs-Issue rule).
+
+**Files:** docs/community/rfc-process.md (new), CONTRIBUTING.md (link).
+
+**Verification:** labels exist — pass · RFC doc linked — pass · one Discussion live — pass ·
+issues created — pass (#1–#3).
+
+**Blockers:** none.
+
+**Next:** B02 — walkthrough (replay running against the installed copy).
+
+---
+
 ## 2026-08-15 · S06-B01 Visual identity · BLOCKED — S07 promoted (blocked-but-not-idle)
 
 **Done (draft):** wordmark light/dark SVG, icon 512, social preview 1280×640 (strategy §21

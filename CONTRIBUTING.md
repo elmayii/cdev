@@ -14,7 +14,7 @@ CDev is a method extracted from field evidence, and it changes the same way it w
 | New role profile | PR + evidence from real use (a field report) |
 | New host binding (another agent/OS) | Proposal → implementation → validation |
 | New skill or capability | Open a Discussion first |
-| Core methodology change | RFC + field evidence |
+| Core methodology change | RFC + field evidence — see [the RFC process](docs/community/rfc-process.md) |
 | **Field report** | Always welcome — no code required (see the issue template) |
 
 Field reports are the community's primary evidence object: what held, what broke, how long
