@@ -1,0 +1,33 @@
+---
+name: verify-feature
+description: Use before marking a {{PROJECT_NAME}} batch as DONE. Confirms tasks are implemented, acceptance criteria are met, and verification commands pass.
+---
+
+# Verify Feature Skill
+
+Use this skill before marking a batch `DONE`.
+
+## Checklist
+
+1. Confirm every task in the batch is implemented.
+2. Confirm acceptance criteria are actually satisfied (covered by a test or reproducible check).
+3. Ensure local infra is up and schema is current:
+   ```
+   {{DB_VERIFY}}
+   ```
+4. Run the verification sequence:
+   ```
+   {{VERIFY_SEQUENCE}}
+   ```
+5. Inspect `git diff` for accidental unrelated changes.
+6. Check for security-sensitive changes (no leaked secrets/tokens/env vars).
+7. Report pass/fail clearly.
+
+Note: background worker teardown warnings at process exit are benign — exit code 0 is still a pass.
+
+## Output
+
+- Verification summary
+- Commands executed + pass/fail each
+- Acceptance-criteria coverage
+- Remaining risks

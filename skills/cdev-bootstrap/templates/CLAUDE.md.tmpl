@@ -1,0 +1,115 @@
+# CLAUDE.md — {{PROJECT_NAME}}
+
+This file guides Claude Code when working in this repository. Read it before touching code.
+
+## What this repo is
+
+{{ONE_LINER}}
+
+Core business logic, lifecycle/state and persistence live here.
+
+> If you are unsure what this project *is*, read the source documents below before writing code. The behavior you implement must trace back to them.
+
+## Source documents (authority order)
+
+These docs define the project. They live in `docs/`. They are the source of truth; this file is the operational summary.
+
+{{SOURCE_DOCS}}
+
+Lower-numbered docs define direction/limits; higher-numbered define detail. Keep features inside the documented scope.
+
+## Current status
+
+**Conditioned (per `docs/00_repo_conditioning.md`).** See that file for the phased conditioning plan and the current phase's Done-when status. Verify before referencing files; don't assume a feature is implemented just because its module exists.
+
+## Target stack
+
+Decided / from the docs (build a small version of the *real* system, not a throwaway mock):
+
+{{STACK}}
+
+Package manager: **{{PACKAGE_MANAGER}}**.
+
+## Architecture & module map
+
+```
+Product UI (frontend repo)
+   ↓  HTTP API
+Backend API              ← this repo: controllers, DTOs, guards
+   ↓
+Workflow & State layer   ← lifecycle state machines (single source of "what can happen next")
+   ↓
+AI Orchestration layer   ← agent roles, handoffs, prompt/context, human-review gates
+   ↓
+Document / Proposal / Delivery engines
+   ↓
+Local Runner / coding-agent execution
+   ↓
+Repos / files / external tools
+   ↓
+Logs / Audit / Deliverables
+```
+
+Domain modules (one module per area):
+
+{{DOMAIN_AREAS}}
+
+AI roles inside orchestration (start as explicit service functions + prompt templates — no heavy multi-agent framework yet): AI Product Owner → Product Analyst → Tech Lead → Engineer → QA/Reviewer → Communication.
+
+## Core domain concepts
+
+Domain lifecycle, entities and states are defined in the source documents listed above. Model state transitions as guarded; never mutate status ad hoc — guarded transitions must be the only way state changes.
+
+## Development principles (the attitude this project needs)
+
+This is a **trust product** built as a **productized service**, not a magic black box. Hold these while coding:
+
+1. **Human-in-the-loop by default.** The system may *generate* proposals, emails, budgets, code plans — but must **not autonomously perform high-risk actions** without approval: external comms, accepting proposals, confirming payment, deleting code, pushing to prod, scope changes, final delivery. Model these as explicit approval gates, not implicit side effects.
+2. **Traceability over magic.** Every meaningful output traces to project → session → input messages → uploaded docs → agent run → prompt/context → human approval. Write `audit_events` for state transitions, agent actions and approvals. If you can't explain what happened and who caused it, the design is wrong.
+3. **Scope discipline.** Separate client desire / business need / MVP scope / excluded scope / assumptions / risks / later phases. The project must not drift from its defined scope. Resist building beyond the documented MVP.
+4. **System before interface.** Backend logic must not depend on a single frontend. Future interfaces (CLI, Slack, email, voice, API) reuse the same system. No core workflow logic in controllers that can't be reused.
+5. **AI services produce structured outputs, not hidden side effects.** Generation returns versioned, stored artifacts. Persist outputs; version documents and proposals; reuse project context.
+6. **Cost awareness.** Avoid repeated AI calls — store and reuse generated outputs, reserve frontier models for high-value tasks, use cheaper models for summaries/routine generation. Design so per-run cost (model, op type, project, output) can be tracked later.
+7. **Security & privacy.** Treat project data, uploads, transcripts and outputs as confidential. Separate internal vs client-visible documents. Never leak credentials, env vars, private repo data or secrets into logs/outputs. Local-first execution keeps credentials local by default.
+8. **Reliability.** Long-running tasks are resumable/recoverable. Distinguish failed vs incomplete vs blocked vs cancelled vs human-paused workflows.
+9. **Build the real system small.** Simple implementation, but architecturally aligned with the full Solution — not a disposable mock.
+
+## Code conventions
+
+- **TypeScript strict mode.** No `any` without a clear reason. Prefer explicit types on public boundaries (DTOs, service signatures).
+- **API-first.** Define DTOs + validation (class-validator) at the edge; keep domain logic in services.
+- **Module boundaries.** Cross-module access goes through services, not by reaching into another module's internals.
+- **State changes through guarded transitions only.** Centralize lifecycle rules; don't scatter status writes.
+- **Naming:** entities/fields follow the source docs (`snake_case` in DB, `camelCase` in TS). States are the exact `UPPER_SNAKE` strings from the source docs.
+- **Match surrounding code.** Mirror existing patterns, comment density and idioms once the codebase exists.
+- **Tests:** prefer test-driven development for domain logic (state machines, orchestration, proposal/budget logic) — these are the high-value, easy-to-break areas.
+
+## Commands
+
+Package manager is **{{PACKAGE_MANAGER}}**. Start any required local services first.
+
+```bash
+{{VERIFY_SEQUENCE}}
+```
+
+{{DB_VERIFY}}
+
+## Autonomous execution (overnight / watchdog)
+
+This repo is set up to be driven autonomously by Claude Code, sprint by sprint. The autonomous-execution docs live in `docs/develop/`:
+
+- `docs/develop/AGENT_EXECUTION_PROTOCOL.md` — the operating loop (how to consume the plan and execute safely).
+- `docs/develop/SPRINTS.md` — the plan (sprints → batches → tasks → acceptance).
+- `docs/develop/ROADMAP.md` — high-level sprint sequence; `PRODUCT.md` / `ARCHITECTURE.md` / `DECISIONS.md` / `TESTING.md` — operational summaries.
+- `docs/develop/AGENT_PROGRESS.md` — the handoff log; update after every meaningful step.
+- `.claude/agents/` (`sprint-runner`, `code-reviewer`, `test-engineer`, `architect-reviewer`) and `.claude/skills/` (`execute-sprint`, `verify-feature`, `update-progress`, `debug-failure`).
+- `scripts/claude-night-runner.ps1` — Windows watchdog that resumes the run every 30 min.
+
+To run autonomously, read `docs/develop/AGENT_EXECUTION_PROTOCOL.md` first. The same safety gates apply: work on `{{BRANCH_PREFIX}}` branches only, never push to `main`/`develop`, never deploy or run destructive DB ops without human approval.
+
+## When working here
+
+- Read the source docs for the exact spec of whatever module/flow you touch; they are detailed.
+- Confirm a change is inside the documented MVP scope before building it.
+- Keep high-risk actions behind human approval. When in doubt, generate a draft + create a question / approval gate rather than acting.
+- Communicate with the user in their language; keep code, identifiers and docs in English.

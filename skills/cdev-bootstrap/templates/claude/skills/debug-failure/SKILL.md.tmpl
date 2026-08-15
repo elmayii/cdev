@@ -1,0 +1,34 @@
+---
+name: debug-failure
+description: Use when typecheck, lint, test, e2e, build or a runtime check fails on the {{PROJECT_NAME}}. Finds the smallest root cause and fixes it without scope creep.
+---
+
+# Debug Failure Skill
+
+Use when a command in `{{VERIFY_SEQUENCE}}` or a runtime check fails.
+
+## Process
+
+1. Read the full error (quote it exactly).
+2. Identify the smallest likely cause; grep callers of the function you intend to touch —
+   fix the root cause once where all callers route through, not each symptom.
+3. Check whether your changes caused the failure.
+4. Fix the smallest possible surface.
+5. Re-run only the failed command first, then the full verification sequence:
+   ```
+   {{VERIFY_SEQUENCE}}
+   ```
+6. Document what failed and how it was fixed.
+
+## Common gotchas
+
+- e2e failures often mean local infra isn't up — run `{{DB_VERIFY}}`.
+- Generated client (ORM/schema) out of date after schema edits — run your project's client-regenerate command (see CLAUDE.md).
+- Background worker teardown warnings at process exit are benign, not a failure.
+
+## Rules
+
+- Do not silence or delete tests to make them pass (unless clearly obsolete and documented).
+- Do not hide type errors with broad `any` unless explicitly justified in a comment.
+- Do not perform unrelated refactors while debugging.
+- Never run destructive DB ops (e.g. `migrate reset`, `DROP`) to "fix" a test without approval.

@@ -1,0 +1,41 @@
+---
+name: execute-sprint
+description: Use when asked to execute the active sprint autonomously on the {{PROJECT_NAME}}. Runs the sequential batch-by-batch loop from docs/develop/AGENT_EXECUTION_PROTOCOL.md.
+---
+
+# Execute Sprint Skill
+
+Use this skill when the user asks you to execute the active sprint autonomously.
+
+## Steps
+
+1. Read `docs/develop/SPRINTS.md`.
+2. Identify the sprint with `Status: ACTIVE`. If none, stop — report "no active sprint".
+3. Identify the first `READY` or `IN_PROGRESS` batch in that sprint.
+4. Mark it `IN_PROGRESS`; create/continue branch `{{BRANCH_PREFIX}}`.
+5. Execute only that batch (read the module/domain spec in `{{SOURCE_DOCS}}` first).
+6. Validate acceptance criteria.
+7. Run the verification sequence:
+   ```
+   {{VERIFY_SEQUENCE}}
+   ```
+   If schema changed, also run:
+   ```
+   {{DB_VERIFY}}
+   ```
+8. Update `docs/develop/AGENT_PROGRESS.md` (`update-progress` skill).
+9. Commit if complete.
+10. Continue to the next batch only after the current one is `DONE`.
+
+## Skills to lean on
+
+- `ponytail:ponytail` on every implementation step (laziest correct solution; keeps the MVP in scope).
+- `superpowers:test-driven-development` for domain logic; `superpowers:systematic-debugging` on failures.
+- `superpowers:verification-before-completion` before step 6/7; `update-progress` for step 8.
+
+## Never
+
+- Do not skip batches or start future sprints.
+- Do not work on `main`/`develop`; do not deploy; do not run destructive DB ops.
+- Do not change entity status outside guarded transitions.
+- Do not mark unfinished work `DONE`.

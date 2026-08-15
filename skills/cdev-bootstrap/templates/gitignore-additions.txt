@@ -1,0 +1,3 @@
+# CDev runtime logs (per-run transcripts + watchdog lifecycle)
+/logs/runs/
+/logs/*.log

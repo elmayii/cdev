@@ -1,0 +1,35 @@
+---
+name: update-progress
+description: Use after completing, pausing or blocking work on the {{PROJECT_NAME}}. Appends an honest entry to docs/develop/AGENT_PROGRESS.md.
+---
+
+# Update Progress Skill
+
+Use after completing, pausing or blocking work. Append (newest on top) to
+`docs/develop/AGENT_PROGRESS.md`:
+
+```md
+## <YYYY-MM-DD HH:mm> — Sprint <n>, Batch <n>
+
+Status: DONE | IN_PROGRESS | BLOCKED | PAUSED
+
+Completed:
+- ...
+
+Files changed:
+- ...
+
+Verification:
+- (one entry per command in {{VERIFY_SEQUENCE}}): pass / fail / not run
+
+Blockers:
+- ...
+
+Next:
+- ...
+```
+
+Rules:
+- Do not exaggerate progress.
+- Do not mark incomplete work as DONE.
+- Record blockers concretely (what is missing, smallest decision needed).

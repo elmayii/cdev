@@ -1,0 +1,38 @@
+# Agent Progress — {{PROJECT_NAME}}
+
+> Handoff log. Append after every meaningful step. Newest at bottom. Do not exaggerate progress.
+
+<!-- The bootstrap seeds the first entry; format below. -->
+
+---
+
+## Progress Log Format
+
+After every meaningful step, append to `docs/develop/AGENT_PROGRESS.md`:
+
+```md
+## <YYYY-MM-DD HH:mm> — Sprint <n>, Batch <n>
+
+Status: DONE | IN_PROGRESS | BLOCKED | PAUSED
+
+Completed:
+- ...
+
+Files changed:
+- ...
+
+Verification:
+- pnpm typecheck: pass/fail/not run
+- pnpm lint: pass/fail/not run
+- pnpm test: pass/fail/not run
+- pnpm test:e2e: pass/fail/not run
+- pnpm build: pass/fail/not run
+
+Blockers:
+- ...
+
+Next:
+- ...
+```
+
+Do not exaggerate progress. Do not mark incomplete work as DONE.

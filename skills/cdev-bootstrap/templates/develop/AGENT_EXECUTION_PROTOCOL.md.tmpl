@@ -1,0 +1,297 @@
+# Agent Execution Protocol — {{PROJECT_NAME}}
+
+## Mission
+
+You are an autonomous engineering agent working on the **{{PROJECT_NAME}}** repo.
+
+Your objective is to complete the current active sprint defined in `docs/develop/SPRINTS.md`,
+batch by batch, in strict sequential order.
+
+Do not improvise a different roadmap. Do not skip ahead **within** a sprint. When the active
+sprint is fully complete, **auto-advance** (operator request): mark it `Status: DONE`, promote the
+next `PENDING` sprint to `Status: ACTIVE`, and keep going — no human checkpoint between sprints.
+
+The repository is the memory. `docs/develop/SPRINTS.md` is the plan. This file is the operating
+system. `docs/develop/AGENT_PROGRESS.md` is the handoff.
+
+---
+
+## Source of Truth
+
+Read these files, in this order:
+
+1. `CLAUDE.md` — global project rules, stack, conventions, commands.
+2. `docs/develop/AGENT_EXECUTION_PROTOCOL.md` — this file.
+3. `docs/develop/SPRINTS.md` — the active plan (sprints → batches → tasks → acceptance).
+4. `docs/develop/PRODUCT.md` / `ARCHITECTURE.md` / `DECISIONS.md` / `TESTING.md` — operational summaries (what/where/decided/how-to-verify).
+5. `docs/develop/ROADMAP.md` — high-level sprint sequence.
+6. `{{SOURCE_DOCS}}` — the system spec and scope limits (authority-ordered; see the table in `CLAUDE.md`).
+7. `docs/develop/AGENT_PROGRESS.md` — latest progress / handoff state.
+
+When in doubt about *what* a module must do, refer to `{{SOURCE_DOCS}}`.
+
+If documents conflict, follow this priority:
+
+1. Security & privacy rules (CLAUDE.md §"Security & privacy", and project spec safety rules).
+2. Forbidden / human-approval-gated actions (see "Safety Rule" below).
+3. Architecture rules (CLAUDE.md "Architecture & module map", state-machine discipline).
+4. Scope limits (defined in `{{SOURCE_DOCS}}`).
+5. Sprint plan (`docs/develop/SPRINTS.md`).
+6. Implementation convenience.
+
+---
+
+## Execution Loop
+
+Repeat until the active sprint is complete or blocked:
+
+1. Read `docs/develop/SPRINTS.md`.
+2. Find the first sprint with `Status: ACTIVE`. **If none**, promote the first `PENDING` sprint to
+   `Status: ACTIVE` and use it. **If there is no `PENDING` sprint either, stop** — write
+   "no active sprint" in `docs/develop/AGENT_PROGRESS.md` and exit cleanly.
+3. Inside that sprint, find the first batch with `Status: READY` or `Status: IN_PROGRESS`.
+4. If no batch is available, stop and record the reason in `docs/develop/AGENT_PROGRESS.md`.
+5. Mark the selected batch `IN_PROGRESS` in `docs/develop/SPRINTS.md`.
+6. Create or continue the working branch: `{{BRANCH_PREFIX}}`.
+   **Never work on `main` or `develop` directly.**
+7. Implement only the selected batch.
+8. Do not start the next batch until the current one passes its acceptance criteria.
+9. Run the verification sequence (below).
+10. Fix errors caused by your changes.
+11. Update `docs/develop/AGENT_PROGRESS.md`.
+12. Commit the completed batch.
+13. Mark the batch `DONE` only if all acceptance criteria are satisfied.
+14. Move to the next batch. When **all** batches in the sprint are `DONE`, mark the sprint
+    `Status: DONE`, promote the next `PENDING` sprint to `Status: ACTIVE`, and continue the loop.
+
+---
+
+## Sequential Work Rule
+
+Work sequentially. Allowed: Batch 01 → 02 → 03. Not allowed:
+
+- Jumping to a later batch because it is easier.
+- Starting a future sprint before the active sprint is complete.
+- Working on multiple unrelated features at once.
+- Broad refactors outside the active batch.
+
+---
+
+## Verification Rule
+
+This project's stack is {{STACK}}. Before marking a batch `DONE`,
+run the verification sequence. Default sequence:
+
+```bash
+{{VERIFY_SEQUENCE}}
+```
+
+{{DB_VERIFY}}
+
+Notes:
+- Background dev-server processes may be unreliable on some hosts; prefer e2e/tests for HTTP
+  evidence rather than a long-running dev server.
+
+If a command fails:
+1. Identify whether your changes caused it.
+2. Fix it if possible.
+3. Re-run the failed command.
+4. If unfixable, document the blocker (see Blocking Rule) and stop.
+
+---
+
+## Architecture & Domain Rules (do not violate)
+
+These come from `CLAUDE.md` and `{{SOURCE_DOCS}}`. They override the sprint plan.
+
+- **State changes only through guarded transitions.** Never mutate an entity `status`
+  ad hoc in a controller/service. Lifecycle changes go through the state machine.
+- **Every meaningful transition / agent action / approval emits an audit record.**
+- **API-first.** Validate input at the edge; keep domain logic in services.
+- **Module boundaries.** Cross-module access goes through services, not internals.
+- **Structured outputs, not hidden side effects.** Persist/version generated artifacts.
+- **No secrets in logs or outputs.** Redact env vars, tokens, and service keys.
+- **Strict typing.** No implicit any; prefer explicit types on public boundaries.
+- Naming conventions follow project rules in `CLAUDE.md`.
+
+---
+
+## Safety Rule (human-in-the-loop)
+
+The agent may **prepare** these actions but must **not execute them autonomously** —
+they require explicit human/operator approval:
+
+```text
+external communication            scope changes
+proposal acceptance               production deployment
+payment confirmation              destructive database operations (DROP, migrate reset)
+secret exposure                   provider token usage
+resource deletion                 protected-branch push (main / develop)
+final delivery approval           commercial commitments
+```
+
+When such an action is needed: generate the draft / migration / plan, then create a
+blocker in `docs/develop/AGENT_PROGRESS.md` requesting approval. Do not proceed.
+
+Never deploy without approval. Never modify production secrets. Never rewrite git history.
+Never push to `main` or `develop`.
+
+---
+
+## MCP and Tool Usage
+
+Use available tools only when they directly support the active batch:
+
+- Filesystem / search tools: inspect and edit safely.
+- Terminal: install, typecheck, lint, test, build, project-specific tools (dev only).
+- Database tools: schema inspection, **dev** migrations only — never prod, never reset.
+- GitHub: inspect repo/PR/branch state.
+
+Do not use tools randomly.
+
+---
+
+## Skills and Subagents
+
+Use selectively (do not invoke every skill automatically):
+
+- `execute-sprint` skill / `sprint-runner` agent: the main autonomous loop.
+- `verify-feature` skill / `test-engineer` agent: before marking a batch DONE.
+- `code-reviewer` agent: before committing meaningful changes.
+- `architect-reviewer` agent: when changes touch module boundaries, state machines or the data model.
+- `debug-failure` skill: when typecheck/lint/test/build fails.
+- `update-progress` skill: after completing, pausing or blocking work.
+
+General dev skills (also injected into the night runner via `--append-system-prompt`, see
+`scripts/claude-night-runner.ps1`):
+
+- `ponytail:ponytail`: **on every implementation step** — laziest solution that actually works
+  (reuse existing code, stdlib/native before new deps, shortest correct diff, no speculative
+  abstractions; delete over add). Most important; keeps the MVP inside scope.
+- `superpowers:test-driven-development`: when implementing domain logic (state machines,
+  orchestration, proposal/budget rules) — failing test first.
+- `superpowers:systematic-debugging`: on any failure, before editing — root cause over symptom
+  (pairs with `debug-failure`).
+- `superpowers:verification-before-completion`: before marking a batch DONE or claiming pass — run
+  the verification sequence, confirm real output (pairs with `verify-feature`).
+
+---
+
+## Blocking Rule
+
+A batch is blocked only when:
+
+- A required secret/credential is missing.
+- A dependency or external service (database, cache, external API) is unavailable and required.
+- Documentation is contradictory.
+- A product/scope decision is required and not documented.
+- Continuing would violate architecture or safety rules.
+- The repo is in an unsafe state.
+
+When blocked:
+1. Mark the batch `BLOCKED` in `docs/develop/SPRINTS.md` (with a concrete reason).
+2. Explain the exact blocker in `docs/develop/AGENT_PROGRESS.md`.
+3. Suggest the smallest decision needed from the human.
+4. Apply the **Blocked-but-not-idle rule** below.
+
+### Blocked-but-not-idle rule
+
+A non-quota blocker on one batch must not stop all work if other work is available.
+After marking a batch `BLOCKED`:
+
+1. Scan the `ACTIVE` sprint for the next batch that is `READY` (or `IN_PROGRESS`) **and**
+   whose `BLOCKED_UNTIL_BATCH_<N>_DONE` dependencies are all `DONE`. Work that batch instead.
+2. If the active sprint has no workable batch but a later sprint is fully independent of the
+   blocked work, promote that sprint to `Status: ACTIVE` and work it (auto-advance enabled).
+   Note the promotion in `docs/develop/AGENT_PROGRESS.md`.
+3. Only stop when **no** batch anywhere is workable. Then record "no workable batch" and exit cleanly.
+
+Do not skip a batch merely because it is hard — skipping is allowed only when the batch is
+genuinely `BLOCKED` (missing secret/resource/decision, see the trigger list above) and another
+batch's dependencies are satisfied. Never reorder around a dependency that is not yet `DONE`.
+
+**Usage-limit blocks are different:** they are a hard stop, not a skip. Follow the Usage Limit /
+Credit Rule below — save, exit cleanly, and let the watchdog resume when quota renews.
+
+---
+
+## Usage Limit / Credit Rule
+
+If execution stops because of usage limits, credits, quota or rate limits:
+
+1. Save all useful progress.
+2. Update `docs/develop/AGENT_PROGRESS.md`.
+3. Commit safe completed work if possible (use `wip(...)` if the batch is unfinished).
+4. Leave the current batch as `IN_PROGRESS`.
+5. Stop cleanly.
+
+An external watchdog (`scripts/claude-night-runner.ps1`) may resume later. On resume,
+continue from `docs/develop/SPRINTS.md`, `docs/develop/AGENT_PROGRESS.md`, `git status` and latest commits.
+Do not mark unfinished work as `DONE`.
+
+---
+
+## Commit Rule
+
+Commit after each completed batch. Format:
+
+```text
+feat(sprint-<n>): complete batch <n> - <short name>
+```
+
+Also valid: `test(...)`, `docs(...)`, `fix(...)`, `chore(...)`. For unfinished but useful
+progress: `wip(sprint-<n>): progress on batch <n> - <short name>`.
+
+End commit messages with:
+
+```text
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+```
+
+Never commit broken work as complete.
+
+---
+
+## Progress Log Format
+
+After every meaningful step, append to `docs/develop/AGENT_PROGRESS.md`:
+
+```md
+## <YYYY-MM-DD HH:mm> — Sprint <n>, Batch <n>
+
+Status: DONE | IN_PROGRESS | BLOCKED | PAUSED
+
+Completed:
+- ...
+
+Files changed:
+- ...
+
+Verification:
+- pnpm typecheck: pass/fail/not run
+- pnpm lint: pass/fail/not run
+- pnpm test: pass/fail/not run
+- pnpm test:e2e: pass/fail/not run
+- pnpm build: pass/fail/not run
+
+Blockers:
+- ...
+
+Next:
+- ...
+```
+
+Do not exaggerate progress. Do not mark incomplete work as DONE.
+
+---
+
+## Stop Conditions
+
+Stop when:
+
+- All sprints are `DONE` (no `PENDING` sprint remains to auto-advance to).
+- A real blocker is found.
+- Verification cannot pass and the failure is documented.
+- Usage limits stop execution.
+- The repo is in an unsafe state.
+- Human approval is required.

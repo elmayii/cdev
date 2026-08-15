@@ -1,0 +1,112 @@
+# Claude Night Runner — watchdog (Windows / PowerShell)
+# Project: {{PROJECT_NAME}}
+#
+# cdev: ps1-only watchdog, add .sh when a non-Windows host needs it
+#
+# Drives Claude Code (CLI, headless) over the active sprint. Claude works until it
+# finishes, hits a real blocker, or hits usage limits; this script then waits and
+# resumes. The repo is the memory, so resuming loses no progress.
+#
+#   Rule 1 (work until blocked)   -> the execution loop in AGENT_EXECUTION_PROTOCOL.md.
+#   Rule 2 (skip blocked, do next -> "Blocked-but-not-idle" rule in the protocol.
+#           independent work)
+#   Rule 3 (wait out usage limits -> THIS loop: Claude exits, we wait $WaitSeconds,
+#           then verify+resume)       then retry. A renewed quota makes the next run
+#                                     succeed; a still-limited quota fails fast and we wait again.
+#
+# Usage:   powershell -ExecutionPolicy Bypass -File scripts\claude-night-runner.ps1
+# Stop:    Ctrl+C  (or close the window)
+#
+# Flags below are verified against Claude Code 2.1.195 (`claude --help`). If you
+# upgrade and a flag changes, re-verify. Note: this version has NO --max-turns.
+#
+# Headless runs cannot answer permission prompts, so a non-interactive permission
+# mode is required or the run hangs. Options, least to most permissive:
+#   1) Pre-approve safe commands in .claude/settings.json, run with default mode
+#      (novel commands still prompt -> can hang overnight).
+#   2) '--permission-mode acceptEdits' (auto-accepts file edits; bash still prompts).
+#   3) '--dangerously-skip-permissions' (no prompts at all) -- used below.
+# (3) is the pragmatic choice for unattended runs and is compensated by the protocol's
+# safety gates (branch-only work, never push main/develop, no destructive DB ops,
+# no deploy) plus git isolation. Change $PermissionFlag if you want a safer mode.
+#
+# Working branches follow the prefix: {{BRANCH_PREFIX}}
+#
+# Skills: each run injects a skill directive via --append-system-prompt ($SkillDirective below)
+# so the autonomous agent leans on the same skills used in interactive dev.
+#
+# Logging (two layers):
+#   logs/claude-night-runner.log   -> watchdog lifecycle (start / exit code / waits, human-readable).
+#   logs/runs/run-<timestamp>.jsonl-> the FULL transcript of each run (thinking + tool calls +
+#                                     outputs) via --output-format stream-json --verbose.
+
+$ErrorActionPreference = 'Continue'
+
+$ProjectDir     = Split-Path -Parent $PSScriptRoot
+$WaitSeconds    = 1800                              # 30 min between retries (quota-friendly)
+$Model          = '{{MODEL}}'                       # 'opus' | 'sonnet' | full id
+$Effort         = '{{EFFORT}}'                      # low | medium | high | xhigh | max
+$PermissionFlag = '--dangerously-skip-permissions'  # see note above
+$LogDir         = Join-Path $ProjectDir 'logs'
+$LogFile        = Join-Path $LogDir 'claude-night-runner.log'  # rolling watchdog lifecycle log
+$RunsDir        = Join-Path $LogDir 'runs'                     # one full JSONL transcript per run
+
+$Prompt = @'
+Continue the active sprint using CLAUDE.md and docs/develop/AGENT_EXECUTION_PROTOCOL.md.
+Resume from docs/develop/SPRINTS.md, docs/develop/AGENT_PROGRESS.md, git status and latest commits.
+Work sequentially batch by batch. If the current batch is BLOCKED for a non-quota reason,
+follow the "Blocked-but-not-idle" rule: pick the next batch whose dependencies are satisfied
+and keep working; only stop when no workable batch remains. Auto-advance is enabled: when the
+ACTIVE sprint is fully DONE, mark it DONE, promote the next PENDING sprint to ACTIVE, and keep
+going without asking. Only stop cleanly when every sprint is DONE or nothing is workable. If
+usage limits stop you, save progress, update docs/develop/AGENT_PROGRESS.md and exit cleanly so
+the watchdog can resume later.
+Follow the skill discipline in the appended system directive: ponytail laziness above all, TDD for
+domain logic, systematic-debugging on failures, verification-before-completion before marking DONE.
+'@
+
+# Injected as a system-level directive every run so skills are actually invoked (not just mentioned).
+# ponytail: the rendered SKILL_DIRECTIVE value must not contain a line starting with '@ -- it would close this here-string early.
+$SkillDirective = @'
+{{SKILL_DIRECTIVE}}
+'@
+
+Set-Location $ProjectDir
+New-Item -ItemType Directory -Force -Path $LogDir  | Out-Null
+New-Item -ItemType Directory -Force -Path $RunsDir | Out-Null
+
+# Watchdog lifecycle lines -> console + rolling log (the per-run JSONL holds the agent's transcript).
+function Write-Log($msg) {
+    $line = '[{0}] {1}' -f (Get-Date -Format 'yyyy-MM-dd HH:mm:ss'), $msg
+    Write-Host $line
+    Add-Content -Path $LogFile -Value $line
+}
+
+Write-Host '=========================================='
+Write-Host 'Claude Night Runner'
+Write-Host "Project: $ProjectDir"
+Write-Host "Wait between retries: $WaitSeconds seconds"
+Write-Host "Model/effort: $Model / $Effort   Permission: $PermissionFlag"
+Write-Host '=========================================='
+
+while ($true) {
+    $runStamp = Get-Date -Format 'yyyyMMdd-HHmmss'
+    $RunLog   = Join-Path $RunsDir "run-$runStamp.jsonl"
+    Write-Host ''
+    Write-Log "Starting or resuming Claude execution -> $RunLog"
+
+    # -c continues the latest conversation; -p runs headless with the prompt above.
+    # --append-system-prompt injects the skill discipline. --output-format stream-json --verbose
+    # writes the full event stream (thinking + tool calls + outputs) to the per-run JSONL.
+    # --fallback-model keeps going if the primary model is overloaded (only with -p).
+    claude -c -p $Prompt `
+        --append-system-prompt $SkillDirective `
+        --model $Model --effort $Effort `
+        --output-format stream-json --verbose `
+        --fallback-model sonnet $PermissionFlag 2>&1 |
+        Tee-Object -FilePath $RunLog
+
+    Write-Log "Claude exited with code: $LASTEXITCODE (transcript: $RunLog)"
+    Write-Log "Waiting $WaitSeconds seconds before retry (resumes / verifies renewed quota)..."
+    Start-Sleep -Seconds $WaitSeconds
+}

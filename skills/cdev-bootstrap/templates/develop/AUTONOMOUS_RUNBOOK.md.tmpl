@@ -1,0 +1,224 @@
+# Autonomous Sprint Runbook — {{PROJECT_NAME}}
+
+Ready-to-copy commands for launching Claude Code as an autonomous sprint runner.
+The shell is **{{SHELL}}** (default: PowerShell on Windows). All commands assume the project
+directory:
+
+```
+{{PROJECT_DIR}}
+```
+
+Verify your tool versions with `claude --help` before unattended runs.
+
+The model needs no conversational memory across runs: the **repo is the memory**
+(`docs/develop/SPRINTS.md` = plan, `AGENT_PROGRESS.md` = handoff, git = state).
+
+---
+
+## 0. Initial setup (once)
+
+```powershell
+# 0.1 Go to the project
+cd {{PROJECT_DIR}}
+
+# 0.2 Authenticate Claude Code (subscription account). Run once, /login if prompted, then exit.
+#     Do NOT set ANTHROPIC_API_KEY in subscription mode.
+claude
+
+# 0.3 Start local infrastructure (database, cache, etc.) — needed for tests/migrations.
+#     Skip if no local infrastructure is required for this project.
+{{DB_VERIFY}}
+
+# 0.4 Install dependencies (first time / after pull)
+{{PACKAGE_MANAGER}} install
+
+# 0.5 (Recommended) commit the planning scaffold so the agent starts from a clean base
+git checkout -b chore/autonomous-setup
+git add -A
+git commit -m "chore: autonomous execution scaffold + sprint plan"
+```
+
+> Pre-launch check: `docs/develop/SPRINTS.md` must have exactly one sprint at
+> `Status: ACTIVE` (Sprint 01) and Batch 01 at `Status: READY`.
+
+---
+
+## 1. Launch — autonomous watchdog (recommended)
+
+This mode fulfills the three rules: work until blocked, skip a blocked batch in favour of the
+next workable one, and **wait for quota to renew and resume**.
+
+```powershell
+cd {{PROJECT_DIR}}
+
+# Run in the foreground (keep this window open):
+powershell -ExecutionPolicy Bypass -File scripts\claude-night-runner.ps1
+```
+
+Run detached so it survives terminal close (capture the PID to stop it later):
+
+```powershell
+$runner = Start-Process powershell `
+  -ArgumentList '-ExecutionPolicy','Bypass','-File','scripts\claude-night-runner.ps1' `
+  -WorkingDirectory '{{PROJECT_DIR}}' -PassThru
+$runner.Id   # note this number to stop the watchdog later
+```
+
+What the watchdog executes each cycle (already inside the script — for reference only):
+
+```powershell
+claude -c -p "<resume prompt>" `
+  --append-system-prompt "<skill directive>" `
+  --model {{MODEL}} --effort {{EFFORT}} `
+  --output-format stream-json --verbose `
+  --fallback-model sonnet --dangerously-skip-permissions
+```
+
+- `-c` continues the most recent conversation · `-p` headless · `--model {{MODEL}}` best for coding
+- `--effort {{EFFORT}}` deeper reasoning · `--fallback-model sonnet` continues if primary is saturated
+- `--append-system-prompt` injects the **skill directive** (`ponytail:ponytail` first, plus
+  TDD / systematic-debugging / verification-before-completion and repo runtime skills) so the
+  agent actually invokes them, not just mentions them.
+- `--output-format stream-json --verbose` dumps the full stream (thinking + tool calls + outputs)
+  to a per-run transcript at `logs/runs/run-<timestamp>.jsonl`.
+- `--dangerously-skip-permissions` no permission prompts (see §4).
+- On exit (done / blocked / quota), the script waits **30 min** and retries → renewed quota resumes work.
+
+Adjustable parameters are at the top of `scripts\claude-night-runner.ps1`: `$WaitSeconds`,
+`$Model`, `$Effort`, `$PermissionFlag`.
+
+---
+
+## 2. Launch — single headless run (one pass, no auto-retry)
+
+Use this to test the setup or run a supervised pass:
+
+```powershell
+cd {{PROJECT_DIR}}
+
+claude -p "Read CLAUDE.md and execute the active sprint using docs/develop/AGENT_EXECUTION_PROTOCOL.md. Work sequentially batch by batch. If a batch is BLOCKED for a non-quota reason, follow the Blocked-but-not-idle rule. Stop when the sprint is complete, nothing is workable, unsafe, or usage limits stop execution." --model {{MODEL}} --effort {{EFFORT}} --dangerously-skip-permissions
+```
+
+Optional spend cap for this run (stops at the budget limit; only with `-p`):
+
+```powershell
+claude -p "<same prompt>" --model {{MODEL}} --effort {{EFFORT}} --max-budget-usd 5 --dangerously-skip-permissions
+```
+
+---
+
+## 3. Launch — interactive (supervised, approve on the fly)
+
+Safest mode; you watch and approve. No `--dangerously-skip-permissions`:
+
+```powershell
+cd {{PROJECT_DIR}}
+claude --model {{MODEL}} --effort {{EFFORT}}
+```
+
+Then type:
+
+```
+Execute the active sprint, starting with the first READY batch, per docs/develop/AGENT_EXECUTION_PROTOCOL.md. Validate, update progress, commit. Then continue to the next batch only when the current batch is DONE.
+```
+
+---
+
+## 4. Permissions and security (read before unattended runs)
+
+A headless run **cannot respond to permission prompts** — without a non-interactive mode it hangs.
+`--dangerously-skip-permissions` removes all prompts. Compensating controls (enforced by the
+protocol): work only on `{{BRANCH_PREFIX}}` branches, **never push to `main`/`develop`**,
+no destructive DB operations (`migrate reset`, `DROP`), no deploys, no secret exposure —
+all of these are human gates.
+
+Safer alternatives (edit `$PermissionFlag` in the script, or change the flag):
+
+| Goal | Use | Trade-off |
+|---|---|---|
+| Zero prompts (unattended) | `--dangerously-skip-permissions` | No OS-level barrier; relies on protocol gates + git |
+| Auto-accept edits only | `--permission-mode acceptEdits` | Bash (package manager/git/docker) still prompts → may hang overnight |
+| Curated allowlist | Pre-approve safe Bash in `.claude/settings.json`, run `--permission-mode default` | New commands still prompt |
+
+Run unattended work only in this dedicated repo; the agent must never touch other directories.
+
+---
+
+## 5. Monitor
+
+```powershell
+# Follow the watchdog lifecycle log live (start / exit code / waits)
+Get-Content {{PROJECT_DIR}}\logs\claude-night-runner.log -Wait
+
+# Full transcript of the latest run: thinking + tool calls + outputs (JSONL, one line per event)
+$last = Get-ChildItem logs\runs\run-*.jsonl | Sort-Object LastWriteTime | Select-Object -Last 1
+Get-Content $last.FullName -Wait
+
+# Human-readable render of the latest run (text and thinking for each agent turn)
+Get-Content $last.FullName | ForEach-Object { $_ | ConvertFrom-Json } |
+  ForEach-Object { $_.message.content } | Where-Object { $_ } |
+  ForEach-Object {
+    if     ($_.type -eq 'thinking') { "THINK: $($_.thinking)" }
+    elseif ($_.type -eq 'text')     { "TEXT : $($_.text)" }
+    elseif ($_.type -eq 'tool_use') { "TOOL : $($_.name)" }
+  }
+
+# What the agent has done / where it is heading (handoff log)
+Get-Content docs\develop\AGENT_PROGRESS.md -Tail 40
+
+# Work produced: branches and commits
+git branch --list "claude/*"
+git log --oneline -15
+
+# Current plan state (which batch is IN_PROGRESS / BLOCKED / DONE)
+Select-String -Path docs\develop\SPRINTS.md -Pattern "Status:"
+```
+
+---
+
+## 6. Stop
+
+```powershell
+# If running in the foreground window: press  Ctrl + C
+
+# If detached (using the PID captured in §1):
+Stop-Process -Id <PID>
+
+# In case a hung claude process needs killing:
+Get-Process claude -ErrorAction SilentlyContinue | Stop-Process -Force
+
+# Stop local infrastructure when fully done (preserves data; use 'down -v' only to delete volumes)
+docker compose stop
+```
+
+Stopping mid-batch is safe: progress is committed per batch and recorded in `AGENT_PROGRESS.md`;
+relaunching the watchdog resumes from there.
+
+---
+
+## 7. How the three rules work
+
+1. **Work until blocked** — the Execution Loop in `AGENT_EXECUTION_PROTOCOL.md` runs batch by batch.
+2. **If blocked, do other available work** — the *Blocked-but-not-idle* rule: a non-quota block
+   marks that batch as `BLOCKED` and the agent moves to the next batch whose dependencies are
+   `DONE`; it only stops when nothing is workable.
+3. **On usage limits: save, stop, resume** — the agent saves progress and exits cleanly; the
+   watchdog waits `$WaitSeconds` and re-executes. A renewed quota means the next run advances
+   (the retry *is* the verification); a still-limited quota fails fast and waits again.
+
+The agent auto-advances sprints: when all batches in the active sprint are `DONE`, it marks the
+sprint `DONE`, promotes the next `PENDING` sprint to `ACTIVE`, and continues the loop.
+
+---
+
+## 8. Troubleshooting
+
+| Symptom | Cause | Fix |
+|---|---|---|
+| Run exits immediately, "no active sprint" | No sprint is `ACTIVE` | Set Sprint 01 to `Status: ACTIVE` in `SPRINTS.md` |
+| e2e / integration tests fail with connection errors | Required infrastructure not running | Start services (see §0.3 and `CLAUDE.md`) |
+| "worker failed to exit gracefully" warning | Async teardown race (benign) | Ignore — exit code 0 still means pass |
+| Run hangs without doing anything | Permission prompt without skip flag | Use `--dangerously-skip-permissions` (§4) |
+| Unknown flag error after updating Claude Code | CLI flags changed | `claude --help`, update the script |
+| ORM / schema client out of date | Schema edited without regenerating the client | Run the project-specific regenerate command (see `CLAUDE.md`) |
+| A batch is BLOCKED on a missing credential | Secret not set in `.env` | Provide the secret, or configure the module to run against a mock/fake |
