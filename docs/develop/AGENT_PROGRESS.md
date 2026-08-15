@@ -5,6 +5,31 @@ Newest-first. Required fields: date+unit · status · done · files · verificat
 
 ---
 
+## 2026-08-15 · S02-B02 + S02-B03 · DONE — Sprint 02 `DONE`
+
+**Done:** Gate approved in-session (both repos public, MIT, install + retire old skills).
+LICENSE written; manifest gained `license` + `repository`. `elmayii/cdev` created and pushed
+(full history); `elmayii/cdev-marketplace` created from the drafts and pushed. Marketplace
+added, plugin installed (scope: user). **Installed-copy verification:** cache
+`~/.claude/plugins/cache/cdev-marketplace/cdev/0.1.0/` contains profiles/, templates/, all 7
+skills, docs — the sibling-directory doubt is resolved: everything inside the plugin root is
+copied, so `../../profiles/` resolves in the installed layout. Plain-session load (no
+--plugin-dir) lists all 7 skills as `cdev:*`. The nine pre-refactor global skills moved to
+`.backups/global-skills-2026-08-15/`; `~/.claude/skills` is now empty.
+
+**Files:** LICENSE, .claude-plugin/plugin.json, marketplace/ (published),
+docs/develop/{SPRINTS,DECISIONS}.md, docs/develop/reports/s02.md.
+
+**Verification:** repo push — pass (both) · marketplace add + install — pass · installed-copy
+completeness — pass · plain-session namespaced load — pass (7/7) · old-skills retirement —
+pass (9 moved, backup kept).
+
+**Blockers:** none. **Sprint 02 DONE; Sprint 03 (document 08) promoted to ACTIVE.**
+
+**Next:** S03-B01 — write docs/08-installation.md against what was just verified.
+
+---
+
 ## 2026-08-15 · S02-B01 Plugin manifest · DONE / S02-B02 · BLOCKED / S02-B03 · BLOCKED
 
 **Done (B01):** `.claude-plugin/plugin.json` (name `cdev`, 0.1.0, per DECISIONS assumptions).

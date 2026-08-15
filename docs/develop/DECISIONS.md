@@ -2,6 +2,16 @@
 
 Newest-first. Every assumption made under PARTIAL clarity lands here, dated.
 
+## 2026-08-15 — Publishing gate approved (S02-B02/B03, present human authorization in-session)
+
+- Both repos **public**: `elmayii/cdev`, `elmayii/cdev-marketplace`. License **MIT**.
+- Plugin installed at user scope from the marketplace; the nine pre-refactor global skills
+  retired to `.backups/global-skills-2026-08-15/` (restorable by moving back).
+- `scripts/install.ps1` retired: the plugin supersedes the copy-install path and the
+  un-namespaced collisions it produced.
+- Updates are version-gated: users re-fetch only when `plugin.json` `version` changes —
+  doc-only commits after an install do not reach installed copies until a bump.
+
 ## 2026-08-15 — Plugin assumptions (S02-B01, PARTIAL area — human may veto)
 
 - **Plugin name: `cdev`.** The obvious default; skills invoke as `cdev:<name>` when namespaced.

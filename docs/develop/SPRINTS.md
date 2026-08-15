@@ -66,7 +66,7 @@ Sprint 02.
 
 ---
 
-## Sprint 02 — Plugin and marketplace `ACTIVE`
+## Sprint 02 — Plugin and marketplace `DONE`
 
 Objective: the package installable as a Claude Code plugin, from a marketplace repository.
 
@@ -77,32 +77,35 @@ current Claude Code docs, layout already in place from Sprint 01. **Acceptance:*
 valid; a local install (`claude plugin` tooling or documented equivalent) loads the plugin and
 its 7 skills resolve profiles/templates from the plugin root.
 
-### B02 — Marketplace repository `BLOCKED` (depends: B01)
+### B02 — Marketplace repository `DONE` (depends: B01)
 
-*Drafts complete in `marketplace/`. Blocked on the human gate — minimum decisions: (1) create
-GitHub repo `elmayii/cdev` (visibility?) and push `master`; (2) create GitHub repo
-`elmayii/cdev-marketplace` from `marketplace/` contents (visibility?); (3) license for both
-(none exists — third-party installs deserve one); names `cdev` / `cdev-marketplace` are
-proposals, vetoable.*
+*Gate approved in-session (public + public, MIT, names confirmed). `elmayii/cdev` and
+`elmayii/cdev-marketplace` created and pushed.*
 
 Marketplace manifest prepared as drafts in this repo; creation of the GitHub repository and
 push are a **human gate** (decisions: repo name, account, visibility). **Acceptance:** drafts
 complete and documented; blocker names the exact decisions; after human approval, install from
 the marketplace works.
 
-### B03 — Install and verify `BLOCKED` (depends: B02)
+### B03 — Install and verify `DONE` (depends: B02)
 
-*Also gated on its own: `plugin marketplace add` / `plugin install` modify the user's global
-plugin configuration — same blast-radius class as `~/.claude/skills`. Commands prepared; the
-`--plugin-dir` load test (read-only, session-scoped) already passed with all 7 skills
-registered as `cdev:*`.*
+*Installed from the marketplace (scope: user). Installed copy verified complete (profiles/,
+templates/, 7 skills); plain-session load lists all 7 as `cdev:*`; the nine pre-refactor
+global skills retired to `.backups/global-skills-2026-08-15`.*
 
 Install the plugin from the marketplace (or local path while B02 is gated), run one sandbox
 scenario against the **installed** copy (not the working tree), record evidence.
 **Acceptance:** installed skills exercise cleanly; open questions in PRODUCT.md resolved as
 dated DECISIONS entries.
 
-## Sprint 03 — Document 08, installation `PENDING` (blocked by Sprint 02)
+## Sprint 03 — Document 08, installation `ACTIVE`
 
-Written against the package that exists: what is actually installed, how to launch, how to
-update. Blocked until Sprint 02 closes.
+### B01 — Write document 08 `READY`
+
+`docs/08-installation.md`, written against the package that exists: what is actually
+installed (cache layout, namespaced skills, what rides along), how to install (marketplace +
+local dev), how to update (version-gated), what is deliberately not installed, and the dev-mode
+workflow of this repo. README updated (documents table + "Where this stands");
+`scripts/install.ps1` retired — the plugin replaces the copy-install path it implemented.
+**Acceptance:** the document describes only what exists and was verified; README consistent;
+language check passes.
