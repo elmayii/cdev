@@ -183,7 +183,7 @@ robots/brains/sparkles). Social-preview PNG rendered from it, left prepared — 
 web-UI manual. **Acceptance:** SVG renders; human approves the asset (blocker until then);
 PNG at the exact 1280×640 GitHub size.
 
-### B02 — README redesign `READY` (depends: B01 approval)
+### B02 — README redesign `DONE` (depends: B01 approval)
 
 Hero + positioning, the four failure modes, lifecycle diagram, Quick Start (verified
 commands), command table (§8), "which command when" by project phase (§9), method-vs-binding
@@ -194,6 +194,16 @@ executed at least once in the record; language check passes.
 ### B03 — Verification + report `READY` (depends: B02)
 
 Links resolve, render checked, report `s06.md`. **Acceptance:** checks pass; report exists.
+
+### B04 — Official-repo cleanup `READY` (depends: B03; appended 2026-08-15, human-agreed)
+
+Move out of the public repo, to local `scratch/` (gitignored): the launch drafts
+(`docs/develop/launch/`), the launch report (`reports/s08.md`), the internal strategy document
+(`docs/cdev_open_source_community_strategy.md`), the stale `marketplace/` draft dir, and the
+two untracked conversation transcripts. Live artifacts that cite moved paths (PRODUCT map,
+S08 plan text) are rewritten to say the material is kept outside the repo; historical records
+(handoff, past reports) are not rewritten. **Acceptance:** none of the five remain in the
+tree; no live artifact cites a missing path; git history untouched.
 
 ---
 
