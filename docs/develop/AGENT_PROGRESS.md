@@ -5,6 +5,35 @@ Newest-first. Required fields: date+unit · status · done · files · verificat
 
 ---
 
+## 2026-08-15 · S08 complete · DONE — loop stops: only human decisions remain
+
+**Done (B01):** Five launch drafts in `docs/develop/launch/` (HN, Reddit, X, LinkedIn, Claude
+communities), each on the two ratified hooks, each honest about one-product evidence and
+unvalidated portability, each ending with the named publish decision. Nothing posted.
+**Done (B02):** Report `s08.md`. Also prepared: **v0.1.1** — plugin.json bumped, CHANGELOG
+entry (encoding fix, branch-prefix unification, community layer); the GitHub Release act is
+prepared-not-executed.
+
+**Files:** docs/develop/launch/*.md (5), docs/develop/reports/s08.md, CHANGELOG.md,
+.claude-plugin/plugin.json.
+
+**Verification:** drafts exist with named decisions — pass · language check — pass ·
+version/CHANGELOG agree — pass · nothing published — pass (that is the check).
+
+**STOP — no ungated work remains.** Exactly which approvals unblock what:
+1. **Visual direction** (palette/typography/composition or an asset) → unblocks S06-B01 →
+   B02 README → B03, and with it the launch sequence.
+2. **Signed-in glance** at github.com/elmayii/cdev/issues/new/choose → clears the one
+   standing not-run.
+3. **`gh release create v0.1.1`** (command in s08.md) → publishes the patch release.
+4. **Per-channel publish decisions** (5 drafts) → executes the launch, after S06.
+5. **Ratify Sprint 04** (field validation) + name the target repo → the next development
+   phase.
+
+**Next:** whichever of the five the human decides first.
+
+---
+
 ## 2026-08-15 · S07-B03 · DONE — Sprint 07 `DONE`, Sprint 08 promoted
 
 **Done:** Report `docs/develop/reports/s07.md` including the verification-debt aggregate

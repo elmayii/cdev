@@ -218,19 +218,19 @@ Report `s07.md`. **Acceptance:** checks pass; report exists.
 
 ---
 
-## Sprint 08 — Launch `ACTIVE` (S06 still blocked at entry on the visual-direction decision)
+## Sprint 08 — Launch `DONE` (drafts only — every publish act is a named human decision; launch sequence also waits on S06)
 
 Source: strategy §22 Phase 4. Copy is agent work; **publishing each post is a human act,
 always** — the batch closes as prepared-with-blocker, never as posted.
 
-### B01 — Launch copy `READY`
+### B01 — Launch copy `DONE`
 
 Drafts in `docs/develop/launch/`: HN (Show HN), Reddit, X thread, LinkedIn, Claude Code
 community post — built on the two approved hooks ("sessions → continuous development" and the
 spec-driven origin story §18–§19). **Acceptance:** one draft per channel; each ends with the
 named human decision (publish or not).
 
-### B02 — Verification + report `READY` (depends: B01)
+### B02 — Verification + report `DONE` (depends: B01)
 
 Report `s08.md`; sprint closes with the publish blockers listed. **Acceptance:** report
 exists; blockers name each pending post.

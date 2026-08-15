@@ -4,6 +4,25 @@ All notable changes to the CDev plugin are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow semver. Installed
 copies update only when the version changes.
 
+## [0.1.1] — 2026-08-15
+
+### Fixed
+
+- `templates/develop/SPRINTS.md.tmpl` shipped with damaged encoding (BOM + mojibake
+  em-dashes); a literal render produced corrupted headers. Re-encoded clean UTF-8. Found by
+  replaying the public walkthrough against the installed copy.
+- `templates/PLACEHOLDERS.md` declared a `{{BRANCH_PREFIX}}` default that disagreed with the
+  loop skill's (`claude/…` vs `cdev/sprint-<nn>-batch-<nn>`) — two shipped documents
+  contradicting each other about the same switch, the exact incident class the method's own
+  consistency rule exists for. Unified on the loop's default.
+
+### Added
+
+- `docs/community/walkthrough.md` — replay-validated first-use walkthrough.
+- `docs/community/rfc-process.md` — the RFC process with its field-evidence bar.
+- Community layer: CONTRIBUTING, CODE_OF_CONDUCT, SECURITY, issue forms (field report
+  included), PR template, labels.
+
 ## [0.1.0] — 2026-08-15
 
 First public release.
