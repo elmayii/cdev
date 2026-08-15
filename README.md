@@ -67,7 +67,10 @@ first rule applied to itself.*
 
 **Done.** Documents 01–07. The nine skills are vendored in `skills/` exactly as they ran in
 production (commit `1fe0773`) — untranslated, unconsolidated, on purpose: that baseline is what
-later changes are read against. Two scripts support the loop: `scripts/sandbox.ps1` builds a
+later changes are read against. Two post-extraction skills were added directly in English:
+`cdev-planner` (the monorepo planner's single-repo counterpart — materialize an objective into
+local batches, or gap-analyze one repo) and `ockham` (a user-invoked presentation layer that
+re-tells dense technical output in plain terms; never fires on the loop's own initiative). Two scripts support the loop: `scripts/sandbox.ps1` builds a
 throwaway fixture whose `.claude/skills` is a junction to `skills/`, so a session opened inside it
 runs what is being edited; `scripts/install.ps1` copies `skills/` into `~/.claude/skills` as a
 frozen snapshot, backing up whatever it replaces.
