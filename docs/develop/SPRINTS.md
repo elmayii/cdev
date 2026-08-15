@@ -70,21 +70,32 @@ Sprint 02.
 
 Objective: the package installable as a Claude Code plugin, from a marketplace repository.
 
-### B01 — Plugin manifest `READY`
+### B01 — Plugin manifest `DONE`
 
 `.claude-plugin/plugin.json` (name, version, description, author), schema confirmed against
 current Claude Code docs, layout already in place from Sprint 01. **Acceptance:** manifest
 valid; a local install (`claude plugin` tooling or documented equivalent) loads the plugin and
 its 7 skills resolve profiles/templates from the plugin root.
 
-### B02 — Marketplace repository `READY` (depends: B01)
+### B02 — Marketplace repository `BLOCKED` (depends: B01)
+
+*Drafts complete in `marketplace/`. Blocked on the human gate — minimum decisions: (1) create
+GitHub repo `elmayii/cdev` (visibility?) and push `master`; (2) create GitHub repo
+`elmayii/cdev-marketplace` from `marketplace/` contents (visibility?); (3) license for both
+(none exists — third-party installs deserve one); names `cdev` / `cdev-marketplace` are
+proposals, vetoable.*
 
 Marketplace manifest prepared as drafts in this repo; creation of the GitHub repository and
 push are a **human gate** (decisions: repo name, account, visibility). **Acceptance:** drafts
 complete and documented; blocker names the exact decisions; after human approval, install from
 the marketplace works.
 
-### B03 — Install and verify `READY` (depends: B02)
+### B03 — Install and verify `BLOCKED` (depends: B02)
+
+*Also gated on its own: `plugin marketplace add` / `plugin install` modify the user's global
+plugin configuration — same blast-radius class as `~/.claude/skills`. Commands prepared; the
+`--plugin-dir` load test (read-only, session-scoped) already passed with all 7 skills
+registered as `cdev:*`.*
 
 Install the plugin from the marketplace (or local path while B02 is gated), run one sandbox
 scenario against the **installed** copy (not the working tree), record evidence.

@@ -1,0 +1,24 @@
+{
+  "name": "cdev-marketplace",
+  "owner": {
+    "name": "elmayii"
+  },
+  "description": "Marketplace for the CDev continuous-development plugin.",
+  "plugins": [
+    {
+      "name": "cdev",
+      "source": {
+        "source": "github",
+        "repo": "elmayii/cdev"
+      },
+      "description": "Run coding agents unattended over weeks: the repository holds the plan, the state and the proof.",
+      "category": "workflows",
+      "keywords": [
+        "autonomous-development",
+        "continuous-development",
+        "sprints",
+        "multi-repo"
+      ]
+    }
+  ]
+}

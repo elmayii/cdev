@@ -5,6 +5,39 @@ Newest-first. Required fields: date+unit · status · done · files · verificat
 
 ---
 
+## 2026-08-15 · S02-B01 Plugin manifest · DONE / S02-B02 · BLOCKED / S02-B03 · BLOCKED
+
+**Done (B01):** `.claude-plugin/plugin.json` (name `cdev`, 0.1.0, per DECISIONS assumptions).
+`claude plugin validate .` → pass (one benign warning: root CLAUDE.md is the repo's own guide,
+not plugin context). Live load test `claude --plugin-dir . -p` → all 7 skills registered as
+`cdev:*`. The stale global install (`~/.claude/skills`, pre-refactor nine) coexists
+un-namespaced — the collision the plugin namespacing was chosen to solve; refreshing it is
+part of the gate below.
+
+**B02 blocked (drafts done):** `marketplace/` holds `.claude-plugin/marketplace.json` + README,
+ready to become the `cdev-marketplace` repo. Minimum human decisions: create GitHub repos
+`elmayii/cdev` + `elmayii/cdev-marketplace` (visibility each), license, veto/confirm names.
+Prepared commands: `gh repo create elmayii/cdev --public --source . --push` · new repo from
+`marketplace/` contents.
+
+**B03 blocked:** `plugin marketplace add` / `plugin install` touch the user's global plugin
+config — gated like any shared-state write. Open verification for B03: confirm the
+marketplace-install copy includes `profiles/` and `templates/` (docs ambiguous; `--plugin-dir`
+proves nothing about copy semantics).
+
+**Verification:** manifest validate — pass · plugin-dir load — pass (7/7 namespaced) ·
+frontmatter/language/periphery — pass (unchanged since S01-B05) · marketplace install —
+not-run (gated).
+
+**Blockers:** the S02-B02/B03 human gate above. Nothing else is workable: Sprint 03 depends on
+Sprint 02; self-chosen scan finds only gated work. **Stop condition reached: a safety gate
+requires a human and everything else depends on it.**
+
+**Next:** on gate approval — push, create marketplace, install, run B03's installed-copy
+sandbox scenario, then Sprint 03 (document 08).
+
+---
+
 ## 2026-08-15 · S01-B05 Sprint verification + report · DONE — Sprint 01 `DONE`
 
 **Done:** Full static pass green (frontmatter 7/7 · language 0 · product names 0 · tech names
