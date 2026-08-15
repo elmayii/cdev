@@ -5,6 +5,29 @@ Newest-first. Required fields: date+unit · status · done · files · verificat
 
 ---
 
+## 2026-08-15 · S05-B01 Branch policy · DONE — Sprint 05 promoted ACTIVE
+
+**Done:** `master`→`main` renamed via API in `elmayii/cdev` and `elmayii/cdev-marketplace`
+(GitHub redirects old refs). Protection applied to both `main`s: PR required for others,
+`allow_force_pushes` false, `allow_deletions` false, conversation resolution required,
+`enforce_admins` false — the owner's direct-commit convention (this repo's recorded override)
+keeps working. Local clone renamed and retracking `origin/main`. Protocol + RECOGNITION
+updated: convention is now direct commits to `main`, routine push after each batch.
+One failure mid-batch, root-caused: PS 5.1 pipe mangled the protection JSON (HTTP 400 twice);
+fixed once at the source by sending the JSON via file from bash, both PUTs succeeded.
+
+**Files:** docs/develop/{AGENT_EXECUTION_PROTOCOL,RECOGNITION,SPRINTS,AGENT_PROGRESS}.md.
+
+**Verification:** rename — pass (`main` returned for both) · protection — pass (flags read
+back: force-push disabled, deletion disabled, enforce_admins false) · owner direct push —
+this very commit's push is the test (recorded pass in the next entry if it lands).
+
+**Blockers:** none.
+
+**Next:** B02 — repository metadata.
+
+---
+
 ## 2026-08-15 · Planning (cdev-planner) · DONE — S05–S08 materialized
 
 **Done:** Strategy doc (`docs/cdev_open_source_community_strategy.md`) read and materialized.

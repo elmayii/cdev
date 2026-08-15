@@ -22,8 +22,10 @@ Run per batch, in order; record pass / fail / not-run per check in the handoff:
 
 ## Branches and commits
 
-- No remote exists. Batches commit **directly to `master`** — recorded override, see
-  RECOGNITION.md. Creating a remote or pushing is a human gate.
+- Batches commit **directly to `main`** — recorded override, see RECOGNITION.md. `main` is
+  protected on GitHub (PR required for others, no force pushes, no deletions); the owner
+  bypasses by design so this convention keeps working. Pushing `main` after a batch is part of
+  the routine since the repo went public (S02); force-push and history rewriting stay gated.
 - One commit per batch: `<type>(s<nn>-b<nn>): subject` (e.g. `refactor(s01-b01): extract role
   profiles`). Conditioning and doc-only commits keep plain conventional prefixes.
 

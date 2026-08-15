@@ -15,7 +15,7 @@ framework, no runtime.
 | Generic assumption | Reality here | Override |
 |---|---|---|
 | Verification = lint/build/test | No toolchain exists | Verification is defined in the protocol: frontmatter checks, language/periphery greps, sandbox exercise of touched skills |
-| Working branch per batch, never shared branches | No remote, single operator, all 6 existing commits go straight to `master` | Batches commit directly to `master`; creating a remote or pushing is a human gate |
+| Working branch per batch, never shared branches | Single operator; the whole history commits straight to the default branch | Batches commit directly to `main` (renamed from `master` in S05-B01, protected with owner bypass); routine pushes authorized since S02 — force-push/rewrite stay gated |
 | Runtime evidence via tests or UI | The "runtime" of a skill is an agent following it | Evidence = a fresh subagent exercising the touched skill inside a sandbox fixture, its outcome recorded |
 | Render the full template kit | Most templates are greenfield-backend-shaped and do not apply | Only the core artifacts of doc 07 §1.2 are written |
 | Product docs are the clarity source | The "product" is the package; its spec is `README.md` + `docs/07-core-vs-periphery.md` | Clarity map derives from those two |

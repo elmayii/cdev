@@ -121,12 +121,12 @@ ordered the open-source strategy (S05–S08) first, 2026-08-15. Batches to be ma
 
 ---
 
-## Sprint 05 — Open-source readiness `PENDING`
+## Sprint 05 — Open-source readiness `ACTIVE`
 
 Source: `docs/cdev_open_source_community_strategy.md` §22 Phase 1. Gates pre-authorized
 in-session (see DECISIONS 2026-08-15); external-communication acts remain human forever.
 
-### B01 — Branch policy `READY`
+### B01 — Branch policy `DONE`
 
 Rename `master`→`main` in `elmayii/cdev` and `elmayii/cdev-marketplace` (API; GitHub
 redirects). Protect `main` in both: PR required for others, no force pushes, no deletion —
