@@ -5,6 +5,12 @@ Thumbs.db
 .idea/
 .vscode/
 
+# Throwaway fixtures for debugging instructions — recreate with scripts/sandbox.ps1
+sandbox/
+
+# Copies of whatever install.ps1 replaced in ~/.claude/skills
+.backups/
+
 # Scratch work that is not part of the extraction
 scratch/
 tmp/
