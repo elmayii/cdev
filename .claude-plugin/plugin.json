@@ -1,0 +1,16 @@
+{
+  "name": "cdev",
+  "displayName": "CDev — Continuous Development",
+  "version": "0.1.0",
+  "description": "Run coding agents unattended over weeks: the repository holds the plan, the state and the proof. One conditioning skill and one execution loop reading role profiles, planners, a plain-language explainer, and an optional multi-repo orchestration layer.",
+  "author": {
+    "name": "elmayii"
+  },
+  "keywords": [
+    "autonomous-development",
+    "continuous-development",
+    "sprints",
+    "multi-repo",
+    "orchestration"
+  ]
+}

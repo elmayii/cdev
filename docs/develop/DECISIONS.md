@@ -2,6 +2,14 @@
 
 Newest-first. Every assumption made under PARTIAL clarity lands here, dated.
 
+## 2026-08-15 — Plugin assumptions (S02-B01, PARTIAL area — human may veto)
+
+- **Plugin name: `cdev`.** The obvious default; skills invoke as `cdev:<name>` when namespaced.
+- **Version: semver from `0.1.0`.** Pre-1.0 while document 08 does not exist.
+- **Author: the repo's git identity** (elmayii).
+- Marketplace repo name / account / visibility are NOT assumed — they are the S02-B02 human
+  gate.
+
 ## 2026-08-15 — Sandbox findings (S01-B02)
 
 - **RTK hook mangles npm script output** on this machine (parses passing lint output as ESLint
