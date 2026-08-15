@@ -2,6 +2,13 @@
 
 Newest-first. Every assumption made under PARTIAL clarity lands here, dated.
 
+## 2026-08-16 — The repo obeys its own contribution policy (human-directed)
+
+From now on every series of changes, including the owner's, is classified against
+CONTRIBUTING.md's layer table and meets that layer's process — core changes need an RFC plus
+recorded field evidence even when the maintainer writes them. Encoded in the protocol's
+"Change policy" section; the planner assigns the layer when writing batches.
+
 ## 2026-08-15 — Open-source strategy materialized (planner, present human authorization)
 
 - **Order:** strategy sprints S05–S08 run before field validation; S04 stays `PROPOSAL` (not

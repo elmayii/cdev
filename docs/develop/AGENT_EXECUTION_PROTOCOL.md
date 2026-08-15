@@ -40,6 +40,25 @@ verification per check (pass/fail/not-run) · blockers naming the minimum human 
 See CLAUDE.md. In short: remote/push · marketplace repo creation · install to
 `~/.claude/skills` · frozen product repos · history rewriting. Prepare, don't execute.
 
+## Change policy (this repo obeys its own CONTRIBUTING.md — owner included)
+
+Every series of changes — every batch — declares its **layer** and meets that layer's process
+before it counts, exactly as CONTRIBUTING.md demands of external contributors:
+
+| Layer touched | Required before the batch closes |
+|---|---|
+| Periphery / docs | Nothing extra — the normal verification sequence |
+| Bug fix | The failure quoted as evidence in the handoff entry |
+| Role profile (new or changed) | Field evidence — a sandbox exercise or field report backing the change |
+| Host binding | Proposal recorded in DECISIONS → implementation → validation |
+| New skill / capability | A Discussion opened first (or, pre-community, a dated DECISIONS entry with the rationale) |
+| **Core methodology** | **An RFC (docs/community/rfc-process.md) + recorded field evidence. Never taste.** |
+
+Cross-cutting, always: touched skills/profiles/templates are exercised in a sandbox fixture
+(verification §4); behavior changes land in `CHANGELOG.md` and reach installed copies only via
+a version bump; the planner classifies the layer at batch-writing time and the handoff entry
+names it.
+
 ## Quota exit
 
 Update `AGENT_PROGRESS.md`, commit what is safe (`wip(s<nn>-b<nn>)` if incomplete), exit clean.
