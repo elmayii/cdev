@@ -1,6 +1,6 @@
 # Role profile — frontend
 
-A profile holds exactly four things (doc 07 §2): what "verified" means, what "evidence" means,
+A profile holds exactly four things, by rule: what "verified" means, what "evidence" means,
 the role's hardest gate, and the self-chosen work order. It may not alter the loop, the stop
 conditions, the autonomy threshold, or the gate policy — those are core. Technology names below
 are **examples from one case**, never requirements.

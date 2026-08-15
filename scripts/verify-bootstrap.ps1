@@ -8,28 +8,16 @@ $fail = $false
 function Fail($m) { Write-Host "FAIL: $m" -ForegroundColor Red; $script:fail = $true }
 function Ok($m)   { Write-Host "OK:   $m" -ForegroundColor Green }
 
-# 1. Required files exist.
+# 1. Required files exist — the core artifact set (doc 07 §1.2). Everything else
+#    (TESTING, RUNBOOK, night-runner, reviewer agents, per-repo skills) is optional.
 $required = @(
   'CLAUDE.md',
-  'docs/00_repo_conditioning.md',
+  'docs/develop/RECOGNITION.md',
   'docs/develop/AGENT_EXECUTION_PROTOCOL.md',
   'docs/develop/SPRINTS.md',
   'docs/develop/AGENT_PROGRESS.md',
-  'docs/develop/AUTONOMOUS_RUNBOOK.md',
-  'scripts/claude-night-runner.ps1',
-  '.claude/agents/sprint-runner.md',
-  '.claude/agents/code-reviewer.md',
-  '.claude/agents/test-engineer.md',
-  '.claude/agents/architect-reviewer.md',
-  '.claude/skills/execute-sprint/SKILL.md',
-  '.claude/skills/verify-feature/SKILL.md',
-  '.claude/skills/update-progress/SKILL.md',
-  '.claude/skills/debug-failure/SKILL.md',
-  'docs/develop/ROADMAP.md',
   'docs/develop/PRODUCT.md',
-  'docs/develop/ARCHITECTURE.md',
-  'docs/develop/DECISIONS.md',
-  'docs/develop/TESTING.md'
+  'docs/develop/DECISIONS.md'
 )
 foreach ($r in $required) {
   if (Test-Path (Join-Path $Target $r)) { Ok "exists $r" } else { Fail "missing $r" }
@@ -37,7 +25,7 @@ foreach ($r in $required) {
 
 # 2. No unresolved {{ placeholders }} anywhere in the rendered output.
 $leftover = Get-ChildItem -Path $Target -Recurse -File -Include *.md,*.ps1,*.txt -ErrorAction SilentlyContinue |
-  Where-Object { $_.FullName -notmatch 'cdev-bootstrap' } |
+  Where-Object { $_.FullName -notmatch '\\\.claude\\skills\\|cdev-bootstrap|node_modules' } |
   Select-String -Pattern '\{\{' -List
 if ($leftover) { $leftover | ForEach-Object { Fail "unresolved placeholder in $($_.Path)" } }
 else { Ok 'no unresolved {{ }} placeholders' }

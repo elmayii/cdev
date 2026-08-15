@@ -5,6 +5,39 @@ Newest-first. Required fields: date+unit · status · done · files · verificat
 
 ---
 
+## 2026-08-15 · S01-B03 Consolidate the conditioner · DONE
+
+**Done:** Single `skills/bootstrap/SKILL.md` (recognition-first, both halves, profiles
+materialized into the conditioned repo's protocol, reviewer agents + per-repo skills out of the
+default render, conditioning commits itself at the end). `bootstrap-backend`,
+`bootstrap-frontend` and `cdev-bootstrap` deleted; `templates/` moved to the package root
+(greenfield conditioning-plan template deleted), `verify-bootstrap.ps1` moved to `scripts/` and
+aligned to the core artifact set. Sandbox exercise (`sandbox/cond-be`, fresh subagent): the
+deliberately-broken test gate was caught and became Batch 01 with gate-honesty acceptance; the
+clarity map landed exactly on the DEFINED+PARTIAL boundary; ABSENT area got an open question,
+no batch. Friction fixes applied: real-path resolution wording, RECOGNITION template created,
+PRODUCT template got the clarity-map slot, PROGRESS template flipped to newest-first, verify
+script no longer follows the skills junction, profiles cover the no-DB case and non-HTTP
+evidence, dangling doc-07 citations dropped.
+
+**Files:** skills/bootstrap/SKILL.md (new); deleted skills/{bootstrap-backend,
+bootstrap-frontend,cdev-bootstrap}/; templates/* (moved + PROGRESS/PRODUCT edited,
+RECOGNITION.md.tmpl new, PLACEHOLDERS extended); scripts/verify-bootstrap.ps1;
+profiles/{backend,frontend}.md; sandbox/cond-be/ (fixture, gitignored).
+
+**Verification:** frontmatter check — pass (7/7) · language check — pass · sandbox
+conditioning scenario — pass (verify script FAIL was a false positive of the junction scan,
+fixed) · periphery check — not-run (B04).
+
+**Blockers:** none. Deferred to B04 (periphery sweep): CLAUDE.md.tmpl one-case prose and its
+ghost-artifact roster, protocol template's hardcoded pnpm sequence and Co-Authored trailer,
+ARCHITECTURE/ROADMAP templates' place in the render lists, gitignore-additions tied to the
+night-runner.
+
+**Next:** B04 — periphery removal + the five field rules.
+
+---
+
 ## 2026-08-15 · S01-B02 Consolidate the execution loop · DONE
 
 **Done:** Single `skills/cdev/SKILL.md`: dispatcher + one loop reading `profiles/` (real-path

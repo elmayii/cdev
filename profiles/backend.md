@@ -1,6 +1,6 @@
 # Role profile — backend
 
-A profile holds exactly four things (doc 07 §2): what "verified" means, what "evidence" means,
+A profile holds exactly four things, by rule: what "verified" means, what "evidence" means,
 the role's hardest gate, and the self-chosen work order. It may not alter the loop, the stop
 conditions, the autonomy threshold, or the gate policy — those are core. Technology names below
 are **examples from one case**, never requirements.
@@ -18,9 +18,10 @@ at conditioning from the scripts that actually exist, not assumed.
 
 ## 2 · What "evidence" means here
 
-Tests — HTTP-level and integration tests over the touched behaviour. Not long-running servers,
-not UI steps: a backend batch proves itself through its test run, recorded per check
-(pass / fail / not-run).
+Tests — integration tests over the touched behaviour, at the outermost surface the repo has
+(HTTP-level where an HTTP layer exists; module-level otherwise, with the cap recorded as a
+decision). Not long-running servers, not UI steps: a backend batch proves itself through its
+test run, recorded per check (pass / fail / not-run).
 
 ## 3 · The role's hardest gate
 
@@ -31,6 +32,8 @@ not UI steps: a backend batch proves itself through its test run, recorded per c
   schema and regenerates; the apply is prepared and left as a blocker naming the decision.
 - **Local/ephemeral** (example: docker compose, sqlite): migrating is an ordinary verification
   step.
+- **None present**: record "no database" in the recognition document, plus a standing gate —
+  introducing one is a conditioning-level decision, never an ordinary batch.
 
 Typical gate list this role adds (examples, per repo): schema apply to the shared database ·
 destructive DDL and data deletion · live provider secrets and tokens.

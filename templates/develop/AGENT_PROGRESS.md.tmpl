@@ -1,0 +1,37 @@
+# Agent Progress — {{PROJECT_NAME}}
+
+> Handoff log. One entry per meaningful step, **newest first** (the ordering is declared in the
+> protocol; never mix orderings). Do not exaggerate progress.
+
+<!-- The bootstrap seeds the first entry; format below. -->
+
+---
+
+## Progress Log Format
+
+After every meaningful step, add at the top of `docs/develop/AGENT_PROGRESS.md`:
+
+```md
+## <YYYY-MM-DD HH:mm> — Sprint <n>, Batch <n>
+
+Status: DONE | IN_PROGRESS | BLOCKED | PAUSED
+
+Completed:
+- ...
+
+Files changed:
+- ...
+
+Verification (one line per command of the protocol's verification sequence):
+- <command>: pass / fail / not-run
+- ...
+
+Blockers (each naming the minimum human decision required):
+- ...
+
+Next:
+- ...
+```
+
+Do not exaggerate progress. Do not mark incomplete work as DONE. Omitting a check you did not
+run turns a report into an argument — record `not-run` explicitly.

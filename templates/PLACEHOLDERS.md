@@ -27,3 +27,8 @@ A successful render leaves zero `{{` in target files.
 | `{{ROADMAP_SPRINT_LIST}}` | Ordered list of sprints with titles/goals | derived in procedure step 3/4 |
 | `{{ARCHITECTURE_NOTES}}` | Module structure, layer diagram, tech notes | derived in procedure step 3/4 |
 | `{{INITIAL_DECISIONS}}` | First-pass decisions with dates and rationale | derived in procedure step 3/4 |
+| `{{CLARITY_MAP_ROWS}}` | Clarity-map table rows: area → DEFINED/PARTIAL/ABSENT → source → open questions | Half B scoring |
+| `{{RECOGNITION_SUMMARY}}` | What the repo actually is, one paragraph | Half A step 1 |
+| `{{RECOGNITION_PATTERNS}}` | Real architecture patterns extracted from the code | Half A step 1 |
+| `{{RECOGNITION_OVERRIDES}}` | Table rows: generic assumption → reality here → override | Half A step 1 |
+| `{{RECOGNITION_UNTOUCHABLE}}` | List of things no agent may modify here | Half A step 1 |

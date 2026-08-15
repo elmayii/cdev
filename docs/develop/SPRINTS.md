@@ -31,7 +31,7 @@ is part of closing work when downstream consumers exist). Delete the two merged 
 of one backend scenario and one frontend scenario, outcomes recorded; verification sequence
 checks 1–2 pass.
 
-### B03 — Consolidate the conditioner `READY` (depends: B01)
+### B03 — Consolidate the conditioner `DONE` (depends: B01)
 
 Merge `bootstrap-backend` + `bootstrap-frontend` over the `cdev-bootstrap` base into one
 `bootstrap` skill reading the same profiles: shared two-half structure (structure + clarity),
