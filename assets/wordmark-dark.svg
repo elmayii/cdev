@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 160" role="img" aria-label="/cdev — Continuous Development">
+  <path d="M -10 118 H 118 C 150 118 150 118 182 118 H 310 C 360 118 380 118 430 118 H 650"
+        fill="none" stroke="#475569" stroke-width="4" stroke-linecap="round"/>
+  <g stroke="#94a3b8" stroke-width="4" fill="#0d1117">
+    <circle cx="118" cy="118" r="13"/>
+    <circle cx="246" cy="118" r="13"/>
+  </g>
+  <g stroke="#94a3b8" stroke-width="4.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M 111 118 l 5 5 l 9 -10"/>
+    <path d="M 239 118 l 5 5 l 9 -10"/>
+  </g>
+  <circle cx="374" cy="118" r="13" fill="#818cf8"/>
+  <circle cx="374" cy="118" r="20" fill="none" stroke="#818cf8" stroke-width="3" opacity="0.4"/>
+  <text x="320" y="78" text-anchor="middle"
+        font-family="ui-monospace, 'Cascadia Code', 'JetBrains Mono', Consolas, monospace"
+        font-size="64" font-weight="700" fill="#e2e8f0">/cdev</text>
+</svg>

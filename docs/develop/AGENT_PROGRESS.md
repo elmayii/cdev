@@ -5,6 +5,31 @@ Newest-first. Required fields: date+unit · status · done · files · verificat
 
 ---
 
+## 2026-08-15 · S06-B01 Visual identity · BLOCKED — S07 promoted (blocked-but-not-idle)
+
+**Done (draft):** wordmark light/dark SVG, icon 512, social preview 1280×640 (strategy §21
+direction: `/cdev` + continuous line through verified checkpoints, no AI clichés). Rasterized
+to PNG (sharp-cli after Playwright hung three times — tool swapped, not retried blindly) and
+presented. **Rejected by the human without replacement direction.**
+
+**Blocker (minimum human decision):** state the visual direction — palette, typography,
+composition, references — or supply an asset. B01 regenerates on receipt; S06-B02/B03 chain
+behind it.
+
+**Files:** assets/*.svg + *.png (wip-committed so the drafts are not lost).
+
+**Verification:** SVG renders — pass (PNG inspected) · PNG at 1280×640 — pass · human
+approval — **fail (rejected)**.
+
+**Field note for the method:** a sprint whose entry batch blocks leaves no workable batch in
+the ACTIVE sprint; resolved by demoting S06 to PENDING and promoting the independent S07 —
+keeps the one-ACTIVE invariant while honoring blocked-but-not-idle. Worth a rule if it
+recurs.
+
+**Next:** S07-B01 — contribution mechanics.
+
+---
+
 ## 2026-08-15 · S05-B05 + B06 · DONE — Sprint 05 `DONE`, Sprint 06 promoted
 
 **Done (B05):** Release `v0.1.0` published (tag on main, §5-shaped notes: what CDev is, what

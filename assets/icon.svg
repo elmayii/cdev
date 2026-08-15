@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="CDev icon">
+  <rect width="512" height="512" rx="104" fill="#0f172a"/>
+  <!-- the continuous line, passing through -->
+  <path d="M -20 372 H 140 C 200 372 220 372 280 372 H 532"
+        fill="none" stroke="#475569" stroke-width="18" stroke-linecap="round"/>
+  <!-- one verified checkpoint -->
+  <circle cx="140" cy="372" r="36" fill="#0f172a" stroke="#94a3b8" stroke-width="16"/>
+  <path d="M 121 372 l 14 14 l 25 -28" fill="none" stroke="#94a3b8" stroke-width="18"
+        stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- the current one -->
+  <circle cx="372" cy="372" r="36" fill="#818cf8"/>
+  <!-- wordmark -->
+  <text x="256" y="248" text-anchor="middle"
+        font-family="ui-monospace, 'Cascadia Code', 'JetBrains Mono', Consolas, monospace"
+        font-size="150" font-weight="700" fill="#e2e8f0">/c</text>
+</svg>

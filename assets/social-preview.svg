@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 640" role="img" aria-label="CDev — Continuous Development Framework for Coding Agents">
+  <rect width="1280" height="640" fill="#0f172a"/>
+  <!-- continuous line through checkpoints, full width -->
+  <path d="M -20 470 H 300 C 380 470 400 470 480 470 H 700 C 800 470 830 470 930 470 H 1300"
+        fill="none" stroke="#334155" stroke-width="8" stroke-linecap="round"/>
+  <g stroke="#94a3b8" stroke-width="8" fill="#0f172a">
+    <circle cx="300" cy="470" r="26"/>
+    <circle cx="590" cy="470" r="26"/>
+  </g>
+  <g stroke="#94a3b8" stroke-width="9" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M 286 470 l 10 10 l 18 -20"/>
+    <path d="M 576 470 l 10 10 l 18 -20"/>
+  </g>
+  <circle cx="880" cy="470" r="26" fill="#818cf8"/>
+  <circle cx="880" cy="470" r="40" fill="none" stroke="#818cf8" stroke-width="6" opacity="0.4"/>
+  <!-- wordmark + tagline -->
+  <text x="640" y="270" text-anchor="middle"
+        font-family="ui-monospace, 'Cascadia Code', 'JetBrains Mono', Consolas, monospace"
+        font-size="140" font-weight="700" fill="#e2e8f0">/cdev</text>
+  <text x="640" y="345" text-anchor="middle"
+        font-family="ui-monospace, 'Cascadia Code', 'JetBrains Mono', Consolas, monospace"
+        font-size="34" fill="#94a3b8">Continuous Development Framework for Coding Agents</text>
+</svg>
