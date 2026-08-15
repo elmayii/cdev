@@ -65,9 +65,11 @@ one product, and claims that would need a second product to justify are marked a
 *Written so a session that starts here, with no prior context, can continue. The method's own
 first rule applied to itself.*
 
-**Done.** Documents 01–07. The nine skills are vendored in `skills/` exactly as they ran in
-production (commit `1fe0773`) — untranslated, unconsolidated, on purpose: that baseline is what
-later changes are read against. Two post-extraction skills were added directly in English:
+**Done.** Documents 01–07. The nine skills were vendored in `skills/` exactly as they ran in
+production (commit `1fe0773`) — untranslated, unconsolidated, on purpose: that baseline lives in
+git history and is what later changes are read against. The working tree has since been
+remastered into English (commit `849c1e8`), faithful in structure, with Spanish trigger phrases
+kept as secondary detection patterns. Two post-extraction skills were added directly in English:
 `cdev-planner` (the monorepo planner's single-repo counterpart — materialize an objective into
 local batches, or gap-analyze one repo) and `ockham` (a user-invoked presentation layer that
 re-tells dense technical output in plain terms; never fires on the loop's own initiative). Two scripts support the loop: `scripts/sandbox.ps1` builds a
@@ -77,18 +79,26 @@ frozen snapshot, backing up whatever it replaces.
 
 **Decided.** This repository is the source of truth for the skills; the global directory is an
 installation of it. Artifacts are written in English. The product this was extracted from is
-frozen and is not to be modified.
+frozen and is not to be modified. And, decided 2026-08-15, the package shape:
+
+- **Distribution is a Claude Code plugin with a marketplace entry**, from the start — namespaced
+  skills (`cdev:*`), real versioning (the frozen snapshot becomes installing a version),
+  installable by third parties with one command. The copy script survives only as a dev-mode
+  convenience.
+- **The eleven skills consolidate to seven.** One execution loop (`cdev`, dispatcher included)
+  and one conditioning skill (`bootstrap`) both read role profiles — `profiles/backend.md`,
+  `profiles/frontend.md`, each holding exactly the four things document 07 allows a profile.
+  `cdev-planner` and `ockham` stay as they are. The role-specific rigour is preserved as data,
+  not duplicated as loops.
+- **One plugin, system layer included.** `cdev-monorepo`, `cdev-monorepo-planner` and
+  `bootstrap-monorepo` ship in the same plugin; a single-repo user simply never invokes them.
 
 **Next, in order.**
 
-1. **Refactor the skills** against document 07: English throughout, no product-specific
-   references, periphery removed, the five field-derived rules added. Its first decision is the
-   one 07 leaves open with evidence on both sides — consolidate to roughly four parameterized
-   skills, or keep nine discoverable ones. Every change gets exercised in a sandbox fixture before
-   it counts.
-2. **Package and install**, then use the installed snapshot for real work.
+1. **Refactor the skills** against document 07 and the consolidation decision above: extract the
+   role profiles, merge the two loops and the two conditioners, remove product-specific
+   references and periphery, add the five field-derived rules. English is done. Every change
+   gets exercised in a sandbox fixture before it counts.
+2. **Build the plugin**: manifest, plugin layout (`skills/`, `profiles/`, `templates/`,
+   `scripts/`), marketplace repository, install from it.
 3. **Document 08 — installation**, written against the package that exists.
-
-**Open, to decide at step 2.** Whether "installable" means the copy script that exists today
-(works for one machine) or a proper plugin with its own manifest and marketplace entry (needed if
-anyone else installs it).
