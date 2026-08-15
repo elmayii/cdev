@@ -197,13 +197,12 @@ Links resolve, render checked, report `s06.md`. **Acceptance:** checks pass; rep
 
 ### B04 — Official-repo cleanup `DONE` (depends: B03; appended 2026-08-15, human-agreed)
 
-Move out of the public repo, to local `scratch/` (gitignored): the launch drafts
-(the local launch drafts (gitignored)), the launch report (`reports/s08.md`), the internal strategy document
-(`the internal strategy document (local, gitignored)`), the stale `marketplace/` draft dir, and the
-two untracked conversation transcripts. Live artifacts that cite moved paths (PRODUCT map,
-S08 plan text) are rewritten to say the material is kept outside the repo; historical records
-(handoff, past reports) are not rewritten. **Acceptance:** none of the five remain in the
-tree; no live artifact cites a missing path; git history untouched.
+Restrict from git, keep locally in place (approach corrected by the human 2026-08-16): the
+launch drafts (`docs/develop/launch/`), the launch report (`reports/s08.md`), the internal
+strategy document and the `marketplace/` draft dir stay at their original paths but are
+**gitignored** — removed from the branch by the cleanup commit, retained in history, never
+republished; root-level `.txt` transcripts ignored by pattern. **Acceptance:** the paths exist
+on disk, `git status` shows none of them, the branch carries none of them, history untouched.
 
 ---
 
