@@ -5,6 +5,29 @@ Newest-first. Required fields: date+unit · status · done · files · verificat
 
 ---
 
+## 2026-08-16 · S09-B01 AGENTS.md as canonical guide · IN_PROGRESS → PR
+
+**Done:** Guide migrated (`AGENTS.md` canonical + one-line `CLAUDE.md` pointer, this repo and
+the template base); skills read the guide by its neutral name (cdev, bootstrap,
+bootstrap-monorepo, cdev-monorepo); verifier requires AGENTS.md, validates the pointer's exact
+content when present, warns (not fails) when absent; walkthrough + CHANGELOG updated. Layer:
+host binding + docs (DECISIONS 2026-08-16 — filename is convention per doc 07, no RFC).
+Exercise friction fixed in-branch: pointer contract made exact (no "e.g."), verifier
+conditional matches the skill, recognition compose-then-write ordering, DB_VERIFY no-database
+note replaces "else empty", GATE_AUDIT placeholder gives the protocol template a slot for
+lying-gate findings. Sprint-02+ stub friction = existing issue #1.
+
+**Verification:** sandbox conditioning — pass (`AGENTS.md` + exact pointer rendered,
+`BOOTSTRAP VERIFY: PASS`, commit `0b1339d` in fixture) · pointer live-load — pass (fresh
+Claude Code session quotes the guide role through `@AGENTS.md`) · `claude plugin validate` —
+pass · language check — pass.
+
+**Blockers:** merge is the human act — PR open against `main` per the branch policy.
+
+**Next:** on merge, B01 closes; version bump decision rides the next release.
+
+---
+
 ## 2026-08-16 · Docs 09 + 10 integrated (human-supplied) · DONE
 
 **Done:** Two human-supplied documents joined the series: `docs/09-cdev-monorepo.md` (the

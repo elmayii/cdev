@@ -227,6 +227,24 @@ Report `s07.md`. **Acceptance:** checks pass; report exists.
 
 ---
 
+## Sprint 09 — Agent internationalization `ACTIVE`
+
+Objective: conditioned repositories usable by any coding agent, not just Claude Code. First
+externally-visible feature to flow through the public branch policy (branch → PR → main).
+
+### B01 — AGENTS.md as the canonical repo guide `IN_PROGRESS`
+
+**Layer: host binding + docs** (doc 07: the guide's filename is convention, not core — no RFC
+required; classification recorded in DECISIONS). `AGENTS.md` becomes the guide every
+conditioning renders; hosts that read another filename get a pointer (`CLAUDE.md` containing
+`@AGENTS.md`). This repo migrates its own guide the same way. Skills, verifier, templates and
+walkthrough read the guide by its neutral name. **Acceptance:** sandbox conditioning renders
+`AGENTS.md` + pointer and `BOOTSTRAP VERIFY: PASS`; Claude Code still loads the guide through
+the pointer; `claude plugin validate` passes; PR opened against `main` with the template's
+evidence checklist satisfied — merging is the human act.
+
+---
+
 ## Sprint 08 — Launch `DONE` (drafts only — every publish act is a named human decision; launch sequence also waits on S06)
 
 Source: strategy §22 Phase 4. Copy is agent work; **publishing each post is a human act,

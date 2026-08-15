@@ -40,7 +40,8 @@ gates that lie — writes the recognition document, scores the spec into a clari
 The ABSENT area becomes an open question, never a batch.
 
 **One human gate:** it shows you the resolved placeholders + clarity map + sprint outline and
-asks once. Confirm, and it writes `CLAUDE.md` + `docs/develop/`, validates, and commits.
+asks once. Confirm, and it writes the repo guide (`AGENTS.md`, plus the host's pointer file)
++ `docs/develop/`, validates, and commits.
 
 Expected result: `BOOTSTRAP VERIFY: PASS`, one conditioning commit, Sprint 01 `ACTIVE` whose
 Batch 01 is *make the verification gates real* — a repo without honest gates is not

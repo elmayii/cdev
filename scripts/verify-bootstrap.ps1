@@ -10,8 +10,10 @@ function Ok($m)   { Write-Host "OK:   $m" -ForegroundColor Green }
 
 # 1. Required files exist — the core artifact set (doc 07 §1.2). Everything else
 #    (TESTING, RUNBOOK, night-runner, reviewer agents, per-repo skills) is optional.
+#    AGENTS.md is the canonical guide (required). A host pointer (e.g. CLAUDE.md) is only
+#    required by the host that reads it — checked separately below, warn-not-fail.
 $required = @(
-  'CLAUDE.md',
+  'AGENTS.md',
   'docs/develop/RECOGNITION.md',
   'docs/develop/AGENT_EXECUTION_PROTOCOL.md',
   'docs/develop/SPRINTS.md',
@@ -21,6 +23,17 @@ $required = @(
 )
 foreach ($r in $required) {
   if (Test-Path (Join-Path $Target $r)) { Ok "exists $r" } else { Fail "missing $r" }
+}
+
+# 1b. Host pointer: if CLAUDE.md exists it must be exactly the import line; if absent, warn
+#     (a repo conditioned for a host that reads AGENTS.md natively needs no pointer).
+$pointer = Join-Path $Target 'CLAUDE.md'
+if (Test-Path $pointer) {
+  $content = (Get-Content $pointer -Raw).Trim()
+  if ($content -eq '@AGENTS.md') { Ok 'CLAUDE.md is the @AGENTS.md pointer' }
+  else { Fail 'CLAUDE.md exists but is not the @AGENTS.md pointer (duplicate guides drift)' }
+} else {
+  Write-Host 'WARN: no CLAUDE.md pointer - fine unless Claude Code will run this repo' -ForegroundColor Yellow
 }
 
 # 2. No unresolved {{ placeholders }} anywhere in the rendered output.

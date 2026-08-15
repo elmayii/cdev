@@ -17,7 +17,8 @@ invocation elevates it; on safety gates the strictest always wins.
 
 ## Resolve the role
 
-Read the repo's `CLAUDE.md` and `docs/develop/` (RECOGNITION document if present, protocol).
+Read the repo guide (`AGENTS.md`; hosts with their own filename read it through a pointer,
+e.g. `CLAUDE.md`) and `docs/develop/` (RECOGNITION document if present, protocol).
 Then load the matching profile from this package's `profiles/` directory: resolve this skill's
 base directory to its **real path first** (dereference junctions/symlinks), then go to
 `../../profiles/`:
@@ -36,7 +37,7 @@ propose the `bootstrap` skill and stop there.
 
 ## Start (every invocation/resumption)
 
-Read in order: `CLAUDE.md` → protocol → `SPRINTS.md` → `AGENT_PROGRESS.md` (latest entry) →
+Read in order: the repo guide (`AGENTS.md`) → protocol → `SPRINTS.md` → `AGENT_PROGRESS.md` (latest entry) →
 `git status` + recent commits. If the repo declares an upstream contract (a consumed producer's
 published report), read it **before** starting the sprint: it is the contract — never invent
 fields, and record divergence from deployed reality as a blocker/decision, not a guess. Resume
