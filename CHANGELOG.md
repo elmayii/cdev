@@ -25,7 +25,12 @@ copies update only when the version changes.
 - Visual identity (`assets/`): master icon, flat vector marks, wordmark lockups, social
   preview.
 - Public README: positioning, the four failure modes, the loop, quick start, command table,
-  lifecycle guide, evidence tables.
+  lifecycle guide, evidence tables, and the multi-repo/microservices section with the
+  coordination-flow diagram.
+- `docs/09-cdev-monorepo.md` — the multi-repository layer explained, with the flow diagram
+  and a backend → frontend worked example.
+- `docs/10-usage-recommendations.md` — model/effort defaults for the current Claude Code
+  binding (labeled as binding guidance, dated).
 
 ### Removed
 

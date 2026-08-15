@@ -91,6 +91,30 @@ Ten-minute worked example: [the walkthrough](docs/community/walkthrough.md).
 | The product spans several repositories | The `*-monorepo` commands — coordination that never takes a repo's autonomy away |
 | You didn't understand its output | `/cdev:ockham` |
 
+## Microservices and multi-repo products
+
+When one product spans several repositories — an API, its clients, independent services — CDev
+adds a coordination layer that **composes** each repository's autonomy instead of absorbing it:
+
+<div align="center">
+<img src="assets/cdev-monorepo-flow-dark.png" alt="CDev Monorepo flow: the user plans or executes through the monorepo agent, which sends dedicated prompts to each repository's own CDev agent — waiting where a dependency demands it, resuming after the producer's handoff" width="720">
+</div>
+
+The monorepo agent turns a system objective into **dedicated prompts** for each affected
+repository's own CDev loop. Where one service depends on another, it **waits** for the
+producer's published handoff and **resumes** the consumer with the real contract — never an
+invented one. Independent repositories run **in parallel; work inside each stays sequential**,
+because the local plan owns its order. Repositories the change doesn't touch are never opened.
+
+```text
+/cdev:bootstrap-monorepo        # condition the workspace over your repos
+/cdev:cdev-monorepo-planner     # system objective → real batches in each repo
+/cdev:cdev-monorepo             # execute, coordinate, verify end to end
+```
+
+The full mechanism, with a backend → frontend worked example:
+[09 · CDev Monorepo](docs/09-cdev-monorepo.md).
+
 ## Method, not just a plugin
 
 > **CDev is the method. The current reference implementation is a Claude Code plugin.**
@@ -125,6 +149,8 @@ running the method on this repository itself (its own `docs/develop/` is a live 
 | [06](docs/06-field-report-system.md) | Field report — multi-repo | Four repos as one system: what held and what broke |
 | [07](docs/07-core-vs-periphery.md) | Core and periphery | What *is* CDev, derived from evidence, not taste |
 | [08](docs/08-installation.md) | Installation | What actually installs, and what deliberately does not |
+| [09](docs/09-cdev-monorepo.md) | CDev Monorepo | How one workspace coordinates several autonomous repositories |
+| [10](docs/10-usage-recommendations.md) | Usage recommendations | Model and effort defaults for the current Claude Code binding |
 
 The field reports document failures as carefully as successes — that honesty is the method.
 

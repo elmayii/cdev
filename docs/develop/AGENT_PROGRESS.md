@@ -5,6 +5,27 @@ Newest-first. Required fields: date+unit · status · done · files · verificat
 
 ---
 
+## 2026-08-16 · Docs 09 + 10 integrated (human-supplied) · DONE
+
+**Done:** Two human-supplied documents joined the series: `docs/09-cdev-monorepo.md` (the
+multi-repo layer; the human's flow diagram `assets/cdev-monorepo-flow-dark.png` embedded) and
+`docs/10-usage-recommendations.md` (model/effort defaults — contrast applied: explicitly
+labeled host-binding guidance per doc 07; content verified against the known Claude Code
+surface: aliases, effort levels, ultracode-as-mode all check out). README gained the
+"Microservices and multi-repo products" section with the diagram, the three monorepo commands
+and a link to 09, plus rows 09/10 in the documents table. Consistency fix in 09: the product
+name was anonymized to match docs 01–08's "one product, honestly" rule — flagged to the human,
+revertible.
+
+**Files:** docs/09-cdev-monorepo.md, docs/10-usage-recommendations.md,
+assets/cdev-monorepo-flow-dark.png (now tracked), README.md, CHANGELOG.md.
+
+**Verification:** links — pass (all resolve) · language — pass · product-name sweep — pass.
+
+**Blockers:** none.
+
+---
+
 ## 2026-08-16 · S06-B04 correction · DONE — restrict, don't relocate
 
 **Done:** Human corrected the cleanup approach: the internal material must stay at its
