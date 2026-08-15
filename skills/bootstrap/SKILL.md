@@ -33,8 +33,9 @@ the hardest gate, the self-chosen work order). What the user declares wins over 
 ## Half A — Structure
 
 1. **Recognize before writing.** Read the real repository: stack, manifest and lockfile, real
-   scripts, schema/migrations, targets, existing guides and docs. Write the **recognition
-   document** (`docs/develop/RECOGNITION.md`): what the repo actually is, its real architecture
+   scripts, schema/migrations, targets, existing guides and docs. Compose the **recognition
+   document** (`docs/develop/RECOGNITION.md` — drafted now, written to disk with everything
+   else after the human gate): what the repo actually is, its real architecture
    patterns (extracted from code, they exist nowhere else), and **every place a generic
    assumption must be overridden**. A conditioning that renders templates without this step
    produces a plan for a repository that does not exist.
@@ -57,8 +58,10 @@ the hardest gate, the self-chosen work order). What the user declares wins over 
      section — when the plan runs out the agent derives next work itself in that order and
      stops only at real blockages. This is what legitimizes `/cdev` not stopping.
 3. **Render the core artifacts** from `templates/`, resolving every placeholder: repo guide
-   (`CLAUDE.md`), `docs/develop/` (protocol with local deltas only, SPRINTS, PROGRESS,
-   DECISIONS, PRODUCT). The handoff log's ordering is **declared explicitly in the protocol**
+   (`AGENTS.md` — the agent-neutral standard; when the running host reads a different guide
+   filename, also write that host's pointer file, whose entire content is the import line —
+   under Claude Code: a `CLAUDE.md` containing exactly `@AGENTS.md`), `docs/develop/`
+   (protocol with local deltas only, SPRINTS, PROGRESS, DECISIONS, PRODUCT). The handoff log's ordering is **declared explicitly in the protocol**
    (default: newest-first). Optional on request: TESTING, RUNBOOK, ROADMAP, ARCHITECTURE, and
    the night-runner script (a quota-resumption convenience only — the primary loop is the
    `cdev` skill; continuity is a property of the repository, not of a live process; its

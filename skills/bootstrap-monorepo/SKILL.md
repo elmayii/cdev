@@ -1,6 +1,6 @@
 ---
 name: bootstrap-monorepo
-description: Use when a folder containing several autonomous Git repos (each with its own CDev) must be conditioned as a CDev Monorepo orchestrating workspace — creating the global scaffolding (CLAUDE.md, docs/develop/, workspace/, agents, scripts, the workspace's own git) without touching the child repos, or when the user asks to "bootstrap monorepo", "condition a multi-repo workspace", "condicionar workspace multi-repo", or to set up orchestration over existing repos.
+description: Use when a folder containing several autonomous Git repos (each with its own CDev) must be conditioned as a CDev Monorepo orchestrating workspace — creating the global scaffolding (AGENTS.md, docs/develop/, workspace/, agents, scripts, the workspace's own git) without touching the child repos, or when the user asks to "bootstrap monorepo", "condition a multi-repo workspace", "condicionar workspace multi-repo", or to set up orchestration over existing repos.
 ---
 
 # Bootstrap Monorepo (CDev)
@@ -24,22 +24,22 @@ absorbed by each repo's local `/cdev` (one loop reading the role profiles).
 
 ## Phase B — Per-repo CDev audit
 
-Check: `CLAUDE.md` · `docs/develop/SPRINTS.md` · `AGENT_EXECUTION_PROTOCOL.md` ·
-`AGENT_PROGRESS.md`. Classify:
+Check: the repo guide (`AGENTS.md` or the host's equivalent) · `docs/develop/SPRINTS.md` ·
+`AGENT_EXECUTION_PROTOCOL.md` · `AGENT_PROGRESS.md`. Classify:
 
 - `CDEV_READY` — everything present.
-- `CDEV_PARTIAL` — something non-critical missing (e.g. root CLAUDE.md). The gap is recorded in
-  the workspace's DECISIONS; it does not block the bootstrap.
+- `CDEV_PARTIAL` — something non-critical missing (e.g. the root guide file). The gap is
+  recorded in the workspace's DECISIONS; it does not block the bootstrap.
 - `NOT_CONDITIONED` — no `docs/develop/`. Blocker: recommend the `bootstrap` skill and resume
   once conditioned. **The global bootstrap never invents a child's CDev.**
 
 ## Phase C — System map
 
-Derive from the children's `CLAUDE.md`/`PRODUCT.md`: each repo's responsibility, inter-repo
+Derive from the children's guides (`AGENTS.md`)/`PRODUCT.md`: each repo's responsibility, inter-repo
 dependencies (who consumes whom), cross-cutting domains, known contracts. Generate:
 
 - `workspace/repos.yaml` — registry: logical id → path, git, cdev state, informative role.
-  Stacks are metadata, not rules; operational authority remains the child's CLAUDE.md. Any
+  Stacks are metadata, not rules; operational authority remains the child's guide. Any
   field asserting a child's state is re-derived on read or checked by the verification
   script — a stale registry is exactly the kind of artifact an agent will eventually trust.
 - `workspace/repo-graph.yaml` — `depends_on` + `domains`. Informs planning; it does **not**
@@ -51,7 +51,7 @@ dependencies (who consumes whom), cross-cutting domains, known contracts. Genera
 Generate at the workspace root:
 
 ```text
-CLAUDE.md                            # small: coordination, does not duplicate child docs
+AGENTS.md                            # small: coordination, does not duplicate child docs
 docs/develop/
 ├── PRODUCT.md                       # whole system + global clarity map
 ├── SYSTEM_ARCHITECTURE.md

@@ -25,11 +25,11 @@ progress.
 
 ## Start + reconciliation (every invocation)
 
-1. Read in order: global `CLAUDE.md` → `docs/develop/AGENT_EXECUTION_PROTOCOL.md` →
+1. Read in order: the global guide (`AGENTS.md`) → `docs/develop/AGENT_EXECUTION_PROTOCOL.md` →
    `SPRINTS.md` → `AGENT_PROGRESS.md` (last entry) → `workspace/repos.yaml` →
    `repo-graph.yaml` → `state.lock.json`.
 2. For each repo **relevant to the active sprint/batch** (don't load repos that don't
-   participate): its `CLAUDE.md`, `SPRINTS.md`, `AGENT_PROGRESS.md`, `git status/branch/log`.
+   participate): its guide, `SPRINTS.md`, `AGENT_PROGRESS.md`, `git status/branch/log`.
 3. Reconcile. **The repo is the source of truth of its local state**: renumbered sprint, batch
    finished outside the workspace, new commits, different branch, local blockage → the
    workspace updates itself; never the other way around. Divergence (workspace says DONE, repo

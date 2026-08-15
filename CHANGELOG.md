@@ -32,6 +32,14 @@ copies update only when the version changes.
 - `docs/10-usage-recommendations.md` — model/effort defaults for the current Claude Code
   binding (labeled as binding guidance, dated).
 
+### Changed
+
+- **The repository guide is now `AGENTS.md`** — the agent-neutral standard read by Codex,
+  Cursor, Jules, Zed and others. Hosts that read a different filename get a pointer file
+  (Claude Code: a `CLAUDE.md` containing `@AGENTS.md`). Conditioning renders both; the
+  skills and the verifier read the guide by its neutral name. First step of making
+  conditioned repositories usable by any coding agent.
+
 ### Removed
 
 - Internal working material (launch drafts, strategy notes, stale marketplace draft) moved

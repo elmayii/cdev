@@ -2,6 +2,18 @@
 
 Newest-first. Every assumption made under PARTIAL clarity lands here, dated.
 
+## 2026-08-16 — AGENTS.md is the canonical repo guide (S09-B01, human-directed)
+
+- **Layer: host binding + docs.** Doc 07 §1.2 already says the guide's filename is convention
+  ("CLAUDE.md or equivalent") — renaming the convention is not a core change; no RFC needed.
+- `AGENTS.md` chosen because it is the cross-agent standard (Codex, Cursor, Jules, Zed…).
+  Claude Code keeps working through a pointer `CLAUDE.md` containing `@AGENTS.md` — the import
+  mechanism is proven (this machine's own global config uses it).
+- Conditioning renders both files; the verifier requires both (it ships with the Claude
+  binding). Optional binding templates (night-runner, runbook) keep their CLAUDE.md mentions —
+  they run under Claude Code, where the pointer exists.
+- First feature to flow through the public branch policy: `feat/agents-md-guide` → PR → main.
+
 ## 2026-08-16 — The repo obeys its own contribution policy (human-directed)
 
 From now on every series of changes, including the owner's, is classified against

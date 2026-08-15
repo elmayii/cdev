@@ -11,7 +11,8 @@ A successful render leaves zero `{{` in target files.
 | `{{STACK}}` | Runtime/framework summary | inspect manifest; default Node + TypeScript |
 | `{{PACKAGE_MANAGER}}` | pnpm/npm/yarn/pip/go… | lockfile decides; no lockfile → the stack's plainest default (npm for Node) |
 | `{{VERIFY_SEQUENCE}}` | Ordered verify commands (one per line) | from scripts/manifest; default install/typecheck/lint/test/build |
-| `{{DB_VERIFY}}` | Optional local-DB infra startup and/or migration/verify commands (e.g. `docker compose up -d` then `pnpm db:migrate`) | present only if a DB is detected; else empty |
+| `{{DB_VERIFY}}` | Optional local-DB infra startup and/or migration/verify commands (e.g. `docker compose up -d` then `pnpm db:migrate`) | DB detected → the commands; none → the profile's no-database note (standing gate on introducing one), never empty silence |
+| `{{GATE_AUDIT}}` | Result of running each declared gate at conditioning: honest / lying (and what repairs it) | Half A step 2 — always resolved |
 | `{{SOURCE_DOCS}}` | Authority-ordered docs table (markdown) | enumerate docs folder + infer order |
 | `{{DOMAIN_AREAS}}` | Modules/areas to build (list) | derived from docs structure |
 | `{{SHELL}}` | Shell for the runbook | host shell; default PowerShell on Windows |
