@@ -10,7 +10,7 @@ or `→ BLOCKED` (reason + minimum human decision). Exactly one sprint ACTIVE.
 Objective: eleven skills become seven, per doc 07 and the recorded decisions. Every change
 justified as core / profile / binding / periphery-goes.
 
-### B01 — Extract role profiles `READY`
+### B01 — Extract role profiles `DONE`
 
 Create `profiles/backend.md` and `profiles/frontend.md`. Each contains **exactly four
 sections** (doc 07 §2): what "verified" means (sequence + the traps that make gates lie), what
