@@ -1,0 +1,33 @@
+name: Feature request
+description: A new capability, profile or binding
+labels: ["enhancement"]
+body:
+  - type: dropdown
+    id: layer
+    attributes:
+      label: Which layer does this touch?
+      description: Core changes need field evidence and an RFC (see CONTRIBUTING).
+      options:
+        - Periphery / docs
+        - Host binding
+        - Role profile
+        - New skill / capability
+        - Core methodology
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: The problem it solves
+      description: What real situation does the current method not handle?
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Field evidence, if any
+      description: For profile/core changes this is required — link a field report or describe the recorded incident.
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed shape

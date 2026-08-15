@@ -147,7 +147,7 @@ evidence, field reports accepted without code), `CODE_OF_CONDUCT.md` (Contributo
 `SECURITY.md`, `CHANGELOG.md` (seeded with 0.1.0). **Acceptance:** four files exist, language
 check passes, CONTRIBUTING states the RFC rule for core changes.
 
-### B04 — Issue and PR templates `READY`
+### B04 — Issue and PR templates `DONE`
 
 `.github/ISSUE_TEMPLATE/{bug,feature,field-report,config}.yml` (field-report form carries the
 strategy §13 template fields) + `.github/PULL_REQUEST_TEMPLATE.md`. **Acceptance:** forms

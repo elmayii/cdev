@@ -1,0 +1,37 @@
+name: Bug report
+description: A skill, profile, template or script behaved incorrectly
+labels: ["bug"]
+body:
+  - type: input
+    id: version
+    attributes:
+      label: CDev version
+      placeholder: "0.1.0"
+    validations:
+      required: true
+  - type: input
+    id: skill
+    attributes:
+      label: Skill or component involved
+      placeholder: "cdev:bootstrap / profiles/backend.md / verify-bootstrap.ps1"
+    validations:
+      required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: Quote the exact wrong behavior or output. Evidence over assertion.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What the skill/profile/template says should happen
+      description: Quote the instruction the behavior contradicts.
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Reproduction
+      description: Repo state, invocation, agent/host version. A sandbox fixture recipe is ideal.

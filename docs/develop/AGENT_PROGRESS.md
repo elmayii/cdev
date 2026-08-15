@@ -5,6 +5,25 @@ Newest-first. Required fields: date+unit · status · done · files · verificat
 
 ---
 
+## 2026-08-15 · S05-B04 Issue and PR templates · DONE
+
+**Done:** `.github/ISSUE_TEMPLATE/{bug,feature,field-report,config}.yml` +
+`PULL_REQUEST_TEMPLATE.md`. The field-report form carries all strategy §13 fields; the feature
+form forces the layer question (core → RFC); config routes conversations to Discussions
+("Discussion = conversation, Issue = actionable work"); the PR template embeds the
+evidence-over-assertion checklist.
+
+**Files:** the five under `.github/`.
+
+**Verification:** YAML parse — see next entry after push · files pushed — with this commit ·
+render on GitHub's chooser — verified post-push (recorded in B06 if flagged).
+
+**Blockers:** none.
+
+**Next:** B05 — release v0.1.0.
+
+---
+
 ## 2026-08-15 · S05-B03 Community health files · DONE
 
 **Done:** CONTRIBUTING.md (contribution table §12 with the RFC-for-core rule, branch model

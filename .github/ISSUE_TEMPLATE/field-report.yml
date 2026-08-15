@@ -1,0 +1,78 @@
+name: Field report
+description: Evidence from real CDev use — no code required. The community's primary contribution.
+labels: ["field-report"]
+body:
+  - type: input
+    id: project-type
+    attributes:
+      label: Project type
+      placeholder: "SaaS backend / mobile app / internal tool"
+    validations:
+      required: true
+  - type: input
+    id: repo-type
+    attributes:
+      label: Repository type
+      placeholder: "backend / frontend / multi-repo workspace / other"
+    validations:
+      required: true
+  - type: input
+    id: agent
+    attributes:
+      label: Coding agent and version
+      placeholder: "Claude Code x.y"
+    validations:
+      required: true
+  - type: input
+    id: cdev-version
+    attributes:
+      label: CDev version
+    validations:
+      required: true
+  - type: input
+    id: duration
+    attributes:
+      label: Duration using CDev
+      placeholder: "3 weeks"
+  - type: input
+    id: volume
+    attributes:
+      label: Sprints / batches executed
+      placeholder: "4 sprints, 19 batches"
+  - type: input
+    id: unattended
+    attributes:
+      label: Longest unattended run
+  - type: input
+    id: resumptions
+    attributes:
+      label: Number of resumptions (session deaths survived)
+  - type: textarea
+    id: blockers
+    attributes:
+      label: Blockers encountered and human interventions
+  - type: textarea
+    id: verification
+    attributes:
+      label: Verification strategy
+      description: What "verified" and "evidence" meant in your repo.
+  - type: textarea
+    id: worked
+    attributes:
+      label: What worked
+    validations:
+      required: true
+  - type: textarea
+    id: broke
+    attributes:
+      label: What broke
+    validations:
+      required: true
+  - type: textarea
+    id: unexpected
+    attributes:
+      label: Unexpected behaviour
+  - type: textarea
+    id: improvement
+    attributes:
+      label: Suggested improvement
