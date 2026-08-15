@@ -41,9 +41,10 @@ What exists today, and what these documents are extracted from:
 | [04](docs/04-skills.md) | Skills | What each skill is for, when it fires, what it reads and writes |
 | [05](docs/05-field-report-repo.md) | Field report — single repo | Four real repositories, four different cases: what held and what broke |
 | [06](docs/06-field-report-system.md) | Field report — multi-repo | Coordinating four repos as one system: what held and what broke |
+| [07](docs/07-core-vs-periphery.md) | Core and periphery | What *is* CDev, what is a role profile, what is a host binding, and what does not ship — derived from 05 and 06, not from taste |
 
-A seventh document — the boundary between what *is* CDev and what merely grew around it in one
-product — is deliberately written last, from the two field reports rather than from opinion.
+An eighth document, on installation, is written after the package exists — describing what is
+actually installed, not what it was planned to be.
 
 ## Scope of these documents
 
@@ -56,3 +57,35 @@ periphery, and that is exactly what document 07 will separate.
 **One product, honestly.** Every piece of evidence in the field reports comes from a single
 product. The sample is deep (six weeks, five CDev instances, four kinds of repository) but it is
 one product, and claims that would need a second product to justify are marked as such.
+
+---
+
+## Where this stands
+
+*Written so a session that starts here, with no prior context, can continue. The method's own
+first rule applied to itself.*
+
+**Done.** Documents 01–07. The nine skills are vendored in `skills/` exactly as they ran in
+production (commit `1fe0773`) — untranslated, unconsolidated, on purpose: that baseline is what
+later changes are read against. Two scripts support the loop: `scripts/sandbox.ps1` builds a
+throwaway fixture whose `.claude/skills` is a junction to `skills/`, so a session opened inside it
+runs what is being edited; `scripts/install.ps1` copies `skills/` into `~/.claude/skills` as a
+frozen snapshot, backing up whatever it replaces.
+
+**Decided.** This repository is the source of truth for the skills; the global directory is an
+installation of it. Artifacts are written in English. The product this was extracted from is
+frozen and is not to be modified.
+
+**Next, in order.**
+
+1. **Refactor the skills** against document 07: English throughout, no product-specific
+   references, periphery removed, the five field-derived rules added. Its first decision is the
+   one 07 leaves open with evidence on both sides — consolidate to roughly four parameterized
+   skills, or keep nine discoverable ones. Every change gets exercised in a sandbox fixture before
+   it counts.
+2. **Package and install**, then use the installed snapshot for real work.
+3. **Document 08 — installation**, written against the package that exists.
+
+**Open, to decide at step 2.** Whether "installable" means the copy script that exists today
+(works for one machine) or a proper plugin with its own manifest and marketplace entry (needed if
+anyone else installs it).
