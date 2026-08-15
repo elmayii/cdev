@@ -1,139 +1,142 @@
 ---
 name: cdev-monorepo
-description: Úsala cuando el usuario invoque /cdev-monorepo (con o sin argumentos) en un workspace multi-repo condicionado (tiene workspace/repos.yaml y docs/develop/ global) — ejecuta de forma autónoma el SYSTEM_BATCH activo coordinando en paralelo los CDev locales de los repos afectados, reconcilia estados y cierra batches con verificación global.
+description: Use when the user invokes /cdev-monorepo (with or without arguments) in a conditioned multi-repo workspace (it has workspace/repos.yaml and a global docs/develop/) — autonomously executes the active SYSTEM_BATCH coordinating the affected repos' local CDevs in parallel, reconciles states and closes batches with global verification.
 ---
 
-# CDev Monorepo — bucle orquestador
+# CDev Monorepo — orchestrating loop
 
-Equivalente global de `/cdev` para un workspace multi-repo condicionado por `bootstrap-monorepo`.
-Mandato de **autonomía elevada**: trabaja hasta bloqueo real, nunca para a preguntar "¿y ahora
-qué?". El workspace es la memoria: `SPRINTS.md` global = plan · `AGENT_PROGRESS.md` global =
-handoff · `state.lock.json` = snapshot · el estado local vive en cada repo.
+Global equivalent of `/cdev` for a multi-repo workspace conditioned by `bootstrap-monorepo`.
+**Elevated autonomy** mandate: work until a real blockage, never stop to ask "now what?". The
+workspace is the memory: global `SPRINTS.md` = plan · global `AGENT_PROGRESS.md` = handoff ·
+`state.lock.json` = snapshot · local state lives in each repo.
 
-Invocación: `/cdev-monorepo` (reanudar) · `/cdev-monorepo sprint 02` · `/cdev-monorepo batch SYS-02-B01`.
+Invocation: `/cdev-monorepo` (resume) · `/cdev-monorepo sprint 02` · `/cdev-monorepo batch SYS-02-B01`.
 
-## Invariante que protege todo el mecanismo
+## The invariant that protects the whole mechanism
 
 ```text
-Trabajo global no rompe continuidad local.
-Trabajo local no rompe visibilidad global.
+Global work must not break local continuity.
+Local work must not break global visibility.
 ```
 
-Tras una sesión de workspace, `cd repo && /cdev` debe poder continuar normal. Tras trabajo
-independiente en un repo, la siguiente sesión de workspace **detecta y reconcilia** ese progreso.
+After a workspace session, `cd repo && /cdev` must be able to continue normally. After
+independent work inside a repo, the next workspace session **detects and reconciles** that
+progress.
 
-## Arranque + reconciliación (cada invocación)
+## Start + reconciliation (every invocation)
 
-1. Lee en orden: `CLAUDE.md` global → `docs/develop/AGENT_EXECUTION_PROTOCOL.md` → `SPRINTS.md`
-   → `AGENT_PROGRESS.md` (última entrada) → `workspace/repos.yaml` → `repo-graph.yaml` →
-   `state.lock.json`.
-2. Para cada repo **relevante al sprint/batch activo** (no cargues repos que no participan):
-   su `CLAUDE.md`, `SPRINTS.md`, `AGENT_PROGRESS.md`, `git status/branch/log`.
-3. Reconcilia. **El repo es la fuente de verdad de su estado local**: sprint renumerado, batch
-   terminado fuera del workspace, commits nuevos, rama distinta, bloqueo local → el workspace
-   se actualiza; jamás al revés. Divergencia (workspace dice DONE, repo dice IN_PROGRESS) →
-   gana el repo. El workspace nunca falsifica estado local para cuadrar su plan.
+1. Read in order: global `CLAUDE.md` → `docs/develop/AGENT_EXECUTION_PROTOCOL.md` →
+   `SPRINTS.md` → `AGENT_PROGRESS.md` (last entry) → `workspace/repos.yaml` →
+   `repo-graph.yaml` → `state.lock.json`.
+2. For each repo **relevant to the active sprint/batch** (don't load repos that don't
+   participate): its `CLAUDE.md`, `SPRINTS.md`, `AGENT_PROGRESS.md`, `git status/branch/log`.
+3. Reconcile. **The repo is the source of truth of its local state**: renumbered sprint, batch
+   finished outside the workspace, new commits, different branch, local blockage → the
+   workspace updates itself; never the other way around. Divergence (workspace says DONE, repo
+   says IN_PROGRESS) → the repo wins. The workspace never falsifies local state to square its
+   own plan.
 
-## Bucle (repetir hasta bloqueo real)
+## Loop (repeat until a real blockage)
 
-1. **Selecciona**: primer SYSTEM_BATCH `READY`/`IN_PROGRESS` del SYSTEM Sprint `ACTIVE` — y
-   todos los demás cuyo DAG los haga runnables ya (ejecución por olas, no batch a batch).
-   Si un batch está `PLANNED` (referencias o sync points sin resolver) → invoca la skill
-   `cdev-monorepo-planner` antes de ejecutarlo.
-2. **Resuelve referencias**: cada referencia local requerida existe en el `SPRINTS.md` del repo,
-   con numeración válida que respeta la secuencia local y sus `Wait-for` declarados (artefactos
-   de sync del planner). Referencia rota → reparar vía planner, no improvisar.
-3. **Construye el DAG** del batch/ola con los `depends_on` de sus referencias (solo referencias
-   del batch; repos no referenciados no aparecen). Un ciclo en el DAG = error de planificación:
-   parar ese batch y reportarlo, no desempatar a ojo.
-4. **Ejecuta en paralelo por repo**: despacha un agente `monorepo-repo-runner` por cada
-   referencia runnable, **en paralelo solo cuando son de repos distintos**; **un único runner
-   por repo, siempre**. Dos niveles de paralelismo, y solo dos:
-   - **Entre repos**: referencias sin dependencia mutua corren a la vez (olas del DAG).
-   - **Dentro del repo**: los batches son SIEMPRE secuenciales (el orden local es sagrado;
-     jamás dos batches del mismo repo a la vez). Lo que sí se paraleliza dentro del batch son
-     **tareas heterogéneas vía subagentes del cdev local**: p.ej. un subagente investigando
-     read-only en el working tree del repo productor los endpoints reales, otro inventariando
-     componentes reutilizables del propio repo, y el principal construyendo — que al integrar
-     consume el informe del investigador, no su imaginación. Testing funcional o búsqueda en
-     fuentes externas siguen el mismo patrón. La decisión de crear esos subagentes es del
-     `/cdev` local; el workspace no reparte ese trabajo.
-   - **Guardrail autobloqueante** (aplica a todo subagente y al principal): ningún endpoint,
-     campo, tipo o estructura cross-repo se integra sin estar confirmado por artefacto
-     `Wait-for`, contrato del workspace o código real leído del repo productor. Falta la
-     confirmación → se espera o se rota de tarea; inventarla "para avanzar" está prohibido.
-     Los subagentes investigadores en repos vecinos son **solo lectura**: escribir en otro
-     repo sigue siendo gate absoluto.
-   Reglas del despacho:
-   - El runner ejecuta SIEMPRE **el `/cdev` propio del repo** acotado a la referencia — nunca
-     implementa por su cuenta.
-   - El prompt del runner incluye: referencia (sprint/batch local), `system_batch`, contrato
-     aplicable, sus `Wait-for` (qué artefacto buscar, en qué path de qué repo) y la política
-     de ramas (§ abajo).
-   - Runner que devuelve `WAITING` (su Wait-for no existe aún): reasigna ese slot a otra
-     referencia runnable de otro repo y reintenta la que espera cuando su productor cierre —
-     nunca dejes el slot ocioso si hay trabajo runnable (blocked-but-not-idle también aquí).
-5. **Recoge evidencia** al terminar cada runner (no esperes a toda la ola para registrar):
-   status/branch/SHA/verificación por referencia → `AGENT_PROGRESS.md` global +
-   `state.lock.json` + `workspace/snapshots/` si aplica.
-6. **Verifica globalmente** con `monorepo-system-tester` al nivel que el batch declara
-   (L0 evidencia local · L1 contratos · L2 integración parcial · L3 end-to-end). Batch de un
-   solo repo con acceptance demostrable local → L0, sin pruebas cross-repo artificiales.
-7. **Cierra**:
+1. **Select**: first `READY`/`IN_PROGRESS` SYSTEM_BATCH of the `ACTIVE` SYSTEM Sprint — and
+   every other one the DAG makes runnable now (wave execution, not batch by batch).
+   If a batch is `PLANNED` (unresolved references or sync points) → invoke the
+   `cdev-monorepo-planner` skill before executing it.
+2. **Resolve references**: every required local reference exists in the repo's `SPRINTS.md`,
+   with valid numbering that respects the local sequence and its declared `Wait-for` (the
+   planner's sync artifacts). Broken reference → repair via planner, don't improvise.
+3. **Build the DAG** of the batch/wave from its references' `depends_on` (only the batch's
+   references; unreferenced repos do not appear). A cycle in the DAG = planning error: stop
+   that batch and report it, don't break the tie by eye.
+4. **Execute in parallel per repo**: dispatch one `monorepo-repo-runner` agent per runnable
+   reference, **in parallel only when they belong to different repos**; **a single runner per
+   repo, always**. Two levels of parallelism, and only two:
+   - **Across repos**: references with no mutual dependency run at once (DAG waves).
+   - **Inside the repo**: batches are ALWAYS sequential (local order is sacred; never two
+     batches of the same repo at once). What may be parallelized inside a batch are
+     **heterogeneous tasks via the local cdev's subagents**: e.g. one subagent investigating
+     read-only in the producer repo's working tree the real endpoints, another inventorying
+     the repo's own reusable components, and the main agent building — which at integration
+     time consumes the investigator's report, not its imagination. Functional testing or
+     external-source research follows the same pattern. The decision to create those subagents
+     belongs to the local `/cdev`; the workspace does not hand out that work.
+   - **Self-blocking guardrail** (applies to every subagent and the main agent): no cross-repo
+     endpoint, field, type or structure is integrated without being confirmed by a `Wait-for`
+     artifact, a workspace contract, or real code read from the producer repo. Confirmation
+     missing → wait or rotate task; inventing it "to make progress" is forbidden. Investigator
+     subagents in neighbouring repos are **read-only**: writing into another repo remains an
+     absolute gate.
+   Dispatch rules:
+   - The runner ALWAYS executes **the repo's own `/cdev`** scoped to the reference — it never
+     implements on its own authority.
+   - The runner's prompt includes: reference (local sprint/batch), `system_batch`, applicable
+     contract, its `Wait-for` (which artifact to look for, at which path of which repo) and
+     the branch policy (§ below).
+   - Runner returning `WAITING` (its Wait-for does not exist yet): reassign that slot to
+     another runnable reference from another repo and retry the waiting one when its producer
+     closes — never leave the slot idle if runnable work exists (blocked-but-not-idle here
+     too).
+5. **Collect evidence** as each runner finishes (don't wait for the whole wave to record):
+   status/branch/SHA/verification per reference → global `AGENT_PROGRESS.md` +
+   `state.lock.json` + `workspace/snapshots/` if applicable.
+6. **Verify globally** with `monorepo-system-tester` at the level the batch declares
+   (L0 local evidence · L1 contracts · L2 partial integration · L3 end-to-end). A single-repo
+   batch with locally demonstrable acceptance → L0, no artificial cross-repo tests.
+7. **Close**:
    ```text
-   SYSTEM_BATCH DONE = ALL(referencias requeridas == DONE) AND acceptance global == PASS
+   SYSTEM_BATCH DONE = ALL(required references == DONE) AND global acceptance == PASS
    ```
-   Repos no referenciados no participan, no bloquean, no se abren "por si acaso".
-8. **Auto-avanza**: siguiente ola runnable. Sprint de sistema completo → reporte global, Sprint
-   `DONE`, promueve el siguiente `PENDING`→`ACTIVE` si corresponde, sigue. Plan agotado →
-   invoca `cdev-monorepo-planner` en modo gap-analysis y deja el resultado como `PROPOSAL`
-   para ratificación humana; mientras tanto ejecuta trabajo global no gateado.
+   Unreferenced repos do not participate, do not block, are not opened "just in case".
+8. **Auto-advance**: next runnable wave. System sprint complete → global report, Sprint
+   `DONE`, promote the next `PENDING`→`ACTIVE` if applicable, continue. Plan exhausted →
+   invoke `cdev-monorepo-planner` in gap-analysis mode and leave the result as `PROPOSAL` for
+   human ratification; meanwhile execute ungated global work.
 
-## Sincronización entre repos (pull, no push — y jamás mockear)
+## Cross-repo synchronization (pull, not push — and never mock)
 
-- Toda dependencia productor→consumidor se satisface con un **artefacto en disco** (reporte
-  técnico del batch productor, path declarado por el planner en el `Wait-for` de la referencia
-  consumidora). El productor lo publica como parte de su acceptance; el consumidor **va a
-  buscarlo** al working tree del repo productor y lo lee antes de integrar.
-- Consumidor sin su artefacto: **no mockea el contrato del otro repo** para avanzar ni fabrica
-  evidencia de integración — devuelve `WAITING` y el orquestador lo reprograma. (Los stubs de
-  tests unitarios internos del propio repo siguen siendo legítimos; lo prohibido es fingir la
-  integración cross-repo.)
-- La comunicación entre agentes va SIEMPRE por disco (repos + workspace), nunca por memoria
-  conversacional: cualquier runner puede morir y reanudarse leyendo el repo.
+- Every producer→consumer dependency is satisfied with an **artifact on disk** (the producer
+  batch's technical report, path declared by the planner in the consuming reference's
+  `Wait-for`). The producer publishes it as part of its acceptance; the consumer **goes
+  looking for it** in the producer repo's working tree and reads it before integrating.
+- Consumer without its artifact: **it does not mock the other repo's contract** to make
+  progress nor fabricates integration evidence — it returns `WAITING` and the orchestrator
+  reschedules it. (Unit-test stubs internal to the repo remain legitimate; what is forbidden
+  is faking the cross-repo integration.)
+- Communication between agents ALWAYS goes through disk (repos + workspace), never through
+  conversational memory: any runner may die and resume by reading the repo.
 
-## Ramas y push (política del workspace)
+## Branches and push (workspace policy)
 
-- **Derivación**: la primera rama de trabajo de cada repo dentro de un SYSTEM Sprint se crea
-  **desde `develop`** de ese repo; los batches siguientes encadenan según la convención del
-  CDev local (típico: nueva rama desde la rama del batch anterior). El workspace no redefine
-  nombres de rama locales.
-- **Push: nunca automático.** Al cerrar el SYSTEM Sprint, el push de las ramas resultantes lo
-  hace el humano. Si el usuario pide explícitamente "sube", se pushea **solo la rama de
-  trabajo** correspondiente — nunca `develop`/`main`, nunca con `--force`.
-- Merge/PR/deploy: siempre gate humano.
+- **Derivation**: each repo's first working branch within a SYSTEM Sprint is created **from
+  that repo's `develop`**; subsequent batches chain per the local CDev's convention (typical:
+  new branch from the previous batch's branch). The workspace does not redefine local branch
+  names.
+- **Push: never automatic.** On closing the SYSTEM Sprint, pushing the resulting branches is
+  the human's act. If the user explicitly asks to "push", only the corresponding **working
+  branch** is pushed — never `develop`/`main`, never with `--force`.
+- Merge/PR/deploy: always a human gate.
 
 ## Blocked-but-not-idle (global)
 
-Referencia `BLOCKED` → SYSTEM_BATCH `BLOCKED` con razón + decisión mínima que necesita el
-humano. Continúa con: otra referencia independiente del mismo batch → otro SYSTEM_BATCH sin
-dependencia → otro trabajo global no gateado. Nunca marcar como terminado lo bloqueado.
+Reference `BLOCKED` → SYSTEM_BATCH `BLOCKED` with reason + the minimum decision the human must
+make. Continue with: another independent reference of the same batch → another SYSTEM_BATCH
+with no dependency → other ungated global work. Never mark blocked work as finished.
 
-## Solo se para cuando
+## It only stops when
 
-- Ningún trabajo global no gateado queda — di qué aprobaciones desbloquearían qué.
-- Un gate humano bloquea y todo depende de él.
-- Producto ausente: **prohibido inventar requisitos**; pregunta abierta en DECISIONS.
-- Límite de cuota: actualizar `AGENT_PROGRESS.md` + `state.lock.json`, commit del workspace,
-  salir limpio. La reanudación retoma del workspace, no de memoria conversacional.
+- No ungated global work remains — say which approvals would unblock what.
+- A human gate blocks and everything depends on it.
+- Absent product: **inventing requirements is forbidden**; open question in DECISIONS.
+- Quota limit: update `AGENT_PROGRESS.md` + `state.lock.json`, commit the workspace, exit
+  cleanly. Resumption picks up from the workspace, not from conversational memory.
 
-## Gates de seguridad (nunca elevados; gana siempre el más estricto)
+## Safety gates (never elevated; the strictest always wins)
 
-Los gates de cada repo hijo prevalecen íntegros — este skill jamás los reduce. Una decisión
-histórica documentada en un repo ("vía autorizada", DECISIONS antiguos) NUNCA cuenta como
-aprobación viva de un gate en la sesión actual: el gate exige autorización humana presente. Además, a nivel
-workspace: push a `main`/`develop` de cualquier repo · merge · deploy · migraciones/schema
-remoto · secretos live · pagos reales · reescritura de historial · borrado de datos. Preparar
-sí (drafts, comandos, manifests); ejecutar no. El workspace tampoco puede: alterar numeración
-local, saltarse sprints locales por prisa del sistema, marcar DONE trabajo no demostrado, ni
-convertir cambio local en global sin evidencia.
+Each child repo's gates prevail intact — this skill never reduces them. A historical decision
+documented in a repo ("authorized path", old DECISIONS) NEVER counts as a live approval of a
+gate in the current session: the gate requires present human authorization. Additionally, at
+workspace level: push to any repo's `main`/`develop` · merge · deploy · remote
+migrations/schema · live secrets · real payments · history rewriting · data deletion.
+Preparing yes (drafts, commands, manifests); executing no. The workspace also may not: alter
+local numbering, skip local sprints out of system haste, mark undemonstrated work DONE, or
+turn a local change into a global one without evidence.

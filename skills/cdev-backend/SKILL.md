@@ -1,78 +1,80 @@
 ---
 name: cdev-backend
-description: Úsala para ejecutar de forma autónoma el trabajo pendiente de un repo backend condicionado para CDev (tiene docs/develop/ con SPRINTS.md y AGENT_EXECUTION_PROTOCOL.md) — cuando el usuario pida correr el sprint activo, "sigue el plan", trabajo nocturno/desatendido, o invoque /cdev-backend o /cdev en un backend.
+description: Use to autonomously execute the pending work of a backend repo conditioned for CDev (it has docs/develop/ with SPRINTS.md and AGENT_EXECUTION_PROTOCOL.md) — when the user asks to run the active sprint, "follow the plan", "sigue el plan", overnight/unattended work, or invokes /cdev-backend or /cdev on a backend.
 ---
 
-# CDev Backend — bucle autónomo
+# CDev Backend — autonomous loop
 
-Bucle de ejecución continua para backends condicionados (reemplaza al watchdog
-`claude-night-runner.ps1` como forma primaria de correr CDev). Invocarla es el mandato de
-**autonomía elevada**: trabaja proactivamente asumiendo lo que el proyecto necesita y para
-**solo ante bloqueos reales** — nunca para preguntar qué hacer a continuación.
+Continuous execution loop for conditioned backends (replaces the `claude-night-runner.ps1`
+watchdog as the primary way to run CDev). Invoking it is the **elevated autonomy** mandate:
+work proactively assuming what the project needs and stop **only at real blockages** — never
+to ask what to do next.
 
-El repo es la memoria: `SPRINTS.md` = plan · `AGENT_PROGRESS.md` = handoff · git = estado.
-Los detalles específicos del repo (verificación exacta, patrones, gates propios) los fija su
-`docs/develop/AGENT_EXECUTION_PROTOCOL.md`; este skill es el sistema operativo genérico y el
-umbral de autonomía. Si el protocolo del repo es más estricto en *cuándo parar a preguntar*,
-esta invocación explícita lo eleva; en gates de seguridad gana siempre el más estricto.
+The repo is the memory: `SPRINTS.md` = plan · `AGENT_PROGRESS.md` = handoff · git = state.
+The repo's specifics (exact verification, patterns, own gates) are fixed by its
+`docs/develop/AGENT_EXECUTION_PROTOCOL.md`; this skill is the generic operating system and the
+autonomy threshold. If the repo's protocol is stricter about *when to stop and ask*, this
+explicit invocation elevates it; on safety gates the strictest always wins.
 
-## Arranque (cada invocación/reanudación)
+## Start (every invocation/resumption)
 
-Lee en orden: `CLAUDE.md` → `docs/develop/AGENT_EXECUTION_PROTOCOL.md` → `SPRINTS.md` →
-`AGENT_PROGRESS.md` (última entrada) → `git status` + últimos commits. Reanuda desde ahí; no
-re-derives lo ya decidido.
+Read in order: `CLAUDE.md` → `docs/develop/AGENT_EXECUTION_PROTOCOL.md` → `SPRINTS.md` →
+`AGENT_PROGRESS.md` (last entry) → `git status` + recent commits. Resume from there; do not
+re-derive what was already decided.
 
-## Bucle (repetir hasta bloqueo real)
+## Loop (repeat until a real blockage)
 
-1. **Selecciona trabajo:** primer batch `READY`/`IN_PROGRESS` del sprint `ACTIVE`, en orden
-   estricto. Márcalo `IN_PROGRESS`. Rama de trabajo `cdev/sprint-<n>-batch-<n>` (nunca
-   `main`/`develop`).
-2. **Implementa solo ese batch.** `ponytail:ponytail` en cada paso (reutilizar antes que crear,
-   diff mínimo correcto). `superpowers:test-driven-development` en lógica de dominio (state
-   machines, billing, autorización). Aditivo siempre: no romper contratos vivos.
-3. **Verifica** con la secuencia del repo (típico `npm run lint` → `build` → `test`). Schema
-   tocado → `prisma format` + `generate`; el apply a DB remota es gate humano (blocker, no lo
-   corras). Evidencia runtime = tests, no servers largos.
-4. **Si algo falla:** `superpowers:systematic-debugging` — error exacto citado, grep de callers,
-   causa raíz una vez donde todos enrutan, superficie mínima, re-correr el comando fallido y
-   luego la secuencia completa. Nunca silenciar tests ni tapar tipos con `any` para pasar.
-5. **Registra** en `AGENT_PROGRESS.md`: status honesto, hecho, ficheros, verificación
-   pass/fail/not-run, blockers concretos, siguiente. No exagerar; incompleto nunca es `DONE`.
-6. **Commitea el batch completo** (`feat(<fase>-sprint-<n>): ...`; inacabado útil → `wip(...)`).
-7. **Cierra:** batch `DONE` solo con acceptance cumplida con evidencia
-   (`superpowers:verification-before-completion`). Siguiente batch.
+1. **Select work:** first `READY`/`IN_PROGRESS` batch of the `ACTIVE` sprint, in strict order.
+   Mark it `IN_PROGRESS`. Working branch `cdev/sprint-<n>-batch-<n>` (never `main`/`develop`).
+2. **Implement only that batch.** `ponytail:ponytail` at every step (reuse before creating,
+   smallest correct diff). `superpowers:test-driven-development` on domain logic (state
+   machines, billing, authorization). Always additive: don't break live contracts.
+3. **Verify** with the repo's sequence (typical `npm run lint` → `build` → `test`). Schema
+   touched → `prisma format` + `generate`; the apply to a remote DB is a human gate (blocker,
+   don't run it). Runtime evidence = tests, not long-running servers.
+4. **If something fails:** `superpowers:systematic-debugging` — exact error quoted, grep the
+   callers, root cause once where they all route through, minimal surface, re-run the failed
+   command and then the full sequence. Never silence tests or paper over types with `any` to
+   pass.
+5. **Record** in `AGENT_PROGRESS.md`: honest status, what was done, files, verification
+   pass/fail/not-run, concrete blockers, next. No exaggeration; incomplete is never `DONE`.
+6. **Commit the whole batch** (`feat(<phase>-sprint-<n>): ...`; useful-but-unfinished →
+   `wip(...)`).
+7. **Close:** batch `DONE` only with acceptance met with evidence
+   (`superpowers:verification-before-completion`). Next batch.
 
-## Auto-avance (el umbral elevado)
+## Auto-advance (the elevated threshold)
 
-- **Sprint completo** → escribe y commitea el reporte de integración del sprint (obligatorio
-  antes del `DONE`), marca el sprint `DONE`, promueve el siguiente `PENDING` a `ACTIVE`, sigue.
-- **Batch bloqueado (no-cuota)** → márcalo `BLOCKED` con razón + decisión mínima que necesita el
-  humano, y aplica *blocked-but-not-idle*: siguiente batch con dependencias `DONE`; si no hay,
-  siguiente sprint independiente de la fase.
-- **Fase completa** → márcala `DONE` y **no te quedes parado**: deriva el siguiente trabajo tú
-  mismo, en este orden, dentro del mapa de claridad del repo (`PRODUCT.md`; solo áreas
-  DEFINIDO/PARCIAL):
-  1. Backlog documentado del repo (backlog de plataforma en CLAUDE.md, ROADMAP, TODOs de docs).
-  2. Backfill de tests en lógica crítica sin cobertura.
-  3. Hardening/observabilidad ya prevista (health, métricas, rate limit) de forma aditiva.
-  4. **Borrador de la fase siguiente** en `SPRINTS.md` como `PROPOSAL` (no `ACTIVE`): derivado de
-     las fuentes de producto, listado para ratificación humana — y mientras tanto sigue con 1–3.
-  Registra en `AGENT_PROGRESS.md` qué autoelegiste y por qué.
+- **Sprint complete** → write and commit the sprint's integration report (mandatory before the
+  `DONE`), mark the sprint `DONE`, promote the next `PENDING` to `ACTIVE`, continue.
+- **Batch blocked (non-quota)** → mark it `BLOCKED` with reason + the minimum decision the
+  human must make, and apply *blocked-but-not-idle*: next batch whose dependencies are `DONE`;
+  if none, the phase's next independent sprint.
+- **Phase complete** → mark it `DONE` and **do not stand still**: derive the next work
+  yourself, in this order, inside the repo's clarity map (`PRODUCT.md`; only DEFINED/PARTIAL
+  areas):
+  1. The repo's documented backlog (platform backlog in CLAUDE.md, ROADMAP, doc TODOs).
+  2. Test backfill on critical logic without coverage.
+  3. Already-planned hardening/observability (health, metrics, rate limit), additively.
+  4. **Draft of the next phase** in `SPRINTS.md` as `PROPOSAL` (not `ACTIVE`): derived from
+     the product sources, ready for human ratification — and meanwhile continue with 1–3.
+  Record in `AGENT_PROGRESS.md` what you self-selected and why.
 
-## Solo se para cuando
+## It only stops when
 
-- Ningún trabajo no-gateado queda (ni batch, ni backlog, ni backfill) — di exactamente qué
-  aprobaciones desbloquearían qué.
-- Un gate de seguridad exige acción humana y todo lo demás depende de él.
-- Docs contradictorios o área `AUSENTE` sin la cual no se puede seguir (pregunta abierta
-  registrada; inventar producto está prohibido).
-- Repo en estado inseguro.
-- Límite de uso/cuota: guarda todo, actualiza `AGENT_PROGRESS.md`, commitea lo seguro
-  (`wip` si hace falta), sal limpio. La reanudación (watchdog o próxima invocación) retoma del
-  repo, no de la memoria conversacional.
+- No ungated work remains (no batch, no backlog, no backfill) — say exactly which approvals
+  would unblock what.
+- A safety gate requires human action and everything else depends on it.
+- Contradictory docs, or an `ABSENT` area without which it cannot continue (open question
+  recorded; inventing product is forbidden).
+- The repo is in an unsafe state.
+- Usage/quota limit: save everything, update `AGENT_PROGRESS.md`, commit what is safe (`wip`
+  if needed), exit cleanly. Resumption (watchdog or next invocation) picks up from the repo,
+  not from conversational memory.
 
-## Gates de seguridad (nunca elevados por este skill)
+## Safety gates (never elevated by this skill)
 
-Apply de schema a DB remota (`prisma db push`/`migrate deploy`) · push a `main`/`develop` ·
-deploy · DDL/ops destructivas (DROP, borrado de datos) · secretos o tokens live de proveedores ·
-reescribir historial git. Prepararlos sí (draft + blocker pidiendo aprobación); ejecutarlos no.
+Schema apply to a remote DB (`prisma db push`/`migrate deploy`) · push to `main`/`develop` ·
+deploy · destructive DDL/ops (DROP, data deletion) · live provider secrets or tokens ·
+rewriting git history. Preparing them yes (draft + blocker requesting approval); executing
+them no.

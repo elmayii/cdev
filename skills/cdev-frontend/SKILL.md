@@ -1,97 +1,101 @@
 ---
 name: cdev-frontend
-description: Úsala para ejecutar de forma autónoma el trabajo pendiente de un repo frontend condicionado para CDev (tiene docs/develop/ con SPRINTS.md y AGENT_EXECUTION_PROTOCOL.md) — cuando el usuario pida correr el sprint activo, "sigue el plan", trabajo nocturno/desatendido, o invoque /cdev-frontend o /cdev en un frontend.
+description: Use to autonomously execute the pending work of a frontend repo conditioned for CDev (it has docs/develop/ with SPRINTS.md and AGENT_EXECUTION_PROTOCOL.md) — when the user asks to run the active sprint, "follow the plan", "sigue el plan", overnight/unattended work, or invokes /cdev-frontend or /cdev on a frontend.
 ---
 
-# CDev Frontend — bucle autónomo
+# CDev Frontend — autonomous loop
 
-Bucle de ejecución continua para frontends condicionados (reemplaza al watchdog
-`claude-night-runner.ps1` como forma primaria de correr CDev). Invocarla es el mandato de
-**autonomía elevada**: trabaja proactivamente asumiendo lo que el proyecto necesita y para
-**solo ante bloqueos reales** — nunca para preguntar qué hacer a continuación.
+Continuous execution loop for conditioned frontends (replaces the `claude-night-runner.ps1`
+watchdog as the primary way to run CDev). Invoking it is the **elevated autonomy** mandate:
+work proactively assuming what the project needs and stop **only at real blockages** — never
+to ask what to do next.
 
-El repo es la memoria: `SPRINTS.md` = plan · `AGENT_PROGRESS.md` = handoff · git = estado.
-Los detalles específicos del repo (comandos exactos, convención de port, gates propios) los fija
-su `docs/develop/AGENT_EXECUTION_PROTOCOL.md` + `CLAUDE.md`; este skill es el sistema operativo
-genérico y el umbral de autonomía. Si el protocolo del repo es más estricto en *cuándo parar a
-preguntar*, esta invocación explícita lo eleva; en gates de seguridad gana siempre el más estricto.
+The repo is the memory: `SPRINTS.md` = plan · `AGENT_PROGRESS.md` = handoff · git = state.
+The repo's specifics (exact commands, port convention, own gates) are fixed by its
+`docs/develop/AGENT_EXECUTION_PROTOCOL.md` + `CLAUDE.md`; this skill is the generic operating
+system and the autonomy threshold. If the repo's protocol is stricter about *when to stop and
+ask*, this explicit invocation elevates it; on safety gates the strictest always wins.
 
-## Arranque (cada invocación/reanudación)
+## Start (every invocation/resumption)
 
-Lee en orden: `CLAUDE.md` → `docs/develop/AGENT_EXECUTION_PROTOCOL.md` → `SPRINTS.md` →
-`AGENT_PROGRESS.md` (última entrada) → `git status` + últimos commits. Si el repo define un
-contrato/reporte de backend por sprint (p.ej. `docs/F6/reports/` en Compiss), léelo **antes** de
-empezar el sprint: es el contrato; no inventes campos, y si difiere de lo desplegado en el backend
-dev, regístralo como bloqueo/decisión. Reanuda desde ahí; no re-derives lo ya decidido.
-Si git muestra trabajo real no registrado en el plan (commits/WIP sin sprint ni entrada de
-progreso), **reconcilia primero**: refléjalo en `SPRINTS.md` + `AGENT_PROGRESS.md` antes de
-seguir — el repo-como-memoria no funciona con el plan desincronizado.
+Read in order: `CLAUDE.md` → `docs/develop/AGENT_EXECUTION_PROTOCOL.md` → `SPRINTS.md` →
+`AGENT_PROGRESS.md` (last entry) → `git status` + recent commits. If the repo defines a
+per-sprint backend contract/report (e.g. `docs/F6/reports/` in Compiss), read it **before**
+starting the sprint: it is the contract; do not invent fields, and if it differs from what is
+deployed on the dev backend, record it as a blockage/decision. Resume from there; do not
+re-derive what was already decided.
+If git shows real work not recorded in the plan (commits/WIP with no sprint or progress
+entry), **reconcile first**: reflect it in `SPRINTS.md` + `AGENT_PROGRESS.md` before
+continuing — repo-as-memory does not work with the plan out of sync.
 
-## Bucle (repetir hasta bloqueo real)
+## Loop (repeat until a real blockage)
 
-1. **Selecciona trabajo:** primer batch `READY`/`IN_PROGRESS` del sprint `ACTIVE`, en orden
-   estricto. Márcalo `IN_PROGRESS`. Rama según convención del repo (p.ej. `claude/f6-sprint-<n>`,
-   creada **desde la rama actual**; al cambiar de sprint, nueva rama desde la entonces actual).
-   Nunca `main`/`develop`.
-2. **Implementa solo ese batch, target principal primero** (web-first si hay varios targets);
-   el port al target secundario sigue la convención del repo (misma ruta relativa, sin imports del
-   framework web en el port). `ponytail:ponytail` en cada paso: reutiliza UI kit, stores, hooks y
-   queries existentes antes de escribir; sin deps nuevas; diff mínimo correcto.
-3. **Verifica antes de cada DONE:**
-   - **Gate de tipos real** — el comando que documenta el repo. Ojo: un typecheck sin el tsconfig
-     correcto o un build con `ignoreBuildErrors` **no** son gate de tipos.
-   - **Build de cada target.**
-   - **Evidencia runtime OBLIGATORIA** — prueba el flujo tocado en el dev server con las
-     dependencias arriba (backend dev, cuentas de prueba) vía Playwright MCP. "Compila" no es
-     evidencia. Sin Playwright MCP o backend caído y nada más trabajable → batch `BLOCKED`, no `DONE`.
-   - `git diff` sin cambios ajenos al batch; paridad entre targets si tocaste código compartido.
-4. **Si algo falla:** `superpowers:systematic-debugging` — error exacto citado, grep de callers,
-   causa raíz una vez donde todos enrutan, superficie mínima, re-correr el comando fallido y luego
-   la secuencia completa. Nunca silenciar checks ni tapar tipos con `any` para pasar.
-5. **Registra** en `AGENT_PROGRESS.md` (lo más reciente arriba): status honesto, hecho, ficheros
-   (target principal + homólogos del port), verificación pass/fail/not-run por comando, blockers
-   concretos, siguiente. No exagerar; incompleto nunca es `DONE`.
-6. **Commitea el batch completo** (`feat(<fase>-sprint-<n>): ...`; inacabado útil → `wip(...)`).
-   Nunca push.
-7. **Cierra:** batch `DONE` solo con acceptance cumplida con evidencia
-   (`superpowers:verification-before-completion`). Siguiente batch.
+1. **Select work:** first `READY`/`IN_PROGRESS` batch of the `ACTIVE` sprint, in strict order.
+   Mark it `IN_PROGRESS`. Branch per the repo's convention (e.g. `claude/f6-sprint-<n>`,
+   created **from the current branch**; on sprint change, new branch from the then-current
+   one). Never `main`/`develop`.
+2. **Implement only that batch, main target first** (web-first if there are several targets);
+   the port to the secondary target follows the repo's convention (same relative path, no
+   web-framework imports in the port). `ponytail:ponytail` at every step: reuse the existing
+   UI kit, stores, hooks and queries before writing; no new deps; smallest correct diff.
+3. **Verify before every DONE:**
+   - **Real type gate** — the command the repo documents. Careful: a typecheck without the
+     correct tsconfig, or a build with `ignoreBuildErrors`, is **not** a type gate.
+   - **Build of every target.**
+   - **MANDATORY runtime evidence** — drive the touched flow on the dev server with its
+     dependencies up (dev backend, test accounts) via Playwright MCP. "It compiles" is not
+     evidence. No Playwright MCP, or backend down and nothing else workable → batch `BLOCKED`,
+     not `DONE`.
+   - `git diff` free of changes unrelated to the batch; parity between targets if shared code
+     was touched.
+4. **If something fails:** `superpowers:systematic-debugging` — exact error quoted, grep the
+   callers, root cause once where they all route through, minimal surface, re-run the failed
+   command and then the full sequence. Never silence checks or paper over types with `any` to
+   pass.
+5. **Record** in `AGENT_PROGRESS.md` (newest first): honest status, what was done, files
+   (main target + port counterparts), verification pass/fail/not-run per command, concrete
+   blockers, next. No exaggeration; incomplete is never `DONE`.
+6. **Commit the whole batch** (`feat(<phase>-sprint-<n>): ...`; useful-but-unfinished →
+   `wip(...)`). Never push.
+7. **Close:** batch `DONE` only with acceptance met with evidence
+   (`superpowers:verification-before-completion`). Next batch.
 
-## Auto-avance (el umbral elevado)
+## Auto-advance (the elevated threshold)
 
-- **Sprint completo** → márcalo `DONE`, promueve el siguiente `PENDING` a `ACTIVE` (nueva rama
-  desde la actual), lee su reporte/contrato backend si existe, sigue.
-- **Batch bloqueado (no-cuota)** → márcalo `BLOCKED` con razón + decisión mínima que necesita el
-  humano, y aplica *blocked-but-not-idle*: siguiente batch con dependencias `DONE`; si no hay,
-  siguiente sprint independiente del bloqueo.
-- **Plan agotado** → márcalo y **no te quedes parado**: deriva el siguiente trabajo tú mismo, en
-  este orden, dentro del mapa de claridad del repo (`PRODUCT.md`; solo áreas DEFINIDO/PARCIAL —
-  si el repo aún no tiene mapa, aproxima: definido = doc fuente + contrato backend existentes, y
-  déjalo anotado en `DECISIONS.md`; generar el mapa real es trabajo de `bootstrap-frontend`):
-  1. Backlog documentado (docs fuente con alcance aún no implementado — verifícalo en código, no
-     lo asumas; TODOs de docs, ROADMAP).
-  2. Brechas de paridad/port entre targets documentadas (p.ej. audit web↔mobile).
-  3. Deuda marcada (`ponytail:`/TODO dentro de scope) y gaps de verificación (flujos sin
-     evidencia runtime, gates rotos).
-  4. **Borrador de la fase siguiente** en `SPRINTS.md` como `PROPOSAL` (no `ACTIVE`): derivado de
-     las fuentes de producto, listo para ratificación humana — y mientras tanto sigue con 1–3.
-  Registra en `AGENT_PROGRESS.md` y `DECISIONS.md` qué autoelegiste y por qué.
+- **Sprint complete** → mark it `DONE`, promote the next `PENDING` to `ACTIVE` (new branch
+  from the current one), read its backend report/contract if it exists, continue.
+- **Batch blocked (non-quota)** → mark it `BLOCKED` with reason + the minimum decision the
+  human must make, and apply *blocked-but-not-idle*: next batch whose dependencies are `DONE`;
+  if none, the next sprint independent of the blockage.
+- **Plan exhausted** → mark it and **do not stand still**: derive the next work yourself, in
+  this order, inside the repo's clarity map (`PRODUCT.md`; only DEFINED/PARTIAL areas — if the
+  repo has no map yet, approximate: defined = existing source doc + backend contract, and note
+  it in `DECISIONS.md`; producing the real map is `bootstrap-frontend`'s job):
+  1. Documented backlog (source docs with scope not yet implemented — verify it in code, don't
+     assume it; doc TODOs, ROADMAP).
+  2. Documented parity/port gaps between targets (e.g. web↔mobile audit).
+  3. Marked debt (`ponytail:`/TODO within scope) and verification gaps (flows without runtime
+     evidence, broken gates).
+  4. **Draft of the next phase** in `SPRINTS.md` as `PROPOSAL` (not `ACTIVE`): derived from
+     the product sources, ready for human ratification — and meanwhile continue with 1–3.
+  Record in `AGENT_PROGRESS.md` and `DECISIONS.md` what you self-selected and why.
 
-## Solo se para cuando
+## It only stops when
 
-- Ningún trabajo no-gateado queda (ni batch, ni backlog, ni paridad, ni deuda) — di exactamente
-  qué aprobaciones desbloquearían qué.
-- Un gate de seguridad exige acción humana y todo lo demás depende de él.
-- Docs contradictorios o área `AUSENTE` sin la cual no se puede seguir (pregunta abierta
-  registrada; inventar producto está prohibido).
-- Repo en estado inseguro.
-- Límite de uso/cuota: guarda todo, actualiza `AGENT_PROGRESS.md`, commitea lo seguro
-  (`wip` si hace falta), sal limpio. La reanudación (próxima invocación o watchdog) retoma del
-  repo, no de la memoria conversacional.
+- No ungated work remains (no batch, no backlog, no parity, no debt) — say exactly which
+  approvals would unblock what.
+- A safety gate requires human action and everything else depends on it.
+- Contradictory docs, or an `ABSENT` area without which it cannot continue (open question
+  recorded; inventing product is forbidden).
+- The repo is in an unsafe state.
+- Usage/quota limit: save everything, update `AGENT_PROGRESS.md`, commit what is safe (`wip`
+  if needed), exit cleanly. Resumption (next invocation or watchdog) picks up from the repo,
+  not from conversational memory.
 
-## Gates de seguridad (nunca elevados por este skill)
+## Safety gates (never elevated by this skill)
 
-Tocar backend, esquema GraphQL o migraciones (se coordinan fuera del repo) · push a
-`main`/`develop` · abrir PR · deploy (hosting/stores) · subir pins de versión documentados como
-gate en el `CLAUDE.md` del repo (p.ej. Apollo en Compiss) · añadir dependencias nuevas ·
-operar pagos en real · romper deep/universal links · secretos o tokens live · reescribir
-historial git. Prepararlos sí (draft + blocker pidiendo aprobación); ejecutarlos no.
+Touching the backend, GraphQL schema or migrations (coordinated outside the repo) · push to
+`main`/`develop` · opening PRs · deploy (hosting/stores) · raising version pins documented as
+gates in the repo's `CLAUDE.md` (e.g. Apollo in Compiss) · adding new dependencies · operating
+real payments · breaking deep/universal links · live secrets or tokens · rewriting git
+history. Preparing them yes (draft + blocker requesting approval); executing them no.

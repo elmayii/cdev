@@ -1,110 +1,109 @@
 ---
 name: bootstrap-monorepo
-description: Úsala cuando haya que condicionar una carpeta que contiene varios repos Git autónomos (cada uno con su CDev propio) como workspace orquestador CDev Monorepo — crear el andamiaje global (CLAUDE.md, docs/develop/, workspace/, agentes, scripts, git propio del workspace) sin tocar los repos hijos, o cuando el usuario pida "bootstrap monorepo", "condicionar workspace multi-repo" o montar orquestación sobre repos existentes.
+description: Use when a folder containing several autonomous Git repos (each with its own CDev) must be conditioned as a CDev Monorepo orchestrating workspace — creating the global scaffolding (CLAUDE.md, docs/develop/, workspace/, agents, scripts, the workspace's own git) without touching the child repos, or when the user asks to "bootstrap monorepo", "condition a multi-repo workspace", "condicionar workspace multi-repo", or to set up orchestration over existing repos.
 ---
 
 # Bootstrap Monorepo (CDev)
 
-Condiciona un **workspace multi-repo** (coloquialmente "monorepo") como capa orquestadora CDev.
-No fusiona los repos en un solo Git ni sustituye su CDev local. Principio rector:
+Conditions a **multi-repo workspace** (colloquially "monorepo") as a CDev orchestration layer.
+It does not merge the repos into a single Git nor replace their local CDev. Guiding principle:
 
-> **El workspace gobierna la coordinación. Cada repositorio gobierna su implementación.**
+> **The workspace governs coordination. Each repository governs its implementation.**
 
-La unidad de coordinación es el **repositorio**, no la tecnología ni el target. Un repo con
-web+mobile dentro es UNA unidad; su paridad interna es asunto de su CDev local. El workspace
-nunca crea agentes por tecnología ("backend agent", "Next runner"): las diferencias de rol las
-absorbe el `/cdev` local de cada repo (dispatcher → `cdev-backend`/`cdev-frontend`).
+The unit of coordination is the **repository**, not the technology or the target. A repo with
+web+mobile inside is ONE unit; its internal parity is its local CDev's business. The workspace
+never creates per-technology agents ("backend agent", "Next runner"): role differences are
+absorbed by each repo's local `/cdev` (dispatcher → `cdev-backend`/`cdev-frontend`).
 
-## Fase A — Descubrimiento
+## Phase A — Discovery
 
-1. Raíz del workspace = cwd. Detecta repos Git hijos (dirs con `.git/`), estén en raíz directa
-   o bajo `repos/` — **el layout real manda, no se mueven repos**. Admite registrar paths
-   externos que el usuario indique.
-2. Por repo: branch actual, origin, SHA HEAD, sprint local activo (de su `SPRINTS.md`).
+1. Workspace root = cwd. Detect child Git repos (dirs with `.git/`), whether in the direct root
+   or under `repos/` — **the real layout rules; repos are never moved**. External paths the
+   user indicates may also be registered.
+2. Per repo: current branch, origin, HEAD SHA, active local sprint (from its `SPRINTS.md`).
 
-## Fase B — Auditoría CDev por repo
+## Phase B — Per-repo CDev audit
 
-Comprueba: `CLAUDE.md` · `docs/develop/SPRINTS.md` · `AGENT_EXECUTION_PROTOCOL.md` ·
-`AGENT_PROGRESS.md`. Clasifica:
+Check: `CLAUDE.md` · `docs/develop/SPRINTS.md` · `AGENT_EXECUTION_PROTOCOL.md` ·
+`AGENT_PROGRESS.md`. Classify:
 
-- `CDEV_READY` — todo presente.
-- `CDEV_PARTIAL` — falta algo no crítico (p.ej. CLAUDE.md raíz). Se registra el gap en el
-  DECISIONS del workspace; no bloquea el bootstrap.
-- `NOT_CONDITIONED` — sin `docs/develop/`. Blocker: recomienda `bootstrap-backend` /
-  `bootstrap-frontend` / `cdev-bootstrap` según rol y reanuda cuando esté condicionado.
-  **El bootstrap global jamás inventa el CDev de un hijo.**
+- `CDEV_READY` — everything present.
+- `CDEV_PARTIAL` — something non-critical missing (e.g. root CLAUDE.md). The gap is recorded in
+  the workspace's DECISIONS; it does not block the bootstrap.
+- `NOT_CONDITIONED` — no `docs/develop/`. Blocker: recommend `bootstrap-backend` /
+  `bootstrap-frontend` / `cdev-bootstrap` per role and resume once conditioned.
+  **The global bootstrap never invents a child's CDev.**
 
-## Fase C — Mapa del sistema
+## Phase C — System map
 
-Deriva de los `CLAUDE.md`/`PRODUCT.md` hijos: responsabilidad de cada repo, dependencias entre
-repos (quién consume a quién), dominios cruzados, contratos conocidos. Genera:
+Derive from the children's `CLAUDE.md`/`PRODUCT.md`: each repo's responsibility, inter-repo
+dependencies (who consumes whom), cross-cutting domains, known contracts. Generate:
 
-- `workspace/repos.yaml` — registro: id lógico → path, git, estado cdev, rol informativo.
-  Los stacks son metadata, no reglas; la autoridad operativa sigue siendo el CLAUDE.md hijo.
-- `workspace/repo-graph.yaml` — `depends_on` + `domains`. Informa la planificación; **no**
-  define participación en batches (eso lo hacen las referencias explícitas de cada
-  SYSTEM_BATCH).
-- `docs/develop/SYSTEM_ARCHITECTURE.md` — nodos, flechas, contratos.
+- `workspace/repos.yaml` — registry: logical id → path, git, cdev state, informative role.
+  Stacks are metadata, not rules; operational authority remains the child's CLAUDE.md.
+- `workspace/repo-graph.yaml` — `depends_on` + `domains`. Informs planning; it does **not**
+  define batch participation (that is done by each SYSTEM_BATCH's explicit references).
+- `docs/develop/SYSTEM_ARCHITECTURE.md` — nodes, arrows, contracts.
 
-## Fase D — Andamiaje
+## Phase D — Scaffolding
 
-Genera en la raíz del workspace:
+Generate at the workspace root:
 
 ```text
-CLAUDE.md                            # pequeño: coordinación, no duplica docs hijos
+CLAUDE.md                            # small: coordination, does not duplicate child docs
 docs/develop/
-├── PRODUCT.md                       # sistema completo + mapa de claridad global
+├── PRODUCT.md                       # whole system + global clarity map
 ├── SYSTEM_ARCHITECTURE.md
-├── SPRINTS.md                       # SYSTEM Sprints / SYSTEM_BATCHes (numeración propia)
-├── AGENT_PROGRESS.md                # handoff de coordinación, no diffs de código
-├── AGENT_EXECUTION_PROTOCOL.md      # deltas locales; el bucle genérico vive en cdev-monorepo
+├── SPRINTS.md                       # SYSTEM Sprints / SYSTEM_BATCHes (own numbering)
+├── AGENT_PROGRESS.md                # coordination handoff, not code diffs
+├── AGENT_EXECUTION_PROTOCOL.md      # local deltas; the generic loop lives in cdev-monorepo
 ├── ROADMAP.md
 ├── DECISIONS.md
-├── TESTING.md                       # niveles L0–L3; cada batch declara el suyo
-└── AUTONOMOUS_RUNBOOK.md            # cómo lanzar y qué esperar
+├── TESTING.md                       # levels L0–L3; each batch declares its own
+└── AUTONOMOUS_RUNBOOK.md            # how to launch and what to expect
 workspace/
 ├── repos.yaml
 ├── repo-graph.yaml
-├── state.lock.json                  # snapshot reproducible del estado coordinado
-├── contracts/                       # contratos cross-repo por SYSTEM_BATCH
+├── state.lock.json                  # reproducible snapshot of coordinated state
+├── contracts/                       # cross-repo contracts per SYSTEM_BATCH
 └── snapshots/
 .claude/agents/
-├── monorepo-repo-runner.md          # puente workspace → /cdev del repo
-└── monorepo-system-tester.md        # acceptance global L0–L3
+├── monorepo-repo-runner.md          # bridge workspace → the repo's /cdev
+└── monorepo-system-tester.md        # global acceptance L0–L3
 scripts/verify-monorepo-bootstrap.ps1
 ```
 
-La planificación NO es agente local: es la skill global `cdev-monorepo-planner`. Las skills
-`cdev-monorepo` y `cdev-monorepo-planner` permanecen globales — no se vendorizan copias.
+Planning is NOT a local agent: it is the global `cdev-monorepo-planner` skill. The
+`cdev-monorepo` and `cdev-monorepo-planner` skills remain global — no vendored copies.
 
-Contenido mínimo de cada doc: seguir el patrón de los repos hijos ya condicionados; ante duda,
-usar un workspace ya montado (p.ej. `compiss/monorepo`) como referencia canónica.
+Minimum content of each doc: follow the pattern of the already conditioned child repos; when
+in doubt, use an already assembled workspace (e.g. `compiss/monorepo`) as canonical reference.
 
-## Fase E — Git del workspace
+## Phase E — Workspace git
 
-Si la raíz no es repo: `git init`. `.gitignore` excluye **cada path de repo registrado** (los
-`.git` hijos jamás se anidan), más `worktrees/` y `logs/runs/`. Sin `origin` por defecto; el
-git del workspace versiona solo planificación/contratos/estado. Rama de trabajo futura:
-`cdev/system-sprint-<n>`. Commit inicial del andamiaje.
+If the root is not a repo: `git init`. `.gitignore` excludes **every registered repo path**
+(child `.git` dirs are never nested), plus `worktrees/` and `logs/runs/`. No `origin` by
+default; the workspace git versions only planning/contracts/state. Future working branch:
+`cdev/system-sprint-<n>`. Initial commit of the scaffolding.
 
-## Fase F — Estado inicial
+## Phase F — Initial state
 
-`state.lock.json` con snapshot por repo: branch, SHA, sprint/batch local activo. Es fotografía
-informativa; el gate de DONE de un batch solo mira sus referencias requeridas.
+`state.lock.json` with a per-repo snapshot: branch, SHA, active local sprint/batch. It is an
+informative photograph; a batch's DONE gate only looks at its required references.
 
-## Fase G — Gate humano (único)
+## Phase G — Human gate (single)
 
-Antes de escribir: presenta repos detectados (path, branch, SHA, clasificación CDev), grafo
-derivado, archivos a generar y esquema del primer SYSTEM Sprint si se deriva uno. Una
-confirmación y renderiza todo. Archivo existente → diff y preguntar, nunca sobrescribir en
-silencio. Si el usuario ya aprobó el diseño explícitamente en la conversación, esa aprobación
-cuenta como el gate.
+Before writing: present detected repos (path, branch, SHA, CDev classification), derived
+graph, files to generate and the outline of the first SYSTEM Sprint if one is derived. One
+confirmation and render everything. Existing file → diff and ask, never overwrite silently.
+If the user already explicitly approved the design in the conversation, that approval counts
+as the gate.
 
-## Al terminar
+## On finishing
 
-1. Ejecuta `scripts/verify-monorepo-bootstrap.ps1` (paths existen, sin placeholders, ≤1 SYSTEM
-   Sprint ACTIVE, referencias apuntan a sprints/batches reales, state.lock parseable, repos no
-   versionados por el git padre).
-2. Primera entrada en `AGENT_PROGRESS.md` global: bootstrap hecho, siguiente acción =
-   `/cdev-monorepo-planner` para derivar el primer SYSTEM Sprint real.
-3. Resumen "condicionado — cómo lanzar" apuntando al RUNBOOK.
+1. Run `scripts/verify-monorepo-bootstrap.ps1` (paths exist, no placeholders, ≤1 SYSTEM Sprint
+   ACTIVE, references point at real sprints/batches, state.lock parseable, repos not versioned
+   by the parent git).
+2. First entry in the global `AGENT_PROGRESS.md`: bootstrap done, next action =
+   `/cdev-monorepo-planner` to derive the first real SYSTEM Sprint.
+3. "Conditioned — how to launch" summary pointing at the RUNBOOK.

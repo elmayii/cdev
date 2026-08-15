@@ -1,86 +1,85 @@
 ---
 name: bootstrap-backend
-description: Úsala cuando haya que condicionar un repo que es SOLO backend (API, servicios, DB) para desarrollo continuo autónomo (CDev) — repo nuevo o existente sin docs/develop/, o cuando el usuario pida "bootstrap backend", "condicionar backend para cdev" o preparar un backend para que /cdev trabaje solo.
+description: Use when a repo that is backend ONLY (API, services, DB) must be conditioned for continuous autonomous development (CDev) — a new repo or an existing one without docs/develop/, or when the user asks to "bootstrap backend", "condition a backend for cdev", "condicionar backend para cdev", or to prepare a backend so /cdev can work alone.
 ---
 
 # Bootstrap Backend (CDev)
 
-Condiciona un repo backend para ejecución autónoma con **umbral de autonomía elevado**: el
-agente que luego corra `/cdev` solo parará ante bloqueos reales, nunca para preguntar "¿y ahora
-qué?". Este skill tiene dos mitades obligatorias:
+Conditions a backend repo for autonomous execution with an **elevated autonomy threshold**: the
+agent that later runs `/cdev` will stop only at real blockages, never to ask "now what?". This
+skill has two mandatory halves:
 
-- **Mitad A — Estructura:** armar/verificar la maquinaria CDev adaptada a backend.
-- **Mitad B — Claridad:** auditar hasta dónde está claro *qué* hay que producir, porque el nivel
-  de claridad define hasta dónde puede llegar la autonomía.
+- **Half A — Structure:** build/verify the CDev machinery adapted to a backend.
+- **Half B — Clarity:** audit how far it is clear *what* must be produced, because the level of
+  clarity defines how far autonomy may reach.
 
-Base: reutiliza `~/.claude/skills/cdev-bootstrap/templates/*` y su `PLACEHOLDERS.md` (mismo
-contrato `{{...}}`; cero `{{` sin resolver al terminar). Este skill define los **deltas backend**
-y el **perfil de autonomía** que esas plantillas no traen.
+Base: reuses `~/.claude/skills/cdev-bootstrap/templates/*` and its `PLACEHOLDERS.md` (same
+`{{...}}` contract; zero unresolved `{{` at the end). This skill defines the **backend deltas**
+and the **autonomy profile** those templates do not carry.
 
-## Mitad A — Estructura backend
+## Half A — Backend structure
 
-1. **Inspecciona el repo.** Stack (manifest/lockfile), framework (NestJS/Express/Fastify/Django/
-   Go...), ORM y schema (prisma/, migrations/), gestor de paquetes, shell. Resuelve placeholders.
-2. **Detecta la DB y clasifícala** — esto decide el gate más importante:
-   - **Remota/compartida** (Supabase, RDS, connection string a host externo): aplicar schema
-     (`db push`/`migrate deploy`) = **gate humano siempre**. El agente edita schema + `generate`,
-     y deja el apply como blocker.
-   - **Local/efímera** (docker compose, sqlite): migrar es parte de la verificación normal.
-3. **Fija la secuencia de verificación** desde los scripts reales del repo (típico:
-   `lint` → `build` (typecheck) → `test`). Sin framework de tests → instalar el del stack y dejar
-   Batch 01 = primer test real; un backend CDev sin gate de tests no queda condicionado.
-4. **Renderiza** CLAUDE.md, `docs/develop/*` (protocolo, SPRINTS, PROGRESS, ROADMAP, DECISIONS,
-   TESTING, RUNBOOK), `.claude/agents/*` y `.claude/skills/*` desde las plantillas, con estos
-   deltas backend:
-   - **Rol en CLAUDE.md:** ingeniero backend senior con autonomía; mandato aditivo (no romper
-     contratos vivos: campos opcionales, enums solo-añadir, endpoints nuevos versionados).
-   - **Patrón de módulo** del framework detectado como regla de arquitectura (p.ej. NestJS:
-     module/controller/resolver/service + repositorios).
-   - **Separación lectura/escritura** si hay GraphQL+REST (REST escribe, GraphQL lee) — solo si
-     el repo ya la practica; no la impongas a un repo REST puro.
-   - **Sin pasos de UI**: nada de Playwright/builds web; la evidencia runtime son tests (HTTP/
-     integración), no servers largos en background.
-   - **Entrega por sprint:** reporte de integración para consumidores (frontend/mobile/partners)
-     obligatorio antes de marcar un sprint DONE (plantilla SPRINT_FRONTEND_REPORT).
-5. **Escribe el perfil de autonomía elevada en el protocolo** (esto es lo que legitima que
-   `/cdev` no pare): en `AGENT_EXECUTION_PROTOCOL.md`, la sección de condiciones de parada debe
-   decir que al agotar el plan el agente **deriva trabajo siguiente él mismo** (orden: backlog
-   documentado → backfill de tests → hardening/observabilidad → borrador de fase siguiente como
-   propuesta) y solo para ante bloqueos reales o gates humanos. Los gates de seguridad (§ abajo)
-   nunca se elevan.
-6. **Night-runner:** renderiza `scripts/claude-night-runner.ps1` como opción de reanudación por
-   cuota, pero documenta en el RUNBOOK que el bucle primario es la skill `cdev-backend`.
+1. **Inspect the repo.** Stack (manifest/lockfile), framework (NestJS/Express/Fastify/Django/
+   Go...), ORM and schema (prisma/, migrations/), package manager, shell. Resolve placeholders.
+2. **Detect the DB and classify it** — this decides the most important gate:
+   - **Remote/shared** (Supabase, RDS, connection string to an external host): applying schema
+     (`db push`/`migrate deploy`) = **human gate, always**. The agent edits schema + `generate`,
+     and leaves the apply as a blocker.
+   - **Local/ephemeral** (docker compose, sqlite): migrating is part of normal verification.
+3. **Fix the verification sequence** from the repo's real scripts (typical:
+   `lint` → `build` (typecheck) → `test`). No test framework → install the stack's one and make
+   Batch 01 = first real test; a CDev backend without a test gate is not conditioned.
+4. **Render** CLAUDE.md, `docs/develop/*` (protocol, SPRINTS, PROGRESS, ROADMAP, DECISIONS,
+   TESTING, RUNBOOK), `.claude/agents/*` and `.claude/skills/*` from the templates, with these
+   backend deltas:
+   - **Role in CLAUDE.md:** senior backend engineer with autonomy; additive mandate (don't break
+     live contracts: optional fields, add-only enums, new endpoints versioned).
+   - **Module pattern** of the detected framework as an architecture rule (e.g. NestJS:
+     module/controller/resolver/service + repositories).
+   - **Read/write separation** if GraphQL+REST coexist (REST writes, GraphQL reads) — only if
+     the repo already practices it; do not impose it on a pure REST repo.
+   - **No UI steps**: no Playwright/web builds; runtime evidence is tests (HTTP/integration),
+     not long-running background servers.
+   - **Per-sprint deliverable:** integration report for consumers (frontend/mobile/partners)
+     mandatory before marking a sprint DONE (SPRINT_FRONTEND_REPORT template).
+5. **Write the elevated autonomy profile into the protocol** (this is what legitimizes `/cdev`
+   not stopping): in `AGENT_EXECUTION_PROTOCOL.md`, the stop-conditions section must say that
+   when the plan runs out the agent **derives the next work itself** (order: documented
+   backlog → test backfill → hardening/observability → draft of the next phase as a proposal)
+   and stops only at real blockages or human gates. Safety gates (§ below) are never elevated.
+6. **Night-runner:** render `scripts/claude-night-runner.ps1` as a quota-resumption option, but
+   document in the RUNBOOK that the primary loop is the `cdev-backend` skill.
 
-## Mitad B — Claridad de producto
+## Half B — Product clarity
 
-Sin esto el umbral elevado es peligroso: autonomía ≠ inventar producto.
+Without this the elevated threshold is dangerous: autonomy ≠ inventing product.
 
-1. **Inventario de fuentes.** Enumera docs de producto/spec (y READMEs, schema, código si el repo
-   ya existe). Ordena por autoridad.
-2. **Puntúa cada área de dominio** detectada:
-   - `DEFINIDO` — spec + criterios de aceptación derivables. El agente puede trabajarla solo.
-   - `PARCIAL` — intención clara, detalle ambiguo. El agente trabaja lo claro y registra cada
-     supuesto en DECISIONS.
-   - `AUSENTE` — solo existe el nombre. Prohibido inventarla: se registra como pregunta abierta.
-3. **Escribe el mapa de claridad** en `docs/develop/PRODUCT.md` (tabla área → nivel → fuente →
-   preguntas abiertas). Este mapa es la frontera de la autonomía: `/cdev` solo autoelige trabajo
-   dentro de DEFINIDO/PARCIAL.
-4. **Deriva SPRINTS.md hasta donde la claridad alcance.** Sprint 01 `ACTIVE` con Batch 01 `READY`
-   y acceptance objetiva; áreas PARCIAL → batches con sus supuestos anotados; AUSENTE → ni sprint
-   ni batch, solo pregunta abierta en DECISIONS.
+1. **Source inventory.** Enumerate product/spec docs (and READMEs, schema, code if the repo
+   already exists). Order by authority.
+2. **Score every detected domain area**:
+   - `DEFINED` — spec + derivable acceptance criteria. The agent may work it alone.
+   - `PARTIAL` — intent is clear, detail is ambiguous. The agent works the clear part and
+     records every assumption in DECISIONS.
+   - `ABSENT` — only the name exists. Inventing it is forbidden: recorded as an open question.
+3. **Write the clarity map** in `docs/develop/PRODUCT.md` (table area → level → source → open
+   questions). This map is the boundary of autonomy: `/cdev` only self-selects work inside
+   DEFINED/PARTIAL.
+4. **Derive SPRINTS.md as far as clarity reaches.** Sprint 01 `ACTIVE` with Batch 01 `READY`
+   and objective acceptance; PARTIAL areas → batches with their assumptions noted; ABSENT →
+   neither sprint nor batch, only an open question in DECISIONS.
 
-## Gate humano (único)
+## Human gate (single)
 
-Antes de escribir archivo alguno: presenta tabla de placeholders resueltos + mapa de claridad +
-outline de fases/sprints. Una confirmación (o ediciones) y escribe todo. Si un archivo destino ya
-existe, muestra diff y pregunta — nunca sobrescribir en silencio.
+Before writing any file: present the table of resolved placeholders + clarity map + phase/
+sprint outline. One confirmation (or edits) and write everything. If a target file already
+exists, show the diff and ask — never overwrite silently.
 
-## Gates de seguridad que el bootstrap deja escritos (no negociables)
+## Safety gates the bootstrap leaves written (non-negotiable)
 
-Apply de schema a DB remota · push a main/develop · deploy · operaciones DB destructivas ·
-secretos/tokens live · borrado de datos. El perfil elevado eleva el *qué trabajar*, jamás estos.
+Schema apply to a remote DB · push to main/develop · deploy · destructive DB operations ·
+live secrets/tokens · data deletion. The elevated profile raises *what to work on*, never these.
 
-## Al terminar
+## On finishing
 
-Entrada inicial en `AGENT_PROGRESS.md` (bootstrap hecho, Sprint 01 ACTIVE, siguiente acción =
-`/cdev`) y resumen "condicionado — cómo lanzar" apuntando al RUNBOOK.
+Initial entry in `AGENT_PROGRESS.md` (bootstrap done, Sprint 01 ACTIVE, next action = `/cdev`)
+and a "conditioned — how to launch" summary pointing at the RUNBOOK.

@@ -1,106 +1,110 @@
 ---
 name: bootstrap-frontend
-description: Úsala cuando haya que condicionar un repo que es SOLO frontend (UI que consume backend externo) para desarrollo continuo autónomo (CDev) — repo nuevo o existente sin docs/develop/, o cuando el usuario pida "bootstrap frontend", "condicionar frontend para cdev", o verificar si un frontend está listo para que /cdev trabaje solo.
+description: Use when a repo that is frontend ONLY (UI consuming an external backend) must be conditioned for continuous autonomous development (CDev) — a new repo or an existing one without docs/develop/, or when the user asks to "bootstrap frontend", "condition a frontend for cdev", "condicionar frontend para cdev", or to check whether a frontend is ready for /cdev to work alone.
 ---
 
 # Bootstrap Frontend (CDev)
 
-Condiciona un repo frontend para ejecución autónoma con **umbral de autonomía elevado**: el
-agente que luego corra `/cdev` solo parará ante bloqueos reales, nunca para preguntar "¿y ahora
-qué?". Este skill tiene dos mitades obligatorias:
+Conditions a frontend repo for autonomous execution with an **elevated autonomy threshold**: the
+agent that later runs `/cdev` will stop only at real blockages, never to ask "now what?". This
+skill has two mandatory halves:
 
-- **Mitad A — Estructura:** armar/verificar la maquinaria CDev adaptada a frontend.
-- **Mitad B — Claridad:** auditar hasta dónde está claro *qué* hay que producir, porque el nivel
-  de claridad define hasta dónde puede llegar la autonomía.
+- **Half A — Structure:** build/verify the CDev machinery adapted to a frontend.
+- **Half B — Clarity:** audit how far it is clear *what* must be produced, because the level of
+  clarity defines how far autonomy may reach.
 
-Base: reutiliza `~/.claude/skills/cdev-bootstrap/templates/*` y su `PLACEHOLDERS.md` (mismo
-contrato `{{...}}`; cero `{{` sin resolver al terminar). Este skill define los **deltas frontend**
-y el **perfil de autonomía** que esas plantillas no traen. Es idempotente: sobre un repo ya
-condicionado actúa como auditoría (checklist de deltas abajo) y propone diffs, nunca sobrescribe
-en silencio.
+Base: reuses `~/.claude/skills/cdev-bootstrap/templates/*` and its `PLACEHOLDERS.md` (same
+`{{...}}` contract; zero unresolved `{{` at the end). This skill defines the **frontend deltas**
+and the **autonomy profile** those templates do not carry. It is idempotent: on an already
+conditioned repo it acts as an audit (delta checklist below) and proposes diffs, never
+overwrites silently.
 
-## Mitad A — Estructura frontend
+## Half A — Frontend structure
 
-1. **Inspecciona el repo.** Framework (Next/Vite/Astro/Expo...), gestor de paquetes, **targets**
-   (¿solo web, o web + port mobile/desktop en subcarpeta?), puertos de dev server, scripts reales
-   del manifest. Resuelve placeholders.
-2. **Detecta el backend consumido y decláralo intocable** — el gate más importante de un frontend:
-   endpoints (GraphQL/REST), cliente (Apollo/fetch/tRPC), auth (Supabase/Auth0...), env vars.
-   Cambios de backend/esquema/migraciones **se coordinan fuera del repo = gate humano siempre**.
-   Anota la URL del backend dev y las cuentas de prueba si existen (la verificación runtime las
-   necesita). Detecta pins de versión frágiles (locks documentados tipo Apollo) y déjalos escritos
-   como gate.
-3. **Fija la secuencia de verificación real** — en frontend los gates engañan; verifica cada uno
-   contra el repo antes de escribirlo:
-   - **Gate de tipos:** el comando con el tsconfig correcto por target (un `tsc` a secas sobre un
-     monorepo o un build con `ignoreBuildErrors` **no** son gate). Pruébalo.
-   - **Builds por target** (web, port mobile, etc.).
-   - **Evidencia runtime UI:** flujo tocado en dev server + backend dev arriba + cuentas de
-     prueba, vía **Playwright MCP**. Es paso obligatorio antes de cada `DONE`. Si el Playwright
-     MCP no está configurado, déjalo como requisito bloqueante escrito en el RUNBOOK, no lo omitas.
-4. **Renderiza** CLAUDE.md, `docs/develop/*` (protocolo, SPRINTS, PROGRESS, ROADMAP, PRODUCT,
-   ARCHITECTURE, DECISIONS, TESTING, RUNBOOK) y `.claude/agents/*` desde las plantillas.
-   **Omite** `00_repo_conditioning.md.tmpl` (backend-céntrico) y las plantillas de
-   `.claude/skills/*`. Las plantillas base son genéricas/backend: no basta rellenar
-   placeholders — reescribe lo que choque con el rol (reglas de dominio con DB/state-machines,
-   la nota que prefiere tests a dev server, trailer/modelo hardcodeado desactualizado) según
-   estos deltas frontend:
-   - **Rol en CLAUDE.md:** ingeniero frontend senior con autonomía; consume backend externo, no lo
-     construye.
-   - **Target principal primero** (web-first si hay varios): implementar y validar en el
-     principal, luego portar según **convención de port** explícita (misma ruta relativa; sin
-     imports del framework web en el port; env vía wrapper; paridad por ruta).
-   - **Reutilizar antes que crear:** UI kit existente (shadcn/ui o equivalente), stores, hooks,
-     queries; sin deps nuevas ni abstracciones especulativas.
-   - **Sin pasos de DB/schema:** nada de migraciones ni seeds; la evidencia runtime es UI real
-     contra el backend dev, no tests de integración de servidor.
-   - **Skills de ejecución:** el bucle primario es la skill global `cdev-frontend`; no vendorices
-     skills por-repo salvo que el repo necesite pasos que la global no cubra.
-5. **Escribe el perfil de autonomía elevada en el protocolo** (esto es lo que legitima que
-   `/cdev` no pare): en `AGENT_EXECUTION_PROTOCOL.md`, la sección de condiciones de parada debe
-   decir que al agotar el plan el agente **deriva trabajo siguiente él mismo** (orden: backlog
-   documentado → paridad/port entre targets → deuda marcada y gaps de evidencia runtime →
-   borrador de fase siguiente como `PROPOSAL`) y solo para ante bloqueos reales o gates humanos.
-   Los gates de seguridad (§ abajo) nunca se elevan.
-6. **Night-runner:** renderiza `scripts/claude-night-runner.ps1` solo como opción de reanudación
-   por cuota, con su directiva de skills apuntando a la global `cdev-frontend` (no a skills
-   por-repo), y documenta en el RUNBOOK que el bucle primario es `/cdev` (skill `cdev-frontend`).
+1. **Inspect the repo.** Framework (Next/Vite/Astro/Expo...), package manager, **targets**
+   (web only, or web + mobile/desktop port in a subfolder?), dev server ports, real manifest
+   scripts. Resolve placeholders.
+2. **Detect the consumed backend and declare it untouchable** — a frontend's most important
+   gate: endpoints (GraphQL/REST), client (Apollo/fetch/tRPC), auth (Supabase/Auth0...), env
+   vars. Backend/schema/migration changes **are coordinated outside the repo = human gate,
+   always**. Note the dev backend URL and test accounts if they exist (runtime verification
+   needs them). Detect fragile version pins (documented locks, Apollo-style) and leave them
+   written as a gate.
+3. **Fix the real verification sequence** — frontend gates lie; verify each one against the
+   repo before writing it down:
+   - **Type gate:** the command with the correct tsconfig per target (a bare `tsc` over a
+     monorepo, or a build with `ignoreBuildErrors`, is **not** a gate). Try it.
+   - **Builds per target** (web, mobile port, etc.).
+   - **Runtime UI evidence:** the touched flow on the dev server + dev backend up + test
+     accounts, via **Playwright MCP**. It is a mandatory step before every `DONE`. If the
+     Playwright MCP is not configured, leave it as a written blocking requirement in the
+     RUNBOOK; do not omit it.
+4. **Render** CLAUDE.md, `docs/develop/*` (protocol, SPRINTS, PROGRESS, ROADMAP, PRODUCT,
+   ARCHITECTURE, DECISIONS, TESTING, RUNBOOK) and `.claude/agents/*` from the templates.
+   **Skip** `00_repo_conditioning.md.tmpl` (backend-centric) and the `.claude/skills/*`
+   templates. The base templates are generic/backend: filling placeholders is not enough —
+   rewrite whatever clashes with the role (domain rules with DB/state-machines, the note
+   preferring tests over dev server, the outdated hardcoded trailer/model) per these frontend
+   deltas:
+   - **Role in CLAUDE.md:** senior frontend engineer with autonomy; consumes an external
+     backend, does not build it.
+   - **Main target first** (web-first if several): implement and validate on the main target,
+     then port per an explicit **port convention** (same relative path; no web-framework
+     imports in the port; env via wrapper; parity per route).
+   - **Reuse before creating:** existing UI kit (shadcn/ui or equivalent), stores, hooks,
+     queries; no new deps, no speculative abstractions.
+   - **No DB/schema steps:** no migrations, no seeds; runtime evidence is real UI against the
+     dev backend, not server integration tests.
+   - **Execution skills:** the primary loop is the global `cdev-frontend` skill; do not vendor
+     per-repo skills unless the repo needs steps the global one does not cover.
+5. **Write the elevated autonomy profile into the protocol** (this is what legitimizes `/cdev`
+   not stopping): in `AGENT_EXECUTION_PROTOCOL.md`, the stop-conditions section must say that
+   when the plan runs out the agent **derives the next work itself** (order: documented
+   backlog → parity/port between targets → marked debt and runtime-evidence gaps → draft of
+   the next phase as `PROPOSAL`) and stops only at real blockages or human gates. Safety gates
+   (§ below) are never elevated.
+6. **Night-runner:** render `scripts/claude-night-runner.ps1` only as a quota-resumption
+   option, with its skills directive pointing at the global `cdev-frontend` (not per-repo
+   skills), and document in the RUNBOOK that the primary loop is `/cdev` (skill
+   `cdev-frontend`).
 
-## Mitad B — Claridad de producto
+## Half B — Product clarity
 
-Sin esto el umbral elevado es peligroso: autonomía ≠ inventar producto.
+Without this the elevated threshold is dangerous: autonomy ≠ inventing product.
 
-1. **Inventario de fuentes.** Docs de producto/spec, diseños (Figma/mocks), **contrato del
-   backend** (esquema GraphQL/OpenAPI, reportes por sprint si existen), READMEs, código ya
-   escrito. Ordena por autoridad.
-2. **Puntúa cada área de dominio** detectada:
-   - `DEFINIDO` — spec + contrato backend + criterios de aceptación derivables. El agente puede
-     trabajarla solo.
-   - `PARCIAL` — intención clara pero falta detalle (diseño sin contrato, contrato sin diseño).
-     El agente trabaja lo claro y registra cada supuesto en DECISIONS. Un área sin contrato
-     backend definido es como mucho `PARCIAL`.
-   - `AUSENTE` — solo existe el nombre. Prohibido inventarla: se registra como pregunta abierta.
-3. **Escribe el mapa de claridad** en `docs/develop/PRODUCT.md` (tabla área → nivel → fuente →
-   preguntas abiertas; la plantilla base no trae hueco para la tabla — extiéndela). Este mapa es la frontera de la autonomía: `/cdev` solo autoelige trabajo
-   dentro de DEFINIDO/PARCIAL.
-4. **Deriva SPRINTS.md hasta donde la claridad alcance.** Sprint 01 `ACTIVE` con Batch 01 `READY`
-   y acceptance objetiva (incluida la evidencia runtime exigida); áreas PARCIAL → batches con sus
-   supuestos anotados; AUSENTE → ni sprint ni batch, solo pregunta abierta en DECISIONS.
+1. **Source inventory.** Product/spec docs, designs (Figma/mocks), **backend contract**
+   (GraphQL/OpenAPI schema, per-sprint reports if they exist), READMEs, code already written.
+   Order by authority.
+2. **Score every detected domain area**:
+   - `DEFINED` — spec + backend contract + derivable acceptance criteria. The agent may work
+     it alone.
+   - `PARTIAL` — intent is clear but detail is missing (design without contract, contract
+     without design). The agent works the clear part and records every assumption in
+     DECISIONS. An area without a defined backend contract is at most `PARTIAL`.
+   - `ABSENT` — only the name exists. Inventing it is forbidden: recorded as an open question.
+3. **Write the clarity map** in `docs/develop/PRODUCT.md` (table area → level → source → open
+   questions; the base template has no slot for the table — extend it). This map is the
+   boundary of autonomy: `/cdev` only self-selects work inside DEFINED/PARTIAL.
+4. **Derive SPRINTS.md as far as clarity reaches.** Sprint 01 `ACTIVE` with Batch 01 `READY`
+   and objective acceptance (including the required runtime evidence); PARTIAL areas → batches
+   with their assumptions noted; ABSENT → neither sprint nor batch, only an open question in
+   DECISIONS.
 
-## Gate humano (único)
+## Human gate (single)
 
-Antes de escribir archivo alguno: presenta tabla de placeholders resueltos + mapa de claridad +
-outline de fases/sprints. Una confirmación (o ediciones) y escribe todo. Si un archivo destino ya
-existe, muestra diff y pregunta — nunca sobrescribir en silencio.
+Before writing any file: present the table of resolved placeholders + clarity map + phase/
+sprint outline. One confirmation (or edits) and write everything. If a target file already
+exists, show the diff and ask — never overwrite silently.
 
-## Gates de seguridad que el bootstrap deja escritos (no negociables)
+## Safety gates the bootstrap leaves written (non-negotiable)
 
-Tocar backend/esquema/migraciones · push a main/develop · abrir PR · deploy (hosting/stores) ·
-subir pins de versión documentados · añadir dependencias nuevas · operar pagos en real · romper
-deep/universal links · secretos/tokens live. El perfil elevado eleva el *qué trabajar*, jamás estos.
+Touching backend/schema/migrations · push to main/develop · opening PRs · deploy
+(hosting/stores) · raising documented version pins · adding new dependencies · operating real
+payments · breaking deep/universal links · live secrets/tokens. The elevated profile raises
+*what to work on*, never these.
 
-## Al terminar
+## On finishing
 
-Entrada inicial en `AGENT_PROGRESS.md` (bootstrap hecho, Sprint 01 ACTIVE, siguiente acción =
-`/cdev`) y resumen "condicionado — cómo lanzar" apuntando al RUNBOOK. Valida: cero `{{` sin
-resolver y exactamente un sprint `ACTIVE`.
+Initial entry in `AGENT_PROGRESS.md` (bootstrap done, Sprint 01 ACTIVE, next action = `/cdev`)
+and a "conditioned — how to launch" summary pointing at the RUNBOOK. Validate: zero unresolved
+`{{` and exactly one `ACTIVE` sprint.

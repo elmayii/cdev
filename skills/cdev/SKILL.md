@@ -1,32 +1,32 @@
 ---
 name: cdev
-description: Úsala cuando el usuario invoque /cdev (con o sin argumentos) en un repo condicionado para desarrollo continuo autónomo — arranca el ciclo de trabajo adaptándose al rol que el propio repo define.
+description: Use when the user invokes /cdev (with or without arguments) in a repo conditioned for continuous autonomous development — starts the work cycle adapting to the role the repo itself defines.
 ---
 
 # CDev — dispatcher
 
-Punto de entrada único del ciclo CDev. Identifica el rol del repo y aplica el bucle que toque.
+Single entry point of the CDev cycle. Identify the repo's role and apply the loop that fits.
 
-## Procedimiento
+## Procedure
 
-1. **Identifica el rol** leyendo `CLAUDE.md` del repo y `docs/develop/` (RECOGNITION/
-   RECONOCIMIENTO, AGENT_EXECUTION_PROTOCOL). Señales:
-   - **Backend**: API/servicios/schema propio (NestJS, Express, Django, Go...), sin UI.
-   - **Frontend**: consume backend externo; verificación = typecheck + builds + runtime UI
-     (Playwright); prohibido tocar backend/esquema.
-   - **Fullstack/otro**: el CLAUDE.md lo dirá; ante duda, gana lo que declare el repo.
-2. **Backend** → invoca la skill `cdev-backend` y sigue su bucle.
-3. **Frontend** → invoca la skill `cdev-frontend` y sigue su bucle.
-4. **Fullstack/otro** → mismo contrato de autonomía de `cdev-backend`/`cdev-frontend` (trabajar
-   hasta bloqueo, blocked-but-not-idle, auto-avance, solo parar ante bloqueos reales, gates de
-   seguridad nunca elevados) pero con la mecánica del propio repo: su secuencia de verificación,
-   sus ramas, sus gates y sus skills locales tal como los fija su `AGENT_EXECUTION_PROTOCOL.md`.
-5. **Sin argumento** = reanudar el trabajo pendiente del plan (`SPRINTS.md` + `AGENT_PROGRESS.md`
-   + git). **Con argumento** = úsalo como foco (p.ej. `/cdev sprint 09`), mismo bucle acotado a
-   ese objetivo.
+1. **Identify the role** by reading the repo's `CLAUDE.md` and `docs/develop/` (RECOGNITION
+   document, AGENT_EXECUTION_PROTOCOL). Signals:
+   - **Backend**: API/services/own schema (NestJS, Express, Django, Go...), no UI.
+   - **Frontend**: consumes an external backend; verification = typecheck + builds + runtime UI
+     (Playwright); touching the backend/schema is forbidden.
+   - **Fullstack/other**: the CLAUDE.md will say; when in doubt, what the repo declares wins.
+2. **Backend** → invoke the `cdev-backend` skill and follow its loop.
+3. **Frontend** → invoke the `cdev-frontend` skill and follow its loop.
+4. **Fullstack/other** → same autonomy contract as `cdev-backend`/`cdev-frontend` (work until
+   blocked, blocked-but-not-idle, auto-advance, stop only at real blockages, safety gates never
+   elevated) but with the repo's own mechanics: its verification sequence, its branches, its
+   gates and its local skills as fixed by its `AGENT_EXECUTION_PROTOCOL.md`.
+5. **No argument** = resume the plan's pending work (`SPRINTS.md` + `AGENT_PROGRESS.md` + git).
+   **With argument** = use it as focus (e.g. `/cdev sprint 09`), same loop scoped to that
+   objective.
 
-## Si el repo no está condicionado
+## If the repo is not conditioned
 
-No hay `docs/develop/` con SPRINTS/protocolo → no improvises el bucle: propone condicionarlo
-(`bootstrap-backend` si es backend; `bootstrap-frontend` si es frontend; el kit `cdev-bootstrap`
-genérico si no) y para ahí.
+No `docs/develop/` with SPRINTS/protocol → do not improvise the loop: propose conditioning it
+(`bootstrap-backend` if it is a backend; `bootstrap-frontend` if it is a frontend; the generic
+`cdev-bootstrap` kit otherwise) and stop there.

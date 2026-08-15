@@ -1,74 +1,74 @@
 ---
 name: cdev-monorepo-planner
-description: Úsala cuando haya que planificar trabajo cross-repo en un workspace CDev Monorepo — convertir un objetivo del sistema en SYSTEM_BATCHes con referencias locales reales, o analizar todos los repos para hallar gaps (features a medio integrar, contratos rotos, paridad pendiente) y proponer los siguientes SYSTEM Sprints. También cuando el usuario invoque /cdev-monorepo-planner o pida "planifica el monorepo", "qué falta por integrar".
+description: Use when cross-repo work must be planned in a CDev Monorepo workspace — turning a system objective into SYSTEM_BATCHes with real local references, or analyzing all repos to find gaps (half-integrated features, broken contracts, pending parity) and proposing the next SYSTEM Sprints. Also when the user invokes /cdev-monorepo-planner or asks "plan the monorepo", "what's left to integrate", "planifica el monorepo", "qué falta por integrar".
 ---
 
 # CDev Monorepo Planner
 
-Cerebro de planificación del workspace. **No implementa código.** Dos modos según lo pedido;
-sin argumento claro, ejecuta ambos: primero gap-analysis, luego materializa lo aprobado.
+Planning brain of the workspace. **Never implements code.** Two modes depending on what is
+asked; without a clear argument, run both: gap analysis first, then materialize what is approved.
 
-## Modo 1 — Materializar un objetivo (objetivo → SYSTEM_BATCH ejecutable)
+## Mode 1 — Materialize an objective (objective → executable SYSTEM_BATCH)
 
-1. **Define el batch**: `SYS-<sprint>-B<n>` en `SPRINTS.md` global con objetivo observable,
-   repos afectados (y explícitamente no afectados si aclara alcance), acceptance global y
-   nivel de verificación L0–L3. Nace `PLANNED`.
-2. **Lee el CDev local de cada repo afectado** (`SPRINTS.md`, `AGENT_PROGRESS.md`, protocolo):
-   sprint activo, batches existentes, bloqueos, orden. **Respeto absoluto al orden local**:
-   - trabajo ya existente que coincide → **adoptar** la referencia, no duplicar;
-   - cabe en el sprint activo → nuevo batch al final de ese sprint;
-   - pertenece a fase posterior → batch en el siguiente sprint local `PENDING` (sin forzarlo
-     a `ACTIVE` ni renumerar nada).
-3. **Escribe referencias bidireccionales**:
-   - workspace: repo / sprint local / batch local / required / depends_on;
-   - repo: `System Reference: SYS-XX-BXX` en el batch local + nota en su `AGENT_PROGRESS.md`.
-   El repo debe poder continuar solo, sin el workspace abierto.
-4. **Contrato cross-repo** si el batch toca una interfaz entre repos:
-   `workspace/contracts/SYS-XX-BXX.md` (objetivo, repos, contrato API/datos, compatibilidad,
-   orden de implementación, acceptance por repo y global, orden de despliegue). Copia/extracto
-   en `docs/develop/external-contracts/` del repo cuando la independencia local lo necesite.
-5. **DAG**: `depends_on` entre referencias del batch (solo las del batch). Productor antes que
-   consumidor (típico: backend expone → frontend consume).
-6. **Sync points (obligatorio en toda dependencia productor→consumidor)**: fija el **artefacto
-   concreto** que materializa el handoff — un reporte técnico que el batch productor publica
-   como parte de su acceptance (usar la convención de reportes que el repo productor ya tenga;
-   si no tiene, `docs/develop/reports/<sprint>-<batch>.md`). Escribe en la referencia
-   consumidora la línea `Wait-for: <repo-productor>/<path-del-reporte>`: en ejecución, el
-   agente consumidor **irá a buscar** ese archivo (pull, no aviso) y esperará/rotará si no
-   existe — así se integra sin mockear el contrato del otro repo. Sin sync point declarado,
-   una dependencia cross-repo no está planificada.
-7. **Promueve a `READY`** solo cuando toda referencia requerida existe, respeta la secuencia
-   local, tiene acceptance suficiente y sus sync points declarados.
+1. **Define the batch**: `SYS-<sprint>-B<n>` in the global `SPRINTS.md` with an observable
+   objective, affected repos (and explicitly the non-affected ones if that clarifies scope),
+   global acceptance and verification level L0–L3. It is born `PLANNED`.
+2. **Read the local CDev of each affected repo** (`SPRINTS.md`, `AGENT_PROGRESS.md`, protocol):
+   active sprint, existing batches, blockages, order. **Absolute respect for local order**:
+   - existing work that already matches → **adopt** the reference, don't duplicate;
+   - fits the active sprint → new batch at the end of that sprint;
+   - belongs to a later phase → batch in the next `PENDING` local sprint (without forcing it
+     to `ACTIVE` or renumbering anything).
+3. **Write bidirectional references**:
+   - workspace: repo / local sprint / local batch / required / depends_on;
+   - repo: `System Reference: SYS-XX-BXX` in the local batch + note in its `AGENT_PROGRESS.md`.
+   The repo must be able to continue alone, without the workspace open.
+4. **Cross-repo contract** if the batch touches an interface between repos:
+   `workspace/contracts/SYS-XX-BXX.md` (objective, repos, API/data contract, compatibility,
+   implementation order, per-repo and global acceptance, deploy order). Copy/extract into the
+   repo's `docs/develop/external-contracts/` when local independence needs it.
+5. **DAG**: `depends_on` between the batch's references (only the batch's own). Producer before
+   consumer (typical: backend exposes → frontend consumes).
+6. **Sync points (mandatory on every producer→consumer dependency)**: fix the **concrete
+   artifact** that materializes the handoff — a technical report the producer batch publishes
+   as part of its acceptance (use the report convention the producer repo already has; if it
+   has none, `docs/develop/reports/<sprint>-<batch>.md`). Write in the consuming reference the
+   line `Wait-for: <producer-repo>/<report-path>`: during execution, the consuming agent
+   **goes looking for** that file (pull, not notification) and waits/rotates if it does not
+   exist — that is how integration happens without mocking the other repo's contract. Without
+   a declared sync point, a cross-repo dependency is not planned.
+7. **Promote to `READY`** only when every required reference exists, respects the local
+   sequence, has sufficient acceptance and its sync points declared.
 
-Dos numeraciones independientes: SYSTEM Sprint/Batch ≠ sprint/batch local. Nunca igualarlas,
-nunca obligar a todos los repos a participar, nunca crear sprints locales espejo.
+Two independent numberings: SYSTEM Sprint/Batch ≠ local sprint/batch. Never equate them, never
+force every repo to participate, never create mirror local sprints.
 
-## Modo 2 — Gap analysis (buscar qué hacer y qué falta por integrar)
+## Mode 2 — Gap analysis (find what to do and what is left to integrate)
 
-Recorre workspace + repos registrados y produce un informe con candidatos accionables:
+Sweep the workspace + registered repos and produce a report with actionable candidates:
 
-1. **Integración a medias**: features DONE en un repo cuyo consumidor no las consume aún
-   (reportes de sprint del backend vs queries reales del frontend; endpoints expuestos sin UI;
-   UI esperando contrato inexistente).
-2. **Contratos**: divergencia entre schema/API del productor y tipos/queries de consumidores;
-   contratos en `workspace/contracts/` sin reflejar en repos; breaking changes sin batch de
-   adopción.
-3. **Estado CDev**: repos `CDEV_PARTIAL`/`NOT_CONDITIONED`, repos sin sprint `ACTIVE` (plan
-   agotado — candidato natural a siguiente SYSTEM Sprint), bloqueos locales antiguos,
-   divergencias workspace↔repo sin reconciliar.
-4. **Dominios del grafo**: por cada dominio de `repo-graph.yaml`, ¿los repos del dominio están
-   al mismo nivel funcional? Asimetrías = candidatos.
-5. **Deuda de coordinación**: batches globales `BLOCKED` con decisión humana pendiente,
-   snapshots desactualizados, verificación global nunca corrida.
+1. **Half-done integration**: features DONE in one repo whose consumer does not consume them
+   yet (backend sprint reports vs the frontend's real queries; exposed endpoints without UI;
+   UI waiting for a non-existent contract).
+2. **Contracts**: divergence between the producer's schema/API and consumers' types/queries;
+   contracts in `workspace/contracts/` not reflected in repos; breaking changes without an
+   adoption batch.
+3. **CDev state**: repos `CDEV_PARTIAL`/`NOT_CONDITIONED`, repos with no `ACTIVE` sprint
+   (plan exhausted — natural candidate for the next SYSTEM Sprint), old local blockages,
+   unreconciled workspace↔repo divergences.
+4. **Graph domains**: for each domain in `repo-graph.yaml`, are the domain's repos at the same
+   functional level? Asymmetries = candidates.
+5. **Coordination debt**: global `BLOCKED` batches with a pending human decision, outdated
+   snapshots, global verification never run.
 
-Salida: tabla candidato → repos → evidencia → propuesta (SYSTEM_BATCH borrador). Los aprobados
-entran a `SPRINTS.md` global como `PROPOSAL`/`PLANNED` vía Modo 1. **Los no derivables de
-evidencia documental no se inventan**: pregunta abierta en `DECISIONS.md`.
+Output: table candidate → repos → evidence → proposal (draft SYSTEM_BATCH). Approved ones
+enter the global `SPRINTS.md` as `PROPOSAL`/`PLANNED` via Mode 1. **Findings not derivable
+from documentary evidence are not invented**: open question in `DECISIONS.md`.
 
-## Reglas
+## Rules
 
-- Fuente de verdad local es el repo; el planner lee, referencia y propone — no marca estados
-  locales ni ejecuta trabajo de implementación.
-- Todo hallazgo con evidencia (fichero/línea/commit), no impresiones.
-- El grafo de dominios sugiere impacto; la participación real la fija cada batch.
-- Registrar decisiones de planificación en `DECISIONS.md` global con fecha.
+- The local source of truth is the repo; the planner reads, references and proposes — it does
+  not mark local states or execute implementation work.
+- Every finding with evidence (file/line/commit), not impressions.
+- The domain graph suggests impact; actual participation is fixed by each batch.
+- Record planning decisions in the global `DECISIONS.md`, dated.
