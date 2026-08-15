@@ -123,7 +123,7 @@ ordered the open-source strategy (S05–S08) first, 2026-08-15. Batches to be ma
 
 ## Sprint 05 — Open-source readiness `DONE`
 
-Source: `the internal strategy document (kept outside the repo)` §22 Phase 1. Gates pre-authorized
+Source: `the internal strategy document (local, gitignored)` §22 Phase 1. Gates pre-authorized
 in-session (see DECISIONS 2026-08-15); external-communication acts remain human forever.
 
 ### B01 — Branch policy `DONE`
@@ -198,8 +198,8 @@ Links resolve, render checked, report `s06.md`. **Acceptance:** checks pass; rep
 ### B04 — Official-repo cleanup `DONE` (depends: B03; appended 2026-08-15, human-agreed)
 
 Move out of the public repo, to local `scratch/` (gitignored): the launch drafts
-(the local launch drafts (kept outside the repo)), the launch report (`reports/s08.md`), the internal strategy document
-(`the internal strategy document (kept outside the repo)`), the stale `marketplace/` draft dir, and the
+(the local launch drafts (gitignored)), the launch report (`reports/s08.md`), the internal strategy document
+(`the internal strategy document (local, gitignored)`), the stale `marketplace/` draft dir, and the
 two untracked conversation transcripts. Live artifacts that cite moved paths (PRODUCT map,
 S08 plan text) are rewritten to say the material is kept outside the repo; historical records
 (handoff, past reports) are not rewritten. **Acceptance:** none of the five remain in the
@@ -235,7 +235,7 @@ always** — the batch closes as prepared-with-blocker, never as posted.
 
 ### B01 — Launch copy `DONE`
 
-Drafts in the local launch drafts (kept outside the repo): HN (Show HN), Reddit, X thread, LinkedIn, Claude Code
+Drafts in the local launch drafts (gitignored): HN (Show HN), Reddit, X thread, LinkedIn, Claude Code
 community post — built on the two approved hooks ("sessions → continuous development" and the
 spec-driven origin story §18–§19). **Acceptance:** one draft per channel; each ends with the
 named human decision (publish or not).

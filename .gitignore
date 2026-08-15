@@ -14,3 +14,10 @@ sandbox/
 # Scratch work that is not part of the extraction
 scratch/
 tmp/
+
+# Internal working material - kept locally, restricted from git (history retains old commits)
+docs/develop/launch/
+docs/develop/reports/s08.md
+docs/cdev_open_source_community_strategy.md
+marketplace/
+/*.txt

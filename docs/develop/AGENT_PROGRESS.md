@@ -5,6 +5,25 @@ Newest-first. Required fields: date+unit · status · done · files · verificat
 
 ---
 
+## 2026-08-16 · S06-B04 correction · DONE — restrict, don't relocate
+
+**Done:** Human corrected the cleanup approach: the internal material must stay at its
+original paths, restricted from git — not relocated. Restored from `scratch/` to
+`docs/develop/launch/`, `docs/develop/reports/s08.md`,
+`docs/cdev_open_source_community_strategy.md`, `marketplace/`; all added to `.gitignore`
+(plus root `*.txt`). They remain out of the branch (removed by `cc1d44a`), remain in history,
+and now live untracked in place. Live wording re-pointed ("local, gitignored").
+
+**Verification:** `git status` shows none of the restored paths — pass · paths exist on
+disk — pass · branch clean — pass.
+
+**Blockers:** none. Untracked note: `assets/cdev-monorepo-flow-dark.png` appeared (added by
+the human, not by the loop) — awaiting their intent before tracking it.
+
+**Next:** unchanged — the standing human items below.
+
+---
+
 ## 2026-08-15 · S06 complete · DONE — identity approved, README public, repo cleaned
 
 **Done (B01, second iteration):** the human supplied the master icon; palette sampled via
@@ -24,7 +43,7 @@ of missing paths).
 **Blockers:** none. **No PENDING sprint remains — plan exhausted.** Standing human items:
 social-preview upload (Settings, `assets/social-preview.png`) · avatar upload (`icon.png`) ·
 signed-in glance at the issue chooser · `gh release create v0.1.1` (CHANGELOG ready) ·
-publish decisions per launch draft (now in `scratch/launch/`) · ratify Sprint 04 + name the
+publish decisions per launch draft (in `docs/develop/launch/` (local, gitignored)) · ratify Sprint 04 + name the
 target repo.
 
 **Next:** whichever the human decides; the natural one is releasing v0.1.1 so installed
