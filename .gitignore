@@ -1,0 +1,10 @@
+# OS / editor noise
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+
+# Scratch work that is not part of the extraction
+scratch/
+tmp/
