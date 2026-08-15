@@ -5,6 +5,24 @@ Newest-first. Required fields: date+unit · status · done · files · verificat
 
 ---
 
+## 2026-08-15 · S05-B03 Community health files · DONE
+
+**Done:** CONTRIBUTING.md (contribution table §12 with the RFC-for-core rule, branch model
+§15, evidence-over-assertion ground rules, repo layout), CODE_OF_CONDUCT.md (Contributor
+Covenant 2.1), SECURITY.md (gate-crossing defined as the vulnerability class, private
+advisories), CHANGELOG.md (seeded with 0.1.0 including known limitations).
+
+**Files:** CONTRIBUTING.md, CODE_OF_CONDUCT.md, SECURITY.md, CHANGELOG.md.
+
+**Verification:** four files exist — pass · language check — pass · RFC rule stated in
+CONTRIBUTING — pass.
+
+**Blockers:** none.
+
+**Next:** B04 — issue and PR templates.
+
+---
+
 ## 2026-08-15 · S05-B02 Repository metadata · DONE
 
 **Done:** `elmayii/cdev`: description set, the nine strategy topics added, wiki disabled,

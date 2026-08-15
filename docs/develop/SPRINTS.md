@@ -140,7 +140,7 @@ Description ("Continuous Development Framework for Coding Agents."), the nine to
 strategy §4.1, wiki disabled, Discussions enabled (API). **Acceptance:** `gh repo view` shows
 all four changed.
 
-### B03 — Community health files `READY`
+### B03 — Community health files `DONE`
 
 `CONTRIBUTING.md` (branch model §15, contribution table §12 — core changes need field
 evidence, field reports accepted without code), `CODE_OF_CONDUCT.md` (Contributor Covenant),
