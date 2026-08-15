@@ -5,6 +5,23 @@ Newest-first. Required fields: date+unit · status · done · files · verificat
 
 ---
 
+## 2026-08-15 · S05-B02 Repository metadata · DONE
+
+**Done:** `elmayii/cdev`: description set, the nine strategy topics added, wiki disabled,
+Discussions enabled. `elmayii/cdev-marketplace`: description + two topics, wiki disabled.
+Owner-push evidence from B01 confirmed (8881b71 landed on protected main).
+
+**Files:** none in-repo (GitHub metadata) + this record.
+
+**Verification:** read-back via `gh repo view` — pass (description exact, 9/9 topics,
+hasDiscussionsEnabled true, hasWikiEnabled false).
+
+**Blockers:** none.
+
+**Next:** B03 — community health files.
+
+---
+
 ## 2026-08-15 · S05-B01 Branch policy · DONE — Sprint 05 promoted ACTIVE
 
 **Done:** `master`→`main` renamed via API in `elmayii/cdev` and `elmayii/cdev-marketplace`

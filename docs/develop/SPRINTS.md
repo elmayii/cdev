@@ -134,7 +134,7 @@ redirects). Protect `main` in both: PR required for others, no force pushes, no 
 working. Update local clones' tracking. **Acceptance:** `gh repo view` shows `main` default in
 both; protection active; a local commit+push by the owner still succeeds.
 
-### B02 — Repository metadata `READY`
+### B02 — Repository metadata `DONE`
 
 Description ("Continuous Development Framework for Coding Agents."), the nine topics from
 strategy §4.1, wiki disabled, Discussions enabled (API). **Acceptance:** `gh repo view` shows
