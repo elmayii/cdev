@@ -42,9 +42,7 @@ What exists today, and what these documents are extracted from:
 | [05](docs/05-field-report-repo.md) | Field report — single repo | Four real repositories, four different cases: what held and what broke |
 | [06](docs/06-field-report-system.md) | Field report — multi-repo | Coordinating four repos as one system: what held and what broke |
 | [07](docs/07-core-vs-periphery.md) | Core and periphery | What *is* CDev, what is a role profile, what is a host binding, and what does not ship — derived from 05 and 06, not from taste |
-
-An eighth document, on installation, is written after the package exists — describing what is
-actually installed, not what it was planned to be.
+| [08](docs/08-installation.md) | Installation | What is actually installed, how, and what deliberately is not — written after the package existed |
 
 ## Scope of these documents
 
@@ -74,8 +72,8 @@ kept as secondary detection patterns. Two post-extraction skills were added dire
 local batches, or gap-analyze one repo) and `ockham` (a user-invoked presentation layer that
 re-tells dense technical output in plain terms; never fires on the loop's own initiative). Two scripts support the loop: `scripts/sandbox.ps1` builds a
 throwaway fixture whose `.claude/skills` is a junction to `skills/`, so a session opened inside it
-runs what is being edited; `scripts/install.ps1` copies `skills/` into `~/.claude/skills` as a
-frozen snapshot, backing up whatever it replaces.
+runs what is being edited. (A second script, `install.ps1`, copied `skills/` into
+`~/.claude/skills`; the plugin superseded it and it is gone.)
 
 **Decided.** This repository is the source of truth for the skills; the global directory is an
 installation of it. Artifacts are written in English. The product this was extracted from is
@@ -93,12 +91,23 @@ frozen and is not to be modified. And, decided 2026-08-15, the package shape:
 - **One plugin, system layer included.** `cdev-monorepo`, `cdev-monorepo-planner` and
   `bootstrap-monorepo` ship in the same plugin; a single-repo user simply never invokes them.
 
-**Next, in order.**
+**Shipped, 2026-08-15.** All three steps above are done, executed by the method itself — this
+repository was conditioned (`docs/develop/`) and the work ran as three sprints with sandbox
+evidence per batch:
 
-1. **Refactor the skills** against document 07 and the consolidation decision above: extract the
-   role profiles, merge the two loops and the two conditioners, remove product-specific
-   references and periphery, add the five field-derived rules. English is done. Every change
-   gets exercised in a sandbox fixture before it counts.
-2. **Build the plugin**: manifest, plugin layout (`skills/`, `profiles/`, `templates/`,
-   `scripts/`), marketplace repository, install from it.
-3. **Document 08 — installation**, written against the package that exists.
+1. **Consolidation refactor** — eleven skills became seven; the two loops and two conditioners
+   now read `profiles/`; periphery removed; the five field-derived rules placed. Four sandbox
+   exercises by fresh agents back it.
+2. **Plugin and marketplace** — `cdev` 0.1.0 at `.claude-plugin/plugin.json`, published as
+   [`elmayii/cdev`](https://github.com/elmayii/cdev) and served by
+   [`elmayii/cdev-marketplace`](https://github.com/elmayii/cdev-marketplace); installed and
+   verified (namespaced `cdev:*`, complete cache copy). MIT.
+3. **Document 08** — installation, written against what was verified, not planned.
+
+Install: `/plugin marketplace add elmayii/cdev-marketplace` →
+`/plugin install cdev@cdev-marketplace`. The old copy-install script is retired; `sandbox.ps1`
+remains the way changes get exercised before they count.
+
+**Next.** Proposed, awaiting ratification (see `docs/develop/SPRINTS.md`): a field-validation
+phase — drive real work with the installed plugin and collect the second-product evidence the
+field reports say the method still lacks.

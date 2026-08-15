@@ -5,6 +5,32 @@ Newest-first. Required fields: date+unit · status · done · files · verificat
 
 ---
 
+## 2026-08-15 · S03-B01 Document 08 · DONE — Sprint 03 `DONE`, plan exhausted
+
+**Done:** `docs/08-installation.md` written against the verified reality of Sprint 02 (install
+path, cache layout, the seven namespaced skills, what deliberately does not install, update
+semantics, dev-mode workflow, uninstall). README: documents table gains row 08; "Where this
+stands" now records the three steps as shipped with links to both public repos.
+`scripts/install.ps1` retired (superseded by the plugin). **Plan exhausted** → per the
+self-chosen order, Sprint 04 "Field validation" drafted as `PROPOSAL` (drive a real repo with
+the installed plugin; second-product evidence) — awaiting human ratification, never
+self-activated.
+
+**Files:** docs/08-installation.md (new), README.md, docs/develop/SPRINTS.md; deleted
+scripts/install.ps1.
+
+**Verification:** language check — pass · README↔doc consistency (install.ps1 mentioned only
+as retired) — pass · describes-only-what-was-verified — pass (every command in doc 08 was
+executed this session).
+
+**Blockers:** none. Stop: plan exhausted; the only remaining item is a `PROPOSAL` that
+requires human ratification.
+
+**Next:** if Sprint 04 is ratified — name the target repository and materialize its batches
+with `/cdev:cdev-planner`.
+
+---
+
 ## 2026-08-15 · S02-B02 + S02-B03 · DONE — Sprint 02 `DONE`
 
 **Done:** Gate approved in-session (both repos public, MIT, install + retire old skills).

@@ -98,9 +98,9 @@ scenario against the **installed** copy (not the working tree), record evidence.
 **Acceptance:** installed skills exercise cleanly; open questions in PRODUCT.md resolved as
 dated DECISIONS entries.
 
-## Sprint 03 — Document 08, installation `ACTIVE`
+## Sprint 03 — Document 08, installation `DONE`
 
-### B01 — Write document 08 `READY`
+### B01 — Write document 08 `DONE`
 
 `docs/08-installation.md`, written against the package that exists: what is actually
 installed (cache layout, namespaced skills, what rides along), how to install (marketplace +
@@ -109,3 +109,14 @@ workflow of this repo. README updated (documents table + "Where this stands");
 `scripts/install.ps1` retired — the plugin replaces the copy-install path it implemented.
 **Acceptance:** the document describes only what exists and was verified; README consistent;
 language check passes.
+
+---
+
+## Sprint 04 — Field validation `PROPOSAL` (awaiting human ratification)
+
+The plan is exhausted; this draft is the next phase, derived from the field reports' own
+caveat ("one product, honestly") — it never self-activates. Objective: drive real work with
+the **installed** plugin on at least one repository that is not this one: condition it with
+`/cdev:bootstrap`, run `/cdev:cdev` unattended, and collect the second-product evidence the
+method lacks. Batches to be materialized by `/cdev:cdev-planner` against the chosen target
+repo once a human names it.
