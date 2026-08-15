@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="CDev mark">
+  <defs>
+    <linearGradient id="ring" gradientUnits="userSpaceOnUse" x1="86" y1="400" x2="420" y2="100">
+      <stop offset="0" stop-color="#0045ED"/><stop offset="1" stop-color="#00C8EE"/>
+    </linearGradient>
+    <linearGradient id="slash" gradientUnits="userSpaceOnUse" x1="196" y1="442" x2="352" y2="78">
+      <stop offset="0" stop-color="#0045ED"/><stop offset="1" stop-color="#00E8E5"/>
+    </linearGradient>
+  </defs>
+  <!-- the loop -->
+  <path d="M 341 109 A 170 170 0 1 0 341 403" fill="none" stroke="url(#ring)" stroke-width="38" stroke-linecap="round"/>
+  <!-- the continuation arrow, closing the loop upward -->
+  <path d="M 354 395 A 170 170 0 0 0 416 198" fill="none" stroke="#00E8E5" stroke-width="38" stroke-linecap="round"/>
+  <path d="M 384 214 L 446 206 L 410 154 Z" fill="#00E8E5"/>
+  <!-- the slash: /cdev -->
+  <path d="M 345 92 L 210 424" stroke="url(#slash)" stroke-width="54" stroke-linecap="round" fill="none"/>
+  <!-- checkpoints: verified -->
+  <g stroke="#FFFFFF" stroke-width="11">
+    <circle cx="117" cy="159" r="36" fill="#0045ED"/>
+    <circle cx="96"  cy="314" r="36" fill="#0045ED"/>
+    <circle cx="212" cy="420" r="36" fill="#05ADD9"/>
+  </g>
+  <g stroke="#FFFFFF" stroke-width="10" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M 103 159 l 9 10 l 19 -20"/>
+    <path d="M 82  314 l 9 10 l 19 -20"/>
+    <path d="M 198 420 l 9 10 l 19 -20"/>
+  </g>
+  <!-- the current one, in progress -->
+  <circle cx="300" cy="92" r="36" fill="#0045ED" stroke="#FFFFFF" stroke-width="11"/>
+</svg>

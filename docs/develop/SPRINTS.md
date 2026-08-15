@@ -167,16 +167,16 @@ not-run: issue-form render needs a signed-in glance — see the report.)*
 
 ---
 
-## Sprint 06 — Five-minute README `PENDING` (entry batch BLOCKED)
+## Sprint 06 — Five-minute README `ACTIVE`
 
 Source: strategy §6–§10, §21, §22 Phase 2.
 
-### B01 — Visual identity `BLOCKED`
+### B01 — Visual identity `DONE`
 
-*First proposal (wordmark light/dark + icon + social preview, indigo/slate, checkpoint line)
-drafted, rasterized and **rejected by the human** without replacement direction. Minimum human
-decision: state the visual direction (palette, typography, composition — or supply an asset);
-then B01 regenerates and the sprint unblocks. Drafts preserved in `assets/` (wip commit).*
+*Second iteration approved: the human supplied a master icon (`assets/icon.png`); its palette
+was sampled (#070A16/#0045ED/#00E8E5) and its geometry (loop + checks + arrow + slash)
+rebuilt as flat vectors — mark light/dark, wordmark lockups, social preview. First
+(indigo/slate) proposal rejected and deleted.*
 
 `assets/` with the wordmark SVG (`/cdev` + continuous line through verified checkpoints; no
 robots/brains/sparkles). Social-preview PNG rendered from it, left prepared — uploading is
