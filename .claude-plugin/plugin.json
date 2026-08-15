@@ -6,6 +6,8 @@
   "author": {
     "name": "elmayii"
   },
+  "license": "MIT",
+  "repository": "https://github.com/elmayii/cdev",
   "keywords": [
     "autonomous-development",
     "continuous-development",
