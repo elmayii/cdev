@@ -5,6 +5,25 @@ Newest-first. Required fields: date+unit · status · done · files · verificat
 
 ---
 
+## 2026-08-15 · S05-B05 + B06 · DONE — Sprint 05 `DONE`, Sprint 06 promoted
+
+**Done (B05):** Release `v0.1.0` published (tag on main, §5-shaped notes: what CDev is, what
+ships, the binding, install, limitations, experimental). Tag matches `plugin.json`.
+**Done (B06):** Aggregate verification: GitHub community profile health 100%; contents API
+lists the four issue forms; frontmatter/language checks pass; exactly one ACTIVE sprint.
+Report at `docs/develop/reports/s05.md`.
+
+**Verification:** release — pass (public, tag v0.1.0) · community profile — pass (100%) ·
+protocol checks — pass · **issue-form render — not-run** (chooser page requires sign-in;
+community-profile flag reads false — one signed-in human glance at
+github.com/elmayii/cdev/issues/new/choose settles it; recorded honestly, does not block).
+
+**Blockers:** none blocking. Pending human glance: the issue chooser (above).
+
+**Next:** S06-B01 — visual identity (wordmark SVG; asset approval is the human gate).
+
+---
+
 ## 2026-08-15 · S05-B04 Issue and PR templates · DONE
 
 **Done:** `.github/ISSUE_TEMPLATE/{bug,feature,field-report,config}.yml` +

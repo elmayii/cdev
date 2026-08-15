@@ -121,7 +121,7 @@ ordered the open-source strategy (S05–S08) first, 2026-08-15. Batches to be ma
 
 ---
 
-## Sprint 05 — Open-source readiness `ACTIVE`
+## Sprint 05 — Open-source readiness `DONE`
 
 Source: `docs/cdev_open_source_community_strategy.md` §22 Phase 1. Gates pre-authorized
 in-session (see DECISIONS 2026-08-15); external-communication acts remain human forever.
@@ -153,20 +153,21 @@ check passes, CONTRIBUTING states the RFC rule for core changes.
 strategy §13 template fields) + `.github/PULL_REQUEST_TEMPLATE.md`. **Acceptance:** forms
 render on GitHub's new-issue page.
 
-### B05 — Release v0.1.0 `READY` (depends: B01–B04)
+### B05 — Release v0.1.0 `DONE` (depends: B01–B04)
 
 Tag `v0.1.0` on `main`, GitHub Release with the §5 notes (what CDev is, what ships, the
 Claude Code binding, install, known limitations, what is experimental). **Acceptance:**
 release public; `plugin.json` version and tag agree.
 
-### B06 — Verification + report `READY` (depends: B05)
+### B06 — Verification + report `DONE` (depends: B05)
 
 Protocol checks + every acceptance above re-verified via `gh`; report at
-`docs/develop/reports/s05.md`. **Acceptance:** all checks pass; report exists.
+`docs/develop/reports/s05.md`. **Acceptance:** all checks pass; report exists. *(One recorded
+not-run: issue-form render needs a signed-in glance — see the report.)*
 
 ---
 
-## Sprint 06 — Five-minute README `PENDING`
+## Sprint 06 — Five-minute README `ACTIVE`
 
 Source: strategy §6–§10, §21, §22 Phase 2.
 
