@@ -5,6 +5,31 @@ Newest-first. Required fields: date+unit · status · done · files · verificat
 
 ---
 
+## 2026-08-15 · S07-B02 Examples and showcase · DONE
+
+**Done:** Public walkthrough at `docs/community/walkthrough.md`, validated by a fresh subagent
+replaying it end-to-end against the **installed** plugin copy: bootstrap `BOOTSTRAP VERIFY:
+PASS` (conditioning commit `502b993` in the fixture), Batch 01 `DONE` with gates proven
+honest (`3718918`; lint/build/test real, exit-1 demonstrated on broken input). Replay
+friction fixed at the root: `templates/develop/SPRINTS.md.tmpl` was mojibake (BOM +
+double-encoded em-dashes from an earlier PowerShell rewrite) — rewritten clean UTF-8, no
+other template affected (grep clean); `{{BRANCH_PREFIX}}` contract default unified with the
+loop skill's (`cdev/sprint-<nn>-batch-<nn>`) — two shipped defaults disagreeing is the exact
+incident class field rule 5 exists for, found by our own replay.
+
+**Files:** docs/community/walkthrough.md (new), templates/develop/SPRINTS.md.tmpl,
+templates/PLACEHOLDERS.md.
+
+**Verification:** replay of every walkthrough command — pass (subagent evidence) · mojibake
+sweep — pass (zero matches) · language check — pass.
+
+**Blockers:** none. Note: template fixes change shipped behavior → v0.1.1 patch release is
+due; prepared, release act pending (see next entries).
+
+**Next:** B03 — sprint verification + report.
+
+---
+
 ## 2026-08-15 · S07-B01 Contribution mechanics · DONE
 
 **Done:** RFC process doc (`docs/community/rfc-process.md`: evidence bar = docs/07 §6

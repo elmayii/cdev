@@ -17,7 +17,7 @@ A successful render leaves zero `{{` in target files.
 | `{{SHELL}}` | Shell for the runbook | host shell; default PowerShell on Windows |
 | `{{MODEL}}` | Watchdog model | default `opus` |
 | `{{EFFORT}}` | Watchdog effort | default `high` |
-| `{{BRANCH_PREFIX}}` | Working-branch prefix | default `claude/sprint-<n>-batch-<n>` |
+| `{{BRANCH_PREFIX}}` | Working-branch prefix | default `cdev/sprint-<nn>-batch-<nn>` (must match the loop skill's default) |
 | `{{SKILL_DIRECTIVE}}` | Skills the watchdog injects | default ponytail + superpowers (TDD/systematic-debugging/verification) + repo runtime skills |
 | `{{SPRINT_01_TITLE}}` | Title/name of the first sprint | derived in procedure step 4 |
 | `{{BATCH_01_TITLE}}` | Title/name of Sprint 01's first batch | derived in procedure step 4 |

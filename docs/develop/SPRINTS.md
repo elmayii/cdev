@@ -207,7 +207,7 @@ RFC process doc, label set created via `gh label`, initial `good first issue` ca
 drafted from the repo's own known leftovers, welcome/announcement Discussion posted via API.
 **Acceptance:** labels exist; RFC doc linked from CONTRIBUTING; one Discussion live.
 
-### B02 — Examples and showcase `READY`
+### B02 — Examples and showcase `DONE`
 
 A worked example: conditioning + one loop run on a sandbox fixture, written as a walkthrough
 users can replay. **Acceptance:** every command in the walkthrough replayed this sprint.
