@@ -12,8 +12,8 @@ It does not merge the repos into a single Git nor replace their local CDev. Guid
 
 The unit of coordination is the **repository**, not the technology or the target. A repo with
 web+mobile inside is ONE unit; its internal parity is its local CDev's business. The workspace
-never creates per-technology agents ("backend agent", "Next runner"): role differences are
-absorbed by each repo's local `/cdev` (dispatcher → `cdev-backend`/`cdev-frontend`).
+never creates per-technology agents ("backend agent", "web runner"): role differences are
+absorbed by each repo's local `/cdev` (one loop reading the role profiles).
 
 ## Phase A — Discovery
 
@@ -30,9 +30,8 @@ Check: `CLAUDE.md` · `docs/develop/SPRINTS.md` · `AGENT_EXECUTION_PROTOCOL.md`
 - `CDEV_READY` — everything present.
 - `CDEV_PARTIAL` — something non-critical missing (e.g. root CLAUDE.md). The gap is recorded in
   the workspace's DECISIONS; it does not block the bootstrap.
-- `NOT_CONDITIONED` — no `docs/develop/`. Blocker: recommend `bootstrap-backend` /
-  `bootstrap-frontend` / `cdev-bootstrap` per role and resume once conditioned.
-  **The global bootstrap never invents a child's CDev.**
+- `NOT_CONDITIONED` — no `docs/develop/`. Blocker: recommend the `bootstrap` skill and resume
+  once conditioned. **The global bootstrap never invents a child's CDev.**
 
 ## Phase C — System map
 
@@ -40,7 +39,9 @@ Derive from the children's `CLAUDE.md`/`PRODUCT.md`: each repo's responsibility,
 dependencies (who consumes whom), cross-cutting domains, known contracts. Generate:
 
 - `workspace/repos.yaml` — registry: logical id → path, git, cdev state, informative role.
-  Stacks are metadata, not rules; operational authority remains the child's CLAUDE.md.
+  Stacks are metadata, not rules; operational authority remains the child's CLAUDE.md. Any
+  field asserting a child's state is re-derived on read or checked by the verification
+  script — a stale registry is exactly the kind of artifact an agent will eventually trust.
 - `workspace/repo-graph.yaml` — `depends_on` + `domains`. Informs planning; it does **not**
   define batch participation (that is done by each SYSTEM_BATCH's explicit references).
 - `docs/develop/SYSTEM_ARCHITECTURE.md` — nodes, arrows, contracts.
@@ -76,8 +77,7 @@ scripts/verify-monorepo-bootstrap.ps1
 Planning is NOT a local agent: it is the global `cdev-monorepo-planner` skill. The
 `cdev-monorepo` and `cdev-monorepo-planner` skills remain global — no vendored copies.
 
-Minimum content of each doc: follow the pattern of the already conditioned child repos; when
-in doubt, use an already assembled workspace (e.g. `compiss/monorepo`) as canonical reference.
+Minimum content of each doc: follow the pattern of the already conditioned child repos.
 
 ## Phase E — Workspace git
 

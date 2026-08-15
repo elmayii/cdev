@@ -32,3 +32,8 @@ A successful render leaves zero `{{` in target files.
 | `{{RECOGNITION_PATTERNS}}` | Real architecture patterns extracted from the code | Half A step 1 |
 | `{{RECOGNITION_OVERRIDES}}` | Table rows: generic assumption → reality here → override | Half A step 1 |
 | `{{RECOGNITION_UNTOUCHABLE}}` | List of things no agent may modify here | Half A step 1 |
+| `{{ROLE}}` | The repo's role (backend / frontend / other) plus its one-line consequence | role resolution |
+| `{{EVIDENCE_RULES}}` | What a `DONE` must prove here, and with which tooling | profile §2 materialized |
+| `{{ARCHITECTURE_RULES}}` | The repo's real architecture/domain rules | recognition document |
+| `{{SAFETY_GATES}}` | This repo's gate list (core shape + role's typical gates, concrete) | profile §3 materialized |
+| `{{SELF_CHOSEN_ORDER}}` | Priority order for self-derived work when the plan runs out | profile §4 materialized |

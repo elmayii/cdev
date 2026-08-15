@@ -43,7 +43,7 @@ pruned accordingly. `cdev-bootstrap` folds into `bootstrap` as its template base
 skills removed from the default render list; sandbox exercise of one conditioning scenario;
 checks 1–2 pass.
 
-### B04 — Periphery removal + the five field rules `READY` (depends: B02, B03)
+### B04 — Periphery removal + the five field rules `DONE` (depends: B02, B03)
 
 Across the remaining skills: remove product references (Compiss, F6 paths, compiss/monorepo)
 and named technologies from core rule text (examples move to profiles/templates). Add the five

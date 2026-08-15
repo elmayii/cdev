@@ -38,6 +38,10 @@ the hardest gate, the self-chosen work order). What the user declares wins over 
    patterns (extracted from code, they exist nowhere else), and **every place a generic
    assumption must be overridden**. A conditioning that renders templates without this step
    produces a plan for a repository that does not exist.
+   While reading, **check the repo's operational documents against each other** (runbooks,
+   deploy docs, existing guides): the loop trusts instructions, so two documents disagreeing
+   about the same switch is an incident waiting. A contradiction found is resolved with the
+   human or recorded as an open question — never left standing.
 2. **Materialize the role profile into the repo's protocol.** The profile brings the role's
    four things; conditioning makes them concrete here:
    - **Verification** (profile §1): fix the exact sequence from the repo's real scripts — and
@@ -55,9 +59,9 @@ the hardest gate, the self-chosen work order). What the user declares wins over 
 3. **Render the core artifacts** from `templates/`, resolving every placeholder: repo guide
    (`CLAUDE.md`), `docs/develop/` (protocol with local deltas only, SPRINTS, PROGRESS,
    DECISIONS, PRODUCT). The handoff log's ordering is **declared explicitly in the protocol**
-   (default: newest-first). Optional on request: TESTING, RUNBOOK, and the night-runner script
-   (a quota-resumption convenience only — the primary loop is the `cdev` skill; continuity is
-   a property of the repository, not of a live process). **Not rendered by default:** the
+   (default: newest-first). Optional on request: TESTING, RUNBOOK, ROADMAP, ARCHITECTURE, and
+   the night-runner script (a quota-resumption convenience only — the primary loop is the
+   `cdev` skill; continuity is a property of the repository, not of a live process). **Not rendered by default:** the
    reviewer/runner agent templates and the per-repo runtime skills — unevidenced in six weeks
    of field use; render them only if the repo asks for them. The greenfield conditioning-plan
    document is gone entirely.

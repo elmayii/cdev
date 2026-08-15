@@ -34,7 +34,9 @@ progress.
    finished outside the workspace, new commits, different branch, local blockage → the
    workspace updates itself; never the other way around. Divergence (workspace says DONE, repo
    says IN_PROGRESS) → the repo wins. The workspace never falsifies local state to square its
-   own plan.
+   own plan. Reconciliation covers the workspace's **own older statements** too: anything it
+   asserts about a child (registry fields, snapshot values, stale blocked notes) is re-derived
+   on read or checked by the verification script — never trusted on age.
 
 ## Loop (repeat until a real blockage)
 
@@ -82,13 +84,21 @@ progress.
 6. **Verify globally** with `monorepo-system-tester` at the level the batch declares
    (L0 local evidence · L1 contracts · L2 partial integration · L3 end-to-end). A single-repo
    batch with locally demonstrable acceptance → L0, no artificial cross-repo tests.
+   **The wave must quiesce first**: runtime verification (L2/L3) never runs while any runner
+   is still moving branches in a participating repo — cross-repo parallelism and system-level
+   runtime verification do not compose. Verify between waves, or give runners isolated
+   working copies.
 7. **Close**:
    ```text
    SYSTEM_BATCH DONE = ALL(required references == DONE) AND global acceptance == PASS
    ```
    Unreferenced repos do not participate, do not block, are not opened "just in case".
 8. **Auto-advance**: next runnable wave. System sprint complete → global report, Sprint
-   `DONE`, promote the next `PENDING`→`ACTIVE` if applicable, continue. Plan exhausted →
+   `DONE`, promote the next `PENDING`→`ACTIVE` if applicable, continue. The global report
+   **aggregates verification debt**: it sums the batches closed as references-done-but-system-
+   verification-blocked and shows the total — each such closure is individually honest, but
+   their sum is a plan that reads finished over a system never exercised end to end, and that
+   debt must be visible without reading every entry. Plan exhausted →
    invoke `cdev-monorepo-planner` in gap-analysis mode and leave the result as `PROPOSAL` for
    human ratification; meanwhile execute ungated global work.
 

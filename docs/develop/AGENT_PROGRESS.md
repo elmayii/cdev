@@ -5,6 +5,36 @@ Newest-first. Required fields: date+unit · status · done · files · verificat
 
 ---
 
+## 2026-08-15 · S01-B04 Periphery removal + the five field rules · DONE
+
+**Done:** Product references gone (last `compiss` mention removed from bootstrap-monorepo;
+dead `cdev-backend`/`cdev-frontend` and old bootstrap names re-pointed to the consolidated
+skills). Root-cause template surgery: `AGENT_EXECUTION_PROTOCOL.md.tmpl` rewritten as
+**deltas-only** (it was a full copy of the generic loop — exactly what doc 07 forbids; the
+pnpm hardcodes, model trailer and ghost artifact roster all died with it) and `CLAUDE.md.tmpl`
+rewritten generic (was one-case prose about a different product). Five new placeholders for
+profile materialization (ROLE, EVIDENCE_RULES, ARCHITECTURE_RULES, SAFETY_GATES,
+SELF_CHOSEN_ORDER). Optional render list completed (ROADMAP, ARCHITECTURE homed). Five field
+rules placed: wave quiescence → cdev-monorepo §verify; verification-debt aggregation →
+cdev-monorepo global report (cdev-planner already had the local case); fixed handoff ordering →
+already done in B02/B03 (protocol template + bootstrap default + loop reads the declaration);
+derive-on-read → bootstrap-monorepo registry + cdev-monorepo reconciliation; operational-doc
+consistency check → bootstrap recognition step.
+
+**Files:** skills/{bootstrap,bootstrap-monorepo,cdev-monorepo}/SKILL.md,
+templates/CLAUDE.md.tmpl, templates/develop/AGENT_EXECUTION_PROTOCOL.md.tmpl,
+templates/PLACEHOLDERS.md.
+
+**Verification:** periphery check — pass (product names: 0 anywhere; tech names in core
+skills: 0) · language check — pass · frontmatter check — pass (7/7) · sandbox — not-run
+(wording-level changes; B05 re-exercises nothing but re-runs all static checks).
+
+**Blockers:** none.
+
+**Next:** B05 — full verification + sprint report.
+
+---
+
 ## 2026-08-15 · S01-B03 Consolidate the conditioner · DONE
 
 **Done:** Single `skills/bootstrap/SKILL.md` (recognition-first, both halves, profiles
