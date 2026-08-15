@@ -22,6 +22,15 @@ copies update only when the version changes.
 - `docs/community/rfc-process.md` — the RFC process with its field-evidence bar.
 - Community layer: CONTRIBUTING, CODE_OF_CONDUCT, SECURITY, issue forms (field report
   included), PR template, labels.
+- Visual identity (`assets/`): master icon, flat vector marks, wordmark lockups, social
+  preview.
+- Public README: positioning, the four failure modes, the loop, quick start, command table,
+  lifecycle guide, evidence tables.
+
+### Removed
+
+- Internal working material (launch drafts, strategy notes, stale marketplace draft) moved
+  out of the public tree.
 
 ## [0.1.0] — 2026-08-15
 

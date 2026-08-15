@@ -5,6 +5,33 @@ Newest-first. Required fields: date+unit · status · done · files · verificat
 
 ---
 
+## 2026-08-15 · S06 complete · DONE — identity approved, README public, repo cleaned
+
+**Done (B01, second iteration):** the human supplied the master icon; palette sampled via
+System.Drawing (#070A16/#0045ED/#00E8E5), geometry rebuilt as flat vectors (marks, wordmark
+lockups, social preview), rasterized with sharp-cli, **approved in-session**.
+**Done (B02):** public README per strategy §22-2; 13/13 internal links verified; internal
+state reduced to a link. **Done (B03):** report `reports/s06.md`. **Done (B04, appended,
+human-agreed):** internal material out of the public tree to local `scratch/` — launch
+drafts, launch report, strategy document, stale marketplace draft (transcripts were already
+gone from the root); live artifacts (SPRINTS, PRODUCT) re-pointed; historical records
+untouched; git history untouched. CHANGELOG 0.1.1 updated (identity + README + removals).
+
+**Verification:** links 13/13 — pass · language — pass · identity approval — pass (human,
+in-session) · cleanup acceptance — pass (none of the moved items remain; zero live citations
+of missing paths).
+
+**Blockers:** none. **No PENDING sprint remains — plan exhausted.** Standing human items:
+social-preview upload (Settings, `assets/social-preview.png`) · avatar upload (`icon.png`) ·
+signed-in glance at the issue chooser · `gh release create v0.1.1` (CHANGELOG ready) ·
+publish decisions per launch draft (now in `scratch/launch/`) · ratify Sprint 04 + name the
+target repo.
+
+**Next:** whichever the human decides; the natural one is releasing v0.1.1 so installed
+copies get the fixed templates.
+
+---
+
 ## 2026-08-15 · S08 complete · DONE — loop stops: only human decisions remain
 
 **Done (B01):** Five launch drafts in `docs/develop/launch/` (HN, Reddit, X, LinkedIn, Claude
