@@ -2,6 +2,18 @@
 
 Newest-first. Every assumption made under PARTIAL clarity lands here, dated.
 
+## 2026-08-15 — Open-source strategy materialized (planner, present human authorization)
+
+- **Order:** strategy sprints S05–S08 run before field validation; S04 stays `PROPOSAL` (not
+  renumbered, not reordered — the loop only promotes `PENDING`, so S05 is naturally next).
+- **Authorized in-session:** rename `master`→`main` + protect `main` in both repos (protection
+  must NOT block the owner's direct commits — the loop's local convention depends on them; no
+  `enforce_admins`); publish tag + Release `v0.1.0`; agent-made wordmark SVG (human approves
+  the asset before it ships in the README).
+- **Tooling detected:** `gh` with `repo`+`workflow` scopes covers renames, protection,
+  metadata, Discussions enable, releases, Actions. Web-UI-only: social preview upload, custom
+  Discussions categories (browser automation possible on request). Always human: launch posts.
+
 ## 2026-08-15 — Publishing gate approved (S02-B02/B03, present human authorization in-session)
 
 - Both repos **public**: `elmayii/cdev`, `elmayii/cdev-marketplace`. License **MIT**.

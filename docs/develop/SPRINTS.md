@@ -114,9 +114,117 @@ language check passes.
 
 ## Sprint 04 — Field validation `PROPOSAL` (awaiting human ratification)
 
-The plan is exhausted; this draft is the next phase, derived from the field reports' own
-caveat ("one product, honestly") — it never self-activates. Objective: drive real work with
-the **installed** plugin on at least one repository that is not this one: condition it with
-`/cdev:bootstrap`, run `/cdev:cdev` unattended, and collect the second-product evidence the
-method lacks. Batches to be materialized by `/cdev:cdev-planner` against the chosen target
-repo once a human names it.
+Objective: drive real work with the **installed** plugin on at least one repository that is
+not this one, collecting second-product evidence. Deliberately kept `PROPOSAL`: the human
+ordered the open-source strategy (S05–S08) first, 2026-08-15. Batches to be materialized by
+`/cdev:cdev-planner` against the chosen target repo once a human names it.
+
+---
+
+## Sprint 05 — Open-source readiness `PENDING`
+
+Source: `docs/cdev_open_source_community_strategy.md` §22 Phase 1. Gates pre-authorized
+in-session (see DECISIONS 2026-08-15); external-communication acts remain human forever.
+
+### B01 — Branch policy `READY`
+
+Rename `master`→`main` in `elmayii/cdev` and `elmayii/cdev-marketplace` (API; GitHub
+redirects). Protect `main` in both: PR required for others, no force pushes, no deletion —
+**without** `enforce_admins`, so the owner's direct commits (the loop's own convention) keep
+working. Update local clones' tracking. **Acceptance:** `gh repo view` shows `main` default in
+both; protection active; a local commit+push by the owner still succeeds.
+
+### B02 — Repository metadata `READY`
+
+Description ("Continuous Development Framework for Coding Agents."), the nine topics from
+strategy §4.1, wiki disabled, Discussions enabled (API). **Acceptance:** `gh repo view` shows
+all four changed.
+
+### B03 — Community health files `READY`
+
+`CONTRIBUTING.md` (branch model §15, contribution table §12 — core changes need field
+evidence, field reports accepted without code), `CODE_OF_CONDUCT.md` (Contributor Covenant),
+`SECURITY.md`, `CHANGELOG.md` (seeded with 0.1.0). **Acceptance:** four files exist, language
+check passes, CONTRIBUTING states the RFC rule for core changes.
+
+### B04 — Issue and PR templates `READY`
+
+`.github/ISSUE_TEMPLATE/{bug,feature,field-report,config}.yml` (field-report form carries the
+strategy §13 template fields) + `.github/PULL_REQUEST_TEMPLATE.md`. **Acceptance:** forms
+render on GitHub's new-issue page.
+
+### B05 — Release v0.1.0 `READY` (depends: B01–B04)
+
+Tag `v0.1.0` on `main`, GitHub Release with the §5 notes (what CDev is, what ships, the
+Claude Code binding, install, known limitations, what is experimental). **Acceptance:**
+release public; `plugin.json` version and tag agree.
+
+### B06 — Verification + report `READY` (depends: B05)
+
+Protocol checks + every acceptance above re-verified via `gh`; report at
+`docs/develop/reports/s05.md`. **Acceptance:** all checks pass; report exists.
+
+---
+
+## Sprint 06 — Five-minute README `PENDING`
+
+Source: strategy §6–§10, §21, §22 Phase 2.
+
+### B01 — Visual identity `READY`
+
+`assets/` with the wordmark SVG (`/cdev` + continuous line through verified checkpoints; no
+robots/brains/sparkles). Social-preview PNG rendered from it, left prepared — uploading is
+web-UI manual. **Acceptance:** SVG renders; human approves the asset (blocker until then);
+PNG at the exact 1280×640 GitHub size.
+
+### B02 — README redesign `READY` (depends: B01 approval)
+
+Hero + positioning, the four failure modes, lifecycle diagram, Quick Start (verified
+commands), command table (§8), "which command when" by project phase (§9), method-vs-binding
+statement (§10), links to docs/evidence/CONTRIBUTING. Internal state shrinks to a link to
+`docs/develop/`. **Acceptance:** README contains all §22-2 items; every command shown was
+executed at least once in the record; language check passes.
+
+### B03 — Verification + report `READY` (depends: B02)
+
+Links resolve, render checked, report `s06.md`. **Acceptance:** checks pass; report exists.
+
+---
+
+## Sprint 07 — Community structure `PENDING`
+
+Source: strategy §12–§14, §22 Phase 3.
+
+### B01 — Contribution mechanics `READY`
+
+RFC process doc, label set created via `gh label`, initial `good first issue` candidates
+drafted from the repo's own known leftovers, welcome/announcement Discussion posted via API.
+**Acceptance:** labels exist; RFC doc linked from CONTRIBUTING; one Discussion live.
+
+### B02 — Examples and showcase `READY`
+
+A worked example: conditioning + one loop run on a sandbox fixture, written as a walkthrough
+users can replay. **Acceptance:** every command in the walkthrough replayed this sprint.
+
+### B03 — Verification + report `READY` (depends: B01, B02)
+
+Report `s07.md`. **Acceptance:** checks pass; report exists.
+
+---
+
+## Sprint 08 — Launch `PENDING`
+
+Source: strategy §22 Phase 4. Copy is agent work; **publishing each post is a human act,
+always** — the batch closes as prepared-with-blocker, never as posted.
+
+### B01 — Launch copy `READY`
+
+Drafts in `docs/develop/launch/`: HN (Show HN), Reddit, X thread, LinkedIn, Claude Code
+community post — built on the two approved hooks ("sessions → continuous development" and the
+spec-driven origin story §18–§19). **Acceptance:** one draft per channel; each ends with the
+named human decision (publish or not).
+
+### B02 — Verification + report `READY` (depends: B01)
+
+Report `s08.md`; sprint closes with the publish blockers listed. **Acceptance:** report
+exists; blockers name each pending post.

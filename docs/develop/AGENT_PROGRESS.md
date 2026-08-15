@@ -5,6 +5,32 @@ Newest-first. Required fields: date+unit · status · done · files · verificat
 
 ---
 
+## 2026-08-15 · Planning (cdev-planner) · DONE — S05–S08 materialized
+
+**Done:** Strategy doc (`docs/cdev_open_source_community_strategy.md`) read and materialized.
+Gap analysis: 7 gaps with evidence (stale clarity map, version-without-tag, master default,
+missing metadata/community files, README as internal landing, S04 unratified). Human decided
+in-session: strategy before field validation; rename+protect both repos authorized (owner
+bypass preserved); v0.1.0 release authorized; agent-made wordmark with human approval of the
+asset. Sprints 05–08 written `PENDING` with observable acceptance; S04 stays `PROPOSAL`
+untouched (no renumbering). Clarity map gained six rows; tooling/permissions recorded in
+DECISIONS (gh scopes cover almost all of Phase 1; social preview and Discussions categories
+are web-manual; launch posts always human).
+
+**Files:** docs/cdev_open_source_community_strategy.md (committed as source),
+docs/develop/{SPRINTS,PRODUCT,DECISIONS,AGENT_PROGRESS}.md.
+
+**Verification:** invariants — pass (zero ACTIVE sprints right now; the loop promotes S05 on
+its next run; one-ACTIVE-max holds) · language check — pass · planner-implements-nothing —
+pass.
+
+**Blockers:** none for S05. Standing human acts ahead: wordmark approval (S06-B01), social
+preview upload, each launch post (S08).
+
+**Next:** `/cdev:cdev` — the loop promotes Sprint 05 and starts B01 (branch policy).
+
+---
+
 ## 2026-08-15 · S03-B01 Document 08 · DONE — Sprint 03 `DONE`, plan exhausted
 
 **Done:** `docs/08-installation.md` written against the verified reality of Sprint 02 (install
