@@ -20,7 +20,7 @@ the current `cdev-backend`/`cdev-frontend`/`bootstrap-backend`/`bootstrap-fronte
 **Acceptance:** both files exist; four sections each, nothing more; every statement traceable
 to a current skill or doc 07 §2; language check passes.
 
-### B02 — Consolidate the execution loop `READY` (depends: B01)
+### B02 — Consolidate the execution loop `DONE` (depends: B01)
 
 Merge `cdev` + `cdev-backend` + `cdev-frontend` into one `cdev` skill: dispatcher resolves the
 role from the repo, loads the matching profile, runs the single loop. The consumer-report rule

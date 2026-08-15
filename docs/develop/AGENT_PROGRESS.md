@@ -5,6 +5,33 @@ Newest-first. Required fields: date+unit · status · done · files · verificat
 
 ---
 
+## 2026-08-15 · S01-B02 Consolidate the execution loop · DONE
+
+**Done:** Single `skills/cdev/SKILL.md`: dispatcher + one loop reading `profiles/` (real-path
+resolution through junctions); `cdev-backend` and `cdev-frontend` deleted. Consumer-report rule
+generalized role-independently. Exercised in two sandbox fixtures by fresh subagents:
+**backend** (`sandbox/loop-be`) closed its whole sprint — 2 batches DONE, mid-batch failure
+root-caused at the single caller, honest per-check recording, gates intact; **frontend**
+(`sandbox/loop-fe`) correctly ended `BLOCKED` (runtime evidence impossible), named the minimum
+human decision, flagged the fixture's lying gates, applied blocked-but-not-idle. Friction fixes
+applied from the exercises: real-path profile resolution wording, RECOGNITION-if-present,
+lying-gate-at-runtime rule, stacked branches for dependent batches, zero-padded branch default,
+DECISIONS.md full path.
+
+**Files:** skills/cdev/SKILL.md; deleted skills/cdev-backend/, skills/cdev-frontend/;
+sandbox/loop-be/, sandbox/loop-fe/ (fixtures, gitignored).
+
+**Verification:** frontmatter check — pass (7/7) · language check — pass · sandbox backend
+scenario — pass (sprint closed honestly) · sandbox frontend scenario — pass (blocked honestly)
+· periphery check — not-run (applies at B04).
+
+**Blockers:** none. Environment note for unattended runs recorded in DECISIONS (RTK hook
+mangles npm output; `rtk proxy` gives truthful exit codes).
+
+**Next:** close B03 when its sandbox exercise reports; then B04.
+
+---
+
 ## 2026-08-15 · S01-B01 Extract role profiles · DONE
 
 **Done:** `profiles/backend.md` and `profiles/frontend.md` created, each exactly the four
