@@ -61,7 +61,8 @@ the hardest gate, the self-chosen work order). What the user declares wins over 
    DECISIONS, PRODUCT). The handoff log's ordering is **declared explicitly in the protocol**
    (default: newest-first). Optional on request: TESTING, RUNBOOK, ROADMAP, ARCHITECTURE, and
    the night-runner script (a quota-resumption convenience only — the primary loop is the
-   `cdev` skill; continuity is a property of the repository, not of a live process). **Not rendered by default:** the
+   `cdev` skill; continuity is a property of the repository, not of a live process; its
+   `gitignore-additions` render with it, not by default). **Not rendered by default:** the
    reviewer/runner agent templates and the per-repo runtime skills — unevidenced in six weeks
    of field use; render them only if the repo asks for them. The greenfield conditioning-plan
    document is gone entirely.
@@ -99,5 +100,6 @@ concrete for this repo. The elevated profile raises *what to work on*, never the
 
 Validate: zero unresolved `{{`, exactly one `ACTIVE` sprint (`scripts/verify-bootstrap.ps1`
 automates both). Seed the first `AGENT_PROGRESS.md` entry (bootstrap done, Sprint 01 ACTIVE,
-next action = `/cdev`), **commit the conditioning artifacts** (the machinery must not sit as
+next action = `/cdev`), **commit the conditioning artifacts on the current branch** (the
+branch convention governs batch work, not this commit; the machinery must not sit as
 uncommitted WIP under the first batch), and print a "conditioned — how to launch" summary.

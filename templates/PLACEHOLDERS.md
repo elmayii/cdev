@@ -9,7 +9,7 @@ A successful render leaves zero `{{` in target files.
 | `{{PROJECT_DIR}}` | Absolute path of target repo | cwd at bootstrap |
 | `{{ONE_LINER}}` | One sentence: what the project is | derived from docs overview |
 | `{{STACK}}` | Runtime/framework summary | inspect manifest; default Node + TypeScript |
-| `{{PACKAGE_MANAGER}}` | pnpm/npm/yarn/pip/go… | lockfile present; default pnpm |
+| `{{PACKAGE_MANAGER}}` | pnpm/npm/yarn/pip/go… | lockfile decides; no lockfile → the stack's plainest default (npm for Node) |
 | `{{VERIFY_SEQUENCE}}` | Ordered verify commands (one per line) | from scripts/manifest; default install/typecheck/lint/test/build |
 | `{{DB_VERIFY}}` | Optional local-DB infra startup and/or migration/verify commands (e.g. `docker compose up -d` then `pnpm db:migrate`) | present only if a DB is detected; else empty |
 | `{{SOURCE_DOCS}}` | Authority-ordered docs table (markdown) | enumerate docs folder + infer order |

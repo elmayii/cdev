@@ -5,7 +5,7 @@ or `→ BLOCKED` (reason + minimum human decision). Exactly one sprint ACTIVE.
 
 ---
 
-## Sprint 01 — Consolidation refactor `ACTIVE`
+## Sprint 01 — Consolidation refactor `DONE`
 
 Objective: eleven skills become seven, per doc 07 and the recorded decisions. Every change
 justified as core / profile / binding / periphery-goes.
@@ -55,7 +55,7 @@ Demote the night-runner to an explicitly optional binding.
 **Acceptance:** periphery check (protocol §3) passes; each of the five rules present, each
 stated once, in the right skill; checks 1–2 pass.
 
-### B05 — Sprint verification + report `READY` (depends: B04)
+### B05 — Sprint verification + report `DONE` (depends: B04)
 
 Full verification sequence over the final skill set. Write the sprint report: what was
 consolidated, what was cut, what moved to profiles — the consumer-facing contract delta for
@@ -66,12 +66,30 @@ Sprint 02.
 
 ---
 
-## Sprint 02 — Plugin and marketplace `PENDING`
+## Sprint 02 — Plugin and marketplace `ACTIVE`
 
 Objective: the package installable as a Claude Code plugin, from a marketplace repository.
-Manifest (`.claude-plugin/plugin.json`), layout (`skills/ profiles/ templates/ scripts/`),
-marketplace repo (creation on GitHub = human gate: name, account, visibility), install from it
-and verify the installed set. Open questions in PRODUCT.md resolved as dated DECISIONS entries.
+
+### B01 — Plugin manifest `READY`
+
+`.claude-plugin/plugin.json` (name, version, description, author), schema confirmed against
+current Claude Code docs, layout already in place from Sprint 01. **Acceptance:** manifest
+valid; a local install (`claude plugin` tooling or documented equivalent) loads the plugin and
+its 7 skills resolve profiles/templates from the plugin root.
+
+### B02 — Marketplace repository `READY` (depends: B01)
+
+Marketplace manifest prepared as drafts in this repo; creation of the GitHub repository and
+push are a **human gate** (decisions: repo name, account, visibility). **Acceptance:** drafts
+complete and documented; blocker names the exact decisions; after human approval, install from
+the marketplace works.
+
+### B03 — Install and verify `READY` (depends: B02)
+
+Install the plugin from the marketplace (or local path while B02 is gated), run one sandbox
+scenario against the **installed** copy (not the working tree), record evidence.
+**Acceptance:** installed skills exercise cleanly; open questions in PRODUCT.md resolved as
+dated DECISIONS entries.
 
 ## Sprint 03 — Document 08, installation `PENDING` (blocked by Sprint 02)
 

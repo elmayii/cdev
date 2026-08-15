@@ -5,6 +5,32 @@ Newest-first. Required fields: date+unit · status · done · files · verificat
 
 ---
 
+## 2026-08-15 · S01-B05 Sprint verification + report · DONE — Sprint 01 `DONE`
+
+**Done:** Full static pass green (frontmatter 7/7 · language 0 · product names 0 · tech names
+in core skills 0 · no placeholders outside templates). Bootstrap re-exercised on the rewritten
+templates: `BOOTSTRAP VERIFY: PASS`, zero unresolved placeholders, fake test gate caught,
+clarity boundary exact, conditioning committed in the fixture. Re-exercise friction fixed:
+package-manager default now lockfile-driven (npm plainest for Node), lying lint/build gates
+now force a first-batch repair or written blocker (profile §1), bootstrap commit branch made
+explicit, gitignore-additions tied to the night-runner render, SPRINTS template double-bullet
+removed. Sprint report published at `docs/develop/reports/s01.md` — the contract delta for
+Sprint 02. **Sprint 01 DONE; Sprint 02 (plugin + marketplace) promoted to ACTIVE** with three
+batches (manifest → marketplace repo [human gate] → install and verify).
+
+**Files:** docs/develop/reports/s01.md (new), templates/PLACEHOLDERS.md,
+templates/develop/SPRINTS.md.tmpl, profiles/backend.md, skills/bootstrap/SKILL.md,
+docs/develop/SPRINTS.md.
+
+**Verification:** all four protocol checks — pass (sandbox: 4 recorded exercises total).
+
+**Blockers:** none at sprint level. Known gate ahead: S02-B02 marketplace repo creation
+(decisions: repo name, GitHub account, visibility).
+
+**Next:** S02-B01 — plugin manifest.
+
+---
+
 ## 2026-08-15 · S01-B04 Periphery removal + the five field rules · DONE
 
 **Done:** Product references gone (last `compiss` mention removed from bootstrap-monorepo;

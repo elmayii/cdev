@@ -10,8 +10,11 @@ are **examples from one case**, never requirements.
 The repository's real script sequence — typical: `lint` → `build` (typecheck) → `test` — fixed
 at conditioning from the scripts that actually exist, not assumed.
 
-- **No test framework → the repo is not conditioned.** Installing the stack's framework and
-  writing the first real test becomes the first batch.
+- **No test framework → the repo is not conditioned.** Enabling one (the stack's framework, or
+  its stdlib test runner when one ships) and writing the first real test becomes the first
+  batch. The same applies to **any declared gate found lying** at conditioning (a lint or build
+  that passes while checking nothing): it is repaired in the first batch or written down as a
+  blocking requirement — never left as a gate that lies.
 - Schema touched → format and regenerate the client locally as part of verification
   (example: `prisma format` + `generate`); **applying** it is the gate below, never a
   verification step when the database is shared.
