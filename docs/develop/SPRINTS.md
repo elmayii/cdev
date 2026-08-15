@@ -197,7 +197,7 @@ Links resolve, render checked, report `s06.md`. **Acceptance:** checks pass; rep
 
 ---
 
-## Sprint 07 — Community structure `ACTIVE` (promoted while S06 blocks at entry — blocked-but-not-idle)
+## Sprint 07 — Community structure `DONE` (ran while S06 blocked at entry — blocked-but-not-idle)
 
 Source: strategy §12–§14, §22 Phase 3.
 
@@ -212,13 +212,13 @@ drafted from the repo's own known leftovers, welcome/announcement Discussion pos
 A worked example: conditioning + one loop run on a sandbox fixture, written as a walkthrough
 users can replay. **Acceptance:** every command in the walkthrough replayed this sprint.
 
-### B03 — Verification + report `READY` (depends: B01, B02)
+### B03 — Verification + report `DONE` (depends: B01, B02)
 
 Report `s07.md`. **Acceptance:** checks pass; report exists.
 
 ---
 
-## Sprint 08 — Launch `PENDING`
+## Sprint 08 — Launch `ACTIVE` (S06 still blocked at entry on the visual-direction decision)
 
 Source: strategy §22 Phase 4. Copy is agent work; **publishing each post is a human act,
 always** — the batch closes as prepared-with-blocker, never as posted.

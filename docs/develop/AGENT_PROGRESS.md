@@ -5,6 +5,20 @@ Newest-first. Required fields: date+unit · status · done · files · verificat
 
 ---
 
+## 2026-08-15 · S07-B03 · DONE — Sprint 07 `DONE`, Sprint 08 promoted
+
+**Done:** Report `docs/develop/reports/s07.md` including the verification-debt aggregate
+(one standing not-run: the issue-form render glance). All S07 acceptance re-checked. Sprint 08
+(launch copy) promoted while S06 stays blocked at entry on the visual-direction decision.
+
+**Verification:** language check — pass · reports exist — pass · one ACTIVE sprint — pass.
+
+**Blockers:** carried: S06 visual direction (human) · issue-form glance (human).
+
+**Next:** S08-B01 — launch copy drafts + v0.1.1 patch preparation.
+
+---
+
 ## 2026-08-15 · S07-B02 Examples and showcase · DONE
 
 **Done:** Public walkthrough at `docs/community/walkthrough.md`, validated by a fresh subagent
