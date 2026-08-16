@@ -31,6 +31,9 @@ copies update only when the version changes.
   and a backend → frontend worked example.
 - `docs/10-usage-recommendations.md` — model/effort defaults for the current Claude Code
   binding (labeled as binding guidance, dated).
+- First CI: `.github/workflows/validate.yml` runs `scripts/validate.sh` (portable bash) on a
+  Linux/Windows/macOS matrix — manifest parses, zero unresolved placeholders in consumed
+  files, skill frontmatter contract, internal links resolve (#3).
 
 ### Changed
 

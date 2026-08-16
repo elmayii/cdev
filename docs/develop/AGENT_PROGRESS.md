@@ -5,6 +5,29 @@ Newest-first. Required fields: date+unit · status · done · files · verificat
 
 ---
 
+## 2026-08-16 · First CI workflow (issue #3) · DONE
+
+**Done:** `scripts/validate.sh` (portable bash: node for JSON, git grep, awk — runs locally
+and in CI) implementing issue #3's four checks: manifest parses with name/version; zero
+unresolved `{{` in consumed files (allowlist for templates/, docs/, CHANGELOG, the bootstrap
+skill, its verifier and `.github/` — they mention the syntax legitimately); skill frontmatter
+contract (starts `---`, has `name:`, `description:` starts "Use when"); internal markdown
+links resolve. `.github/workflows/validate.yml` runs it on push to main and PRs over a
+3-OS matrix (external audit ask). Layer: periphery/infra — no skills touched. CHANGELOG
+0.1.1 gains the CI bullet. Context: PR #5 merged by the human, closing S09-B01.
+
+**Verification:** `bash scripts/validate.sh` — pass (all four checks green on main);
+negative tests — pass (bad frontmatter, broken link and placeholder each detected);
+language/periphery/sandbox — not-run (no skill bodies touched).
+
+**Blockers:** push of `main` + tag `v0.1.1` + marketplace pin are the human's (gates).
+Commands prepared in the maintainer's local notes.
+
+**Next:** human pushes → workflow must go green on main → issue #3 auto-closes via commit
+message → publish release v0.1.1 → pin marketplace to the tag.
+
+---
+
 ## 2026-08-16 · S09-B01 AGENTS.md as canonical guide · IN_PROGRESS → PR
 
 **Done:** Guide migrated (`AGENTS.md` canonical + one-line `CLAUDE.md` pointer, this repo and
