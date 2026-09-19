@@ -14,6 +14,11 @@ copies update only when the version changes.
   requirement list to maintain. Every item cites its source; percentages are estimates and
   say so; `since <batch|date|commit>` adds a delta from git history, nothing persisted; an
   axis the repository does not support reads "not derivable". Edits nothing, marks nothing.
+- **`cdev-monorepo-status`** — the same three-axis reading for a SYSTEM sprint across its
+  repositories. Applies `cdev-status` by reference and adds only what is system-level:
+  contracts as a source, **local truth** (each repository's own plan and handoff, read in the
+  repository; workspace↔repo divergence flagged, the repository's state reported; the state
+  snapshot never decides), and one compact per-repository table.
 
 ### Changed
 

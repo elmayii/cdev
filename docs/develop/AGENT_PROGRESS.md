@@ -5,6 +5,34 @@ Newest-first. Required fields: date+unit · status · done · files · verificat
 
 ---
 
+## 2026-09-19 · S10-B04 `cdev-monorepo-status` — the three axes for a SYSTEM sprint · DONE (sandbox not-run, declared)
+
+**Done:** New `skills/cdev-monorepo-status/SKILL.md` (layer: new skill). It does not restate
+the method: a path pointer into `cdev-status` (resolved to the real path), plus only what the
+system level adds — scope (the `ACTIVE` SYSTEM sprint, two independent numberings), sources
+(SYSTEM_BATCHes and their references, sync points, the contracts under
+`workspace/contracts/`), **local truth** (each affected repository's own plan and handoff,
+read in the repository; divergence flagged, the repository's state reported; the state
+snapshot file never read as a state), one compact per-repository table, "not derivable" by
+repository name, and the system-level risks in the executive reading.
+
+**Files:** skills/cdev-monorepo-status/SKILL.md, CHANGELOG.md.
+
+**Verification:** frontmatter — pass · language — pass · periphery — pass ·
+`bash scripts/validate.sh` — pass (9 skills) · `claude plugin validate .` — pass · single home
+— pass (the method's distinctive text greps in `cdev-status` only; this skill carries the
+path pointer) · **live load** (`claude --plugin-dir . -p`) — pass: all nine skills list,
+`cdev:cdev-status` and `cdev:cdev-monorepo-status` among them. *Correction to B03's entry:* its
+acceptance also asked that `cdev:cdev-status` list; I had recorded only the static validation
+there. The listing was checked here, for both skills.
+· **sandbox — not-run** (declared: no workspace fixture exists; protocol §4 local line). This
+skill has never been seen running. Its evidence is the human field exercise of B06, and the
+sprint does not close without it.
+
+**Blockers:** none for this batch's own acceptance. **Next:** B05 — live docs and 0.2.0.
+
+---
+
 ## 2026-09-19 · S10-B03 `cdev-status` — progress on three axes, engineered at read time · DONE
 
 **Done:** New `skills/cdev-status/SKILL.md` (layer: new skill — read-only, loop untouched; record

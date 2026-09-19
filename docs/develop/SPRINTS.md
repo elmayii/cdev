@@ -409,7 +409,7 @@ axis as "not derivable" naming what is missing — no invented item. (4) Uncondi
 proposes `bootstrap`, stops. (5) Protocol checks 1–3 pass; `claude plugin validate .` passes;
 the skill lists as `cdev:cdev-status`.
 
-### B04 — `cdev-monorepo-status`: the same three axes for a SYSTEM sprint `READY` (depends: B03)
+### B04 — `cdev-monorepo-status`: the same three axes for a SYSTEM sprint `DONE` (depends: B03)
 
 **Layer: new skill / capability** (same record as B03). New
 `skills/cdev-monorepo-status/SKILL.md`. It does **not** restate the three-axis method or the
