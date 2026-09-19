@@ -6,6 +6,15 @@ copies update only when the version changes.
 
 ## [Unreleased]
 
+### Added
+
+- **`cdev-status`** — a read-only reading of where a sprint stands, on three axes: functional
+  requirements, non-functional requirements, user stories. Engineered **at read time** from
+  the raw chain sprint → batch → handoff (plus decisions and git); the plan holds no
+  requirement list to maintain. Every item cites its source; percentages are estimates and
+  say so; `since <batch|date|commit>` adds a delta from git history, nothing persisted; an
+  axis the repository does not support reads "not derivable". Edits nothing, marks nothing.
+
 ### Changed
 
 - **Planners close each batch's open decisions with the human before writing it**

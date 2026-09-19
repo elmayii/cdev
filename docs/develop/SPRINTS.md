@@ -354,7 +354,7 @@ recorded. (4) The rule's text appears once: `grep` finds it in `cdev-planner` on
 pointer in `cdev-monorepo-planner`. (5) Protocol checks 1–3 pass. `cdev-monorepo-planner`:
 sandbox `not-run` (declared, no fixture) — its evidence is the human field exercise of B06.
 
-### B03 — `cdev-status`: progress on three axes, engineered at read time `READY`
+### B03 — `cdev-status`: progress on three axes, engineered at read time `DONE`
 
 **Layer: new skill / capability** — read-only, does not alter the loop, so no RFC; the
 required record is the dated DECISIONS entry (2026-09-19). New `skills/cdev-status/SKILL.md`:

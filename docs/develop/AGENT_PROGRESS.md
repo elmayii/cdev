@@ -5,6 +5,63 @@ Newest-first. Required fields: date+unit · status · done · files · verificat
 
 ---
 
+## 2026-09-19 · S10-B03 `cdev-status` — progress on three axes, engineered at read time · DONE
+
+**Done:** New `skills/cdev-status/SKILL.md` (layer: new skill — read-only, loop untouched; record
+in DECISIONS 2026-09-19). Scope (ACTIVE sprint / named / `all` / `since`), the read order over
+the raw chain, the three axes in order with a source on every item, four states (met · met,
+unverified · partial · pending), estimated percentages labelled as such, the report shape
+accepted in the field, the git-derived delta, and the rules: read-only always, "not
+derivable" instead of filling, disagreement flagged never resolved, the human's language.
+
+**Three defects of my own text, found by the first exercise round and fixed in-branch:**
+(1) the skill named the protocol as a source of non-functional requirements, so both runs
+listed the repo's working rules (check sequence, branch convention, gates) as NFRs — 4 of 8
+rows; now: system qualities only, the protocol tells you what "verified" means and is never
+an item. (2) "met" required recorded verification while a rule also defined "met, unverified";
+a run resolved the ambiguity by giving every axis two figures; now an explicit fourth state,
+one figure per axis, and the executive reading says how much rests on unverified items.
+(3) ~1,100-word statuses against compact field specimens; a brevity line added — its effect
+was modest, and much of the length came from the fixture's own plan↔git disagreements.
+
+**Files:** skills/cdev-status/SKILL.md, CHANGELOG.md.
+
+**Verification** (every run a fresh subagent with no planning context; fixture state captured
+after each; all fixtures left with a clean tree — nothing written by the skill):
+- frontmatter — pass · language — pass · periphery — pass · `bash scripts/validate.sh` — pass
+  · `claude plugin validate .` — pass (one pre-existing warning: the root pointer file).
+- **(1) cold start** — pass, twice (before and after the fixes). Three axes in order; every
+  cited path exists; partials carry percentage + reason + owning batch; the decision changed
+  during implementation appears in its newest form citing DECISIONS and warning that the
+  batch text no longer holds; the `DONE`-with-`not-run` batch reads "met, unverified";
+  executive reading and "what is left" present; answered in Spanish to a Spanish prompt.
+  After the fixes: system-only NFRs plus an explicit "no other quality is stated, none is
+  added"; one figure per axis.
+- **(2) `since B01`** — pass. Resolved the bare batch id to the commit that closed it in the
+  sprint in scope (and said so), applied one item list to both states, "(before NN%)" per
+  axis, changed items marked. Without the argument: no delta (run 1).
+- **(3) not derivable** — pass **on the fourth attempt; the first three are recorded, not
+  hidden.** Attempts 1 and 2 did not meet the clause by the letter, and the fault was the
+  fixtures': the premise "a sprint carrying no non-functional signal" was false — the signal
+  sat in the batch text, then in the product notes. In both the skill invented nothing and
+  named what was missing. Attempt 3 met the clause but is **discounted**: the fixture commit
+  I made to remove the signal was titled with the conclusion, and the agent read it in
+  `git log`. Attempt 4, on a fixture with the edit folded into ordinary commits and no hint
+  anywhere: the axis reads "not derivable", three missing things named, Sprint 02's
+  constraints explicitly not carried over, the decision routed to the planner. In no attempt
+  did a run invent a generic quality — not even input sanitising or file size, which an
+  HTML-import feature invites.
+- **(4) unconditioned repo** — pass. Proposed `bootstrap`, refused to read percentages out of
+  the product notes, touched nothing.
+
+**Found by accident, worth keeping:** my status fixture recorded a batch `DONE` whose code was
+never committed. Every run flagged the plan↔handoff↔git disagreement and none resolved it —
+the rule held on a flaw I had not planted.
+
+**Blockers:** none. **Next:** B04 — `cdev-monorepo-status`.
+
+---
+
 ## 2026-09-19 · S10-B02 Planners close gaps per batch, before writing · DONE
 
 **Done:** `skills/cdev-planner/SKILL.md` gains § "Closing open decisions (before each batch is
