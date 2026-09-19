@@ -267,7 +267,7 @@ exists; blockers name each pending post.
 
 ---
 
-## Sprint 10 — Measurable intent: gap-closing planners and status skills `PROPOSAL` (awaiting human ratification)
+## Sprint 10 — Measurable intent: gap-closing planners and status skills `ACTIVE` (ratified by the human, 2026-09-19)
 
 Objective: a sprint's open decisions are closed with the human before each batch is written,
 and progress is measurable at any time from the repository alone — engineered at read time

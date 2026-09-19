@@ -5,7 +5,9 @@ Newest-first. Every assumption made under PARTIAL clarity lands here, dated.
 ## 2026-09-19 — Sprint 10 planned: gap-closing planners + status skills (planner, human present)
 
 Planned by closing gaps with the human batch by batch, through the host's question form —
-the behavior the sprint encodes. Human answers, per unit:
+the behavior the sprint encodes. **Ratified `PROPOSAL` → `ACTIVE` by the human the same day**,
+after reading the batch list; the planner wrote the state change on that instruction, it did
+not decide it. Human answers, per unit:
 
 - **Sprint.** S09 reconciled to `DONE` as the branch's first commit (PR #5 had merged; the
   plan had not caught up). Layers: planner change = **core** (RFC + field evidence); status

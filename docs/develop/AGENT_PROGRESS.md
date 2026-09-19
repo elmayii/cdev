@@ -5,7 +5,7 @@ Newest-first. Required fields: date+unit · status · done · files · verificat
 
 ---
 
-## 2026-09-19 · Planning — Sprint 10 drafted as PROPOSAL (cdev-planner) · DONE
+## 2026-09-19 · Planning — Sprint 10 drafted, then ratified ACTIVE by the human (cdev-planner) · DONE
 
 **Done:** Two read-only subagents mined the maintainer's prompt history and the surviving
 transcripts for the two habits behind issue #8 (planner launches carrying a hand-written
@@ -24,10 +24,11 @@ links) · plan invariants — zero `ACTIVE` sprints until the human ratifies S10
 state, not two actives) · frontmatter / language /
 periphery / sandbox — not-run (no skill touched).
 
-**Blockers:** Sprint 10 is `PROPOSAL` — activating it is the human's ratification. Outward
-acts were authorized for this session only.
+**Blockers:** none for the start — the human ratified Sprint 10 to `ACTIVE` the same day
+(DECISIONS 2026-09-19). Outward acts were authorized for this session only; B06 will block on
+the human's field exercise, and the merge on the RFC's "accepted" summary.
 
-**Next:** on ratification, `/cdev:cdev` runs S10 from B01 on
+**Next:** `/cdev:cdev` runs S10 from B01 on
 `feat/8-status-and-gap-closing-planners`.
 
 ---
