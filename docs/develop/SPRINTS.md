@@ -282,7 +282,7 @@ and additionally waits on the RFC's "accepted" summary — work proceeds on the 
 (blocked-but-not-idle). Outward acts of this sprint (Discussion, issue, branch push, PR) were
 authorized in-session on 2026-09-19; in any later session they are gates again.
 
-### B01 — Field evidence and the RFC `READY`
+### B01 — Field evidence and the RFC `IN_PROGRESS`
 
 **Layer: docs — the prerequisite the core layer demands** (RFC + recorded field evidence).
 Write `docs/develop/reports/s10-field-evidence.md`: the two habits as the record shows them.

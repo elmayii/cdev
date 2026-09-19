@@ -18,7 +18,8 @@ rules) gets proposed and decided.
 
 1. **Open a Discussion in the RFC category.** State: the rule you want to change or add, the
    recorded incident(s) that motivate it (link field reports — yours or others'), and the
-   smallest version of the change.
+   smallest version of the change. *Interim rule: until an RFC category exists (categories
+   are created by hand in the web UI), open it in **Ideas** with the title prefixed `[RFC]`.*
 2. **Evidence bar:** the method's own precedent (docs/07 §6) — every core rule added so far
    traces to a specific recorded failure. "It would be cleaner" does not clear the bar;
    "here is the handoff entry where this broke" does.
