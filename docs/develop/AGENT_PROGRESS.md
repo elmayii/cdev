@@ -5,6 +5,35 @@ Newest-first. Required fields: date+unit · status · done · files · verificat
 
 ---
 
+## 2026-09-19 · S10-B06 Human field exercise of the monorepo skills · BLOCKED (on the human)
+
+**Done:** `docs/develop/reports/s10-field-exercise.md` — the script. Step 0 proves the session
+is running the branch and not the installed 0.1.1 (checked from this repo: with
+`--plugin-dir` the working tree wins — the skill's base directory is this repository and the
+new sentence is present; the human re-checks from their workspace, because that is a
+different working directory). Part A: `cdev-monorepo-planner` launched **bare** on a throwaway
+two-repository objective, eight observations (pointer followed, grouping first, questions per
+SYSTEM_BATCH before each write, suggested answers + recommended + form tool, system-level
+decisions present, no hand-back of the prompt, gap-free batch unasked, answers dated in
+DECISIONS), then everything discarded with git. Part B: `cdev-monorepo-status` cold, in a
+**fresh session**, on the real SYSTEM sprint, nine observations — including the one only the
+human can make: is there any requirement or story in it they do not recognise as theirs.
+
+**Files:** docs/develop/reports/s10-field-exercise.md.
+
+**Verification:** `bash scripts/validate.sh` — pass · product-name sweep over the script — pass
+· the exercise itself — **not-run** (it is the human's).
+
+**Blockers:** **the human runs the script and reports back** (held / broke per observation,
+B7 and B9 in their own words). This repository's agent never opens that workspace. Until the
+entry exists: the sprint does not close, the PR is not merged, and both multi-repo skills
+remain unproven — `cdev-monorepo-status` has never been seen running by anyone.
+
+**Next:** blocked-but-not-idle — B07's preparable parts: full protocol sequence, sprint
+report, the pull request.
+
+---
+
 ## 2026-09-19 · S10-B05 Live docs and version 0.2.0 · DONE
 
 **Done:** The live surfaces that name the skill set now say nine and list both status

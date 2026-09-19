@@ -453,7 +453,12 @@ stale; both new commands appear in README and doc 08; `plugin.json` version and 
 heading agree; `bash scripts/validate.sh` and `claude plugin validate .` pass; the release
 commands exist, unexecuted, in the handoff entry.
 
-### B06 — Human field exercise of the monorepo skills `READY` (depends: B02, B04)
+### B06 — Human field exercise of the monorepo skills `BLOCKED` (depends: B02, B04)
+
+*Blocked 2026-09-19 — the script exists (`docs/develop/reports/s10-field-exercise.md`); the
+rest is not the agent's to do. **Minimum human decision:** run the script once in your own
+workspace (about one session: a throwaway planning run you then discard, and a cold status
+on your real SYSTEM sprint) and report back held / broke per observation.*
 
 **Layer: field evidence** — stands in for the sandbox exercise no workspace fixture allows
 (protocol §4, local line added in B02). The agent writes the script: how to load the branch
