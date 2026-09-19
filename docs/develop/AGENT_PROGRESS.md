@@ -5,6 +5,61 @@ Newest-first. Required fields: date+unit · status · done · files · verificat
 
 ---
 
+## 2026-09-19 · S10-B02 Planners close gaps per batch, before writing · DONE
+
+**Done:** `skills/cdev-planner/SKILL.md` gains § "Closing open decisions (before each batch is
+written)" — the rule's single home — plus a Mode 1 step pointing at it, the PARTIAL line and
+the `READY` promotion made consistent with it. The section names itself apart from Mode 2's
+"gap analysis" (same word, different thing). `skills/cdev-monorepo-planner/SKILL.md` does not
+restate it: a path pointer, applied per SYSTEM_BATCH, plus its own system-level sources of
+open decisions. Both execution loops' planner invocations re-read (field rule 5): no
+contradiction — a batch the planner leaves `BLOCKED` is simply not selected, which is what
+blocked-but-not-idle already does; no loop text changed. Protocol §4 gains the local line on
+multi-repo skills (field exercise stands in for the missing workspace fixture). CHANGELOG
+bullet under Unreleased. Layer: **core** (RFC: Discussion #9).
+
+**Files:** skills/cdev-planner/SKILL.md, skills/cdev-monorepo-planner/SKILL.md,
+docs/develop/AGENT_EXECUTION_PROTOCOL.md, CHANGELOG.md.
+
+**Verification:**
+- frontmatter — pass (7/7) · language — pass (0 outside line 3) · periphery — pass (product
+  0, tech names in skills 0) · `bash scripts/validate.sh` — pass.
+- single home — pass: the rule's text greps in `cdev-planner` only; `cdev-monorepo-planner`
+  carries the path pointer.
+- **sandbox, attended (`cdev-planner`)** — pass. Fresh subagent, hand-conditioned fixture, the
+  driver answering as the human through turn-ending messages (the host-binding fallback: no
+  form tool). Fixture state captured at every stop: T1 grouping shown + sprint-wide questions,
+  **nothing written**; T2 sprint header only; T3 batch 1 written after its answers; T4 batch
+  2; T5 batch 3; T6 batches 4 and 5. Every round: lettered options, one recommended. It did
+  not ask what the product notes settle ("neither is a question"), asked a **permission**
+  question (may the batch edit the product source?), took a free-text answer, honoured an
+  answer that overruled its recommendation, recorded unasked assumptions per batch, and left
+  the ABSENT area unplanned with open questions. `DECISIONS.md` holds one dated entry per
+  batch. *Caveat, recorded honestly:* the planner found open decisions in every batch of the
+  original objective, so the "batch with no gap" clause was exercised by the driver adding a
+  fully specified fifth batch mid-run — it was written with no question and the spec was not
+  handed back for confirmation.
+- **sandbox, unattended** — pass. Same fixture, no human: the undecided batch is `BLOCKED`
+  with two named decisions, a suggested answer each, and "not to be promoted on the
+  suggestions"; nothing `READY` rests on an unanswered decision it judged blocking.
+  *Observation:* this run judged "what counts as the same URL" a non-blocking open question
+  and wrote that batch `READY`; the attended run asked it. Judgment varies between runs —
+  the cost the RFC names for leaving the threshold unwritten.
+- **baseline (`main`'s planner, attended scenario)** — recorded. It asked too, but once: one
+  up-front round (3 items), then all four batches written in one go, and its own report lists
+  five assumptions "the human has NOT seen" — decisions the new rule turns into per-batch
+  questions. That is the difference the rule makes.
+- sandbox, `cdev-monorepo-planner` — **not-run** (no workspace fixture; protocol §4 local
+  line). Its evidence is the human field exercise of B06.
+
+**Fixture flaw found by all three runs:** the hand-conditioned fixture declared a batch `DONE`
+whose work was never in the tree; every planner flagged it before planning and none repaired
+it silently. Accidental, but it exercised Mode 1 step 1.
+
+**Blockers:** none. **Next:** B03 — `cdev-status`.
+
+---
+
 ## 2026-09-19 · S10-B01 Field evidence and the RFC · DONE
 
 **Done:** `docs/develop/reports/s10-field-evidence.md` — the two habits as the record shows

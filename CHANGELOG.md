@@ -4,6 +4,18 @@ All notable changes to the CDev plugin are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow semver. Installed
 copies update only when the version changes.
 
+## [Unreleased]
+
+### Changed
+
+- **Planners close each batch's open decisions with the human before writing it**
+  (core — [RFC, Discussion #9](https://github.com/elmayii/cdev/discussions/9)). `cdev-planner`
+  shows the batch grouping, then goes batch by batch: questions with suggested answers and one
+  recommended → answers recorded → that batch written → next. No open decision, no question.
+  With no human present, a batch with open decisions is written `BLOCKED` naming each
+  decision — never `READY`. `cdev-monorepo-planner` applies the same rule by reference, per
+  SYSTEM_BATCH.
+
 ## [0.1.1] — 2026-08-15
 
 ### Fixed

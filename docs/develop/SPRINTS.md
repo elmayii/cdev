@@ -308,7 +308,7 @@ zero; `bash scripts/validate.sh` passes (links resolve); the Discussion is live,
 `[RFC]`-prefixed, five headings present, permalink resolving; #8 shows the linking comment;
 rfc-process.md states the interim rule. Skill checks: n/a — no skill touched.
 
-### B02 — Planners close gaps per batch, before writing `IN_PROGRESS` (depends: B01)
+### B02 — Planners close gaps per batch, before writing `DONE` (depends: B01)
 
 **Layer: core methodology** (the RFC of B01; the PR's merge waits on its acceptance).
 One new section in `skills/cdev-planner/SKILL.md` — the rule's **single home** — placed in

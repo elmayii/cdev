@@ -10,6 +10,14 @@ asked; without a clear argument, run both: gap analysis first, then materialize 
 
 ## Mode 1 — Materialize an objective (objective → executable SYSTEM_BATCH)
 
+**Before writing each SYSTEM_BATCH, close its open decisions with the human.** The rule lives
+in one place — § "Closing open decisions" of the `cdev-planner` skill: resolve this skill's
+base directory to its real path, read `../cdev-planner/SKILL.md`, and apply that section per
+SYSTEM_BATCH (including its no-human branch). System-level sources of open decisions, beyond
+that section's: which repos participate and which explicitly do not, the terms of a
+cross-repo contract, the sync-point artifact, implementation and deploy order, the
+verification level.
+
 1. **Define the batch**: `SYS-<sprint>-B<n>` in the global `SPRINTS.md` with an observable
    objective, affected repos (and explicitly the non-affected ones if that clarifies scope),
    global acceptance and verification level L0–L3. It is born `PLANNED`.
@@ -37,7 +45,8 @@ asked; without a clear argument, run both: gap analysis first, then materialize 
    **goes looking for** that file (pull, not notification) and waits/rotates if it does not
    exist — that is how integration happens without mocking the other repo's contract. Without
    a declared sync point, a cross-repo dependency is not planned.
-7. **Promote to `READY`** only when every required reference exists, respects the local
+7. **Promote to `READY`** only when the batch's open decisions are closed, every required
+   reference exists, respects the local
    sequence, has sufficient acceptance and its sync points declared.
 
 Two independent numberings: SYSTEM Sprint/Batch ≠ local sprint/batch. Never equate them, never
