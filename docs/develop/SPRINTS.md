@@ -227,12 +227,15 @@ Report `s07.md`. **Acceptance:** checks pass; report exists.
 
 ---
 
-## Sprint 09 — Agent internationalization `ACTIVE`
+## Sprint 09 — Agent internationalization `DONE`
 
 Objective: conditioned repositories usable by any coding agent, not just Claude Code. First
 externally-visible feature to flow through the public branch policy (branch → PR → main).
 
-### B01 — AGENTS.md as the canonical repo guide `IN_PROGRESS`
+### B01 — AGENTS.md as the canonical repo guide `DONE`
+
+*Closed by the human merge of PR #5 (`ec82495`, 2026-08-16); plan reconciled with git on
+2026-09-19, human-approved — the handoff entry had recorded the close, the plan had not.*
 
 **Layer: host binding + docs** (doc 07: the guide's filename is convention, not core — no RFC
 required; classification recorded in DECISIONS). `AGENTS.md` becomes the guide every
