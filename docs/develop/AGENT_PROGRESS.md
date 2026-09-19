@@ -5,6 +5,37 @@ Newest-first. Required fields: date+unit · status · done · files · verificat
 
 ---
 
+## 2026-09-19 · S10-B01 Field evidence and the RFC · DONE
+
+**Done:** `docs/develop/reports/s10-field-evidence.md` — the two habits as the record shows
+them (planner launches and the hand-typed gap-closing line; the three-axis status and how it
+was really produced), the design the human rejected and why, and a "not evidenced" section.
+Every load-bearing quote was re-read against the private source before writing; counts are
+marked as one mining pass, spot-checked. Branch pushed; RFC opened as Discussion #9 in Ideas,
+`[RFC]`-prefixed, five template headings, evidence linked by commit permalink (`6d06c26`);
+issue #8 carries the linking comment. `docs/community/rfc-process.md` states the interim
+category rule. Layer: docs (the core layer's prerequisite). Outward acts (push, Discussion,
+issue comment) executed under the human's in-session authorization of 2026-09-19.
+
+**Files:** docs/develop/reports/s10-field-evidence.md, docs/community/rfc-process.md.
+
+**Verification:** product-name sweep over the evidence file (protocol §3 patterns plus the
+vendor and place names in the source quotes) — pass, 0 matches · `bash scripts/validate.sh`
+— pass · permalink resolves via the API — pass · Discussion category, prefix and five
+headings read back via the API — pass · frontmatter / language / periphery / sandbox —
+not-run (no skill touched).
+
+**Deviation:** B01 carries two commits, not one — the RFC must link the evidence by
+permalink, so the evidence had to be committed and pushed before the Discussion could exist,
+and this closing record could only follow it.
+
+**Blockers:** none for the work. The PR's merge waits on the human's "accepted" summary in
+Discussion #9.
+
+**Next:** B02 — the gap-closing rule in `cdev-planner`, pointer in `cdev-monorepo-planner`.
+
+---
+
 ## 2026-09-19 · Planning — Sprint 10 drafted, then ratified ACTIVE by the human (cdev-planner) · DONE
 
 **Done:** Two read-only subagents mined the maintainer's prompt history and the surviving
