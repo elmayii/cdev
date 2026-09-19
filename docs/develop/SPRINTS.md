@@ -264,3 +264,228 @@ named human decision (publish or not).
 
 Report `s08.md`; sprint closes with the publish blockers listed. **Acceptance:** report
 exists; blockers name each pending post.
+
+---
+
+## Sprint 10 — Measurable intent: gap-closing planners and status skills `PROPOSAL` (awaiting human ratification)
+
+Objective: a sprint's open decisions are closed with the human before each batch is written,
+and progress is measurable at any time from the repository alone — engineered at read time
+from the raw chain sprint → batch → handoff, never from a maintained list of requirements.
+The plan's format does not change (human decision, 2026-09-19: formalized requirements must
+be kept current while a feature is still being discovered, and that maintenance is what
+drifts). Source: issue #8; field evidence mined from the maintainer's prompt history.
+
+Delivery: one branch (`feat/8-status-and-gap-closing-planners`), **one commit per batch**, one
+PR carrying `Closes #8` and declaring both layers (core + new skill). Merging is the human act
+and additionally waits on the RFC's "accepted" summary — work proceeds on the branch meanwhile
+(blocked-but-not-idle). Outward acts of this sprint (Discussion, issue, branch push, PR) were
+authorized in-session on 2026-09-19; in any later session they are gates again.
+
+### B01 — Field evidence and the RFC `READY`
+
+**Layer: docs — the prerequisite the core layer demands** (RFC + recorded field evidence).
+Write `docs/develop/reports/s10-field-evidence.md`: the two habits as the record shows them.
+(a) Planner gap-closing: 16 launches, 10 with a hand-written instruction, 5 spelling out the
+per-batch protocol; the 2026-08-16→17 incident (bare launch, five plan files, zero questions,
+rollback, the agent's own "fixed without asking"); the two other failure shapes (questions
+dumped up front as prose; sprint-level questions letting a batch gap surface after writing);
+the 2026-09-01 reference run (ask → write → ask → write). (b) Three-axis status: three
+requests, one session, produced from in-session context (two with zero file reads), the
+agent's own "derived / estimated" statement, the accepted output shape. (c) A **"not
+evidenced"** section: no three-axis status in a single repo, no cold-start status ever, no
+recorded hallucination incident — that concern is prospective and is stated as such.
+Quotes in English marked as translated, the Spanish original in italics only for the four or
+five load-bearing ones, product anonymized, pointer = date + prompt index in the local history.
+Then: push the branch, open the RFC as a Discussion in **Ideas** titled `[RFC] …` following the
+five template headings and linking the evidence by commit permalink; comment on #8 with the
+link. `docs/community/rfc-process.md` gains the interim rule (until an RFC category exists,
+RFCs go to Ideas with the `[RFC]` prefix).
+
+**Acceptance:** the evidence file exists and every claim carries its pointer; the "not
+evidenced" section exists; product-name sweep (protocol §3 patterns) over the file returns
+zero; `bash scripts/validate.sh` passes (links resolve); the Discussion is live, in Ideas,
+`[RFC]`-prefixed, five headings present, permalink resolving; #8 shows the linking comment;
+rfc-process.md states the interim rule. Skill checks: n/a — no skill touched.
+
+### B02 — Planners close gaps per batch, before writing `READY` (depends: B01)
+
+**Layer: core methodology** (the RFC of B01; the PR's merge waits on its acceptance).
+One new section in `skills/cdev-planner/SKILL.md` — the rule's **single home** — placed in
+Mode 1 between placing the work and writing it:
+
+- The batch grouping is shown to the human first.
+- Then, for each batch in order and **before writing it**: the decisions the batch would
+  otherwise fix on its own are put as questions, each with suggested answers and one marked
+  recommended. Ask → record the answers → write that batch → next batch. A batch that raises
+  no gap asks nothing. Permissions and tool connections the batch will need are gap sources.
+- What counts as a gap is the planner's judgment — no written threshold (human decision,
+  2026-09-19) — held conservatively: assume almost nothing; never ask what repository evidence
+  already settles. What it judges not worth a question is still recorded as a dated assumption.
+- A question closes something undecided. The human's prompt is the statement of intent: the
+  planner interprets it and never hands it back for confirmation.
+- Sprint-level decisions may be asked once up front; they never replace the per-batch rounds.
+  Never one questionnaire for every batch, never a question about a batch already written.
+- A free-text answer is an answer. Answers land in `DECISIONS.md`, dated, per batch.
+- **No human present** (the planner invoked from an unattended loop): a batch with open gaps
+  is written `BLOCKED`, each gap naming the minimum human decision and the suggested answer.
+  Never `READY`, never carried forward on the recommendation.
+- Host binding, stated as such: where the host offers a structured question tool it is used;
+  otherwise numbered questions with lettered options, one batch per message.
+
+`skills/cdev-monorepo-planner/SKILL.md` does **not** restate the rule: it points at that
+section by path (resolved to the real path, the way `cdev` reaches `profiles/`), applies it per
+SYSTEM_BATCH, and lists only its own gap sources — repo participation, cross-repo contract
+terms, the sync-point artifact, implementation/deploy order, verification level. The two
+execution loops' planner invocations are re-read for contradiction with the `BLOCKED` rule
+(field rule 5). Protocol §4 gains the local line: while no workspace fixture exists, a recorded
+field exercise by the human stands in for the sandbox exercise of a monorepo skill, and the
+sandbox check is recorded `not-run`. `CHANGELOG.md` gains the behavior bullet.
+
+**Acceptance:** (1) *Attended sandbox, `cdev-planner`:* conditioned fixture, an objective
+spanning at least three batches of which one raises no gap, a driver answering as the human.
+The recorded timeline shows the grouping first; for every gapped batch its questions — each
+with two or more suggested answers and one recommended — **precede** that batch's write in
+`SPRINTS.md`; the gap-free batch is written unasked; nothing reaches `SPRINTS.md` before the
+first answer; `DECISIONS.md` holds the dated answers. (2) *Unattended variant:* same fixture,
+no human — gapped batches are `BLOCKED` with decision + suggested answer, none `READY`.
+(3) *Baseline:* the attended scenario run once against `main`'s planner, the difference
+recorded. (4) The rule's text appears once: `grep` finds it in `cdev-planner` only, and a path
+pointer in `cdev-monorepo-planner`. (5) Protocol checks 1–3 pass. `cdev-monorepo-planner`:
+sandbox `not-run` (declared, no fixture) — its evidence is the human field exercise of B06.
+
+### B03 — `cdev-status`: progress on three axes, engineered at read time `READY`
+
+**Layer: new skill / capability** — read-only, does not alter the loop, so no RFC; the
+required record is the dated DECISIONS entry (2026-09-19). New `skills/cdev-status/SKILL.md`:
+
+- Requires a conditioned repo; otherwise proposes `bootstrap` and stops.
+- Scope: the `ACTIVE` sprint by default; an argument names another sprint, or `all` for a
+  sprint-by-sprint rollup of the project.
+- Reads the raw chain, in order: repo guide → `SPRINTS.md` (the sprint's objective and every
+  batch's text and state) → `DECISIONS.md` → the `AGENT_PROGRESS.md` entries of that sprint's
+  batches → `git` log and status → whatever files the sprint or its batches reference
+  (contracts, reports, a testing document where one exists). Where a later record changes an
+  earlier decision, the newest wins and is the one cited.
+- Engineers the three axes **at read time**, in this order: functional requirements (what the
+  sprint's objective and batches commit the system to do) → non-functional requirements (the
+  qualities and constraints they commit to) → user stories, built over the first two against
+  the sprint's objective, first person, marked new or enriched. Every item cites where it
+  came from. Nothing is written back: the plan holds no requirement list to maintain.
+- State per item: met · partial, with an **estimated** percentage, the reason and the owning
+  batch · pending, with the owning batch. Each axis carries an estimated percentage over the
+  sprint's total; a method note says the items are derived and the numbers are estimates.
+- Output, the shape accepted in the field: title → method note → §1 functional requirements
+  (`State | Requirement`, heading with the percentage and batches X of N) → §2 non-functional
+  requirements (same table) → §3 user stories grouped complete / partial / empty → executive
+  reading (batches closed, the three percentages, where the remaining work converges, live
+  risks: blocked batches and pending human decisions) → what is left to reach 100%.
+- `since <batch|date|commit>`: reads the plan and the handoff at that point of the git history,
+  applies the same item list to both states, shows "(before NN%)" and marks what changed. No
+  argument, no delta. Nothing is persisted.
+- An axis the repository does not support reads **"not derivable"** and names what is missing.
+  It is never filled from general knowledge.
+- Disagreement between plan, handoff and git is flagged, never resolved (a `DONE` whose entry
+  records a `not-run` check reads "met, unverified").
+- Read-only, always: it edits no file and marks no state. Something the conversation surfaces
+  that belongs in the plan is the planner's job, not this skill's. No isolation machinery —
+  status is a read operation inside the conversation; CDev is a procedure and does not guard
+  the human against their own use of context (human decision, 2026-09-19).
+- Answers in the language the human is using.
+
+`CHANGELOG.md` gains the bullet.
+
+**Acceptance:** (1) *Cold-start sandbox:* a conditioned fixture whose active sprint has at
+least four batches in mixed states (`DONE` with handoff evidence, `DONE` with a `not-run`
+check, `IN_PROGRESS`, `READY`, one `BLOCKED`) and one DECISIONS entry that changes a planned
+decision; a **fresh subagent with no planning context** runs the skill. Its answer has the
+three axes in the stated order; every item cites a path that exists; partials carry
+percentage + reason + owning batch; the changed decision appears in its newest form citing
+DECISIONS; the `not-run` item reads unverified; the executive reading is present; and
+`git status` in the fixture is clean afterwards. (2) *`since`:* with a batch closed between
+two fixture commits, the delta appears and the changed item is marked; without the argument
+there is none. (3) *Not derivable:* a sprint carrying no non-functional signal yields that
+axis as "not derivable" naming what is missing — no invented item. (4) Unconditioned repo →
+proposes `bootstrap`, stops. (5) Protocol checks 1–3 pass; `claude plugin validate .` passes;
+the skill lists as `cdev:cdev-status`.
+
+### B04 — `cdev-monorepo-status`: the same three axes for a SYSTEM sprint `READY` (depends: B03)
+
+**Layer: new skill / capability** (same record as B03). New
+`skills/cdev-monorepo-status/SKILL.md`. It does **not** restate the three-axis method or the
+output shape: it points at `cdev-status` by path (resolved to the real path) and adds only
+what is system-level:
+
+- Requires a conditioned workspace (`workspace/repos.yaml` + a global `docs/develop/`);
+  otherwise proposes `bootstrap-monorepo` and stops.
+- Scope: the `ACTIVE` SYSTEM sprint of the global `SPRINTS.md`; an argument names another.
+- Sources, beyond those of `cdev-status`: the SYSTEM_BATCHes and their references, the
+  contracts under `workspace/contracts/`, and — **local truth** — each affected repository's
+  own `SPRINTS.md` and `AGENT_PROGRESS.md`, reached through the bidirectional references and
+  read in the repository itself. Workspace↔repository divergence is flagged and the
+  repository's state is the one reported. The state snapshot file never decides anything.
+- Output: the three axes at system level, then one compact table — repository · its local
+  batches for this SYSTEM sprint · state · blockers.
+- A repository that cannot be reached reads "not derivable" for that repository, by name.
+- Read-only, as B03.
+
+`CHANGELOG.md` gains the bullet.
+
+**Acceptance:** protocol checks 1–3 pass; `claude plugin validate .` passes; the skill lists
+as `cdev:cdev-monorepo-status`; `grep` finds the three-axis method stated in `cdev-status`
+only, and a path pointer here. Sandbox: `not-run` (declared — no workspace fixture); its
+evidence is the human field exercise of B06.
+
+### B05 — Live docs and version 0.2.0 `READY` (depends: B02, B03, B04)
+
+**Layer: periphery / docs.** The surfaces that name the skill set learn there are nine:
+`README.md` (command table and "which command when"), `docs/08-installation.md` (command
+table), `CONTRIBUTING.md` ("the seven" → "the nine"), and `docs/09` / `docs/10` where they list
+commands. Documents 01–07 are the extraction record and stay untouched; the walkthrough is not
+extended (every command in it must be replayed — not worth it for a read operation). In the
+**same commit**: `.claude-plugin/plugin.json` → `0.2.0` (semver per CONTRIBUTING: compatible
+capabilities) and `CHANGELOG.md` gathers this sprint's bullets under `## 0.2.0`. Tag, GitHub
+Release and the marketplace pin happen **after the merge, from `main`**, and are the human's —
+commands left ready per the maintainer's release checklist (annotated tag, explicit push).
+
+**Acceptance:** `grep -rn -iE '\bseven\b|7 skills'` over the live surfaces returns nothing
+stale; both new commands appear in README and doc 08; `plugin.json` version and the CHANGELOG
+heading agree; `bash scripts/validate.sh` and `claude plugin validate .` pass; the release
+commands exist, unexecuted, in the handoff entry.
+
+### B06 — Human field exercise of the monorepo skills `READY` (depends: B02, B04)
+
+**Layer: field evidence** — stands in for the sandbox exercise no workspace fixture allows
+(protocol §4, local line added in B02). The agent writes the script: how to load the branch
+(`claude --plugin-dir <working tree>`), what to run, what to observe. The **human** runs it,
+once, in their own workspace; this repository's agent never touches those repositories.
+(a) `cdev-monorepo-planner` on a **throwaway objective**: does it follow the pointer into
+`cdev-planner`, show the grouping, ask per SYSTEM_BATCH before writing each, with suggested
+answers and a recommendation? What it wrote is then discarded with git in the workspace and
+the repositories — real plans receive nothing from an unmerged skill. (b)
+`cdev-monorepo-status`, cold, on the real `ACTIVE` SYSTEM sprint (read-only): three axes in
+order, items citing sources, the per-repository table, local truth over the workspace's view.
+The human reports back; the outcome lands in the handoff as field evidence, product
+anonymized. This batch is `BLOCKED` on the human from the moment the script exists — the loop
+moves on to B07's preparable parts and does not wait idle.
+
+**Acceptance:** the script exists; the handoff entry records, per observation, what the human
+saw (held / broke, quoted where it broke); any break is either fixed on the branch and
+re-observed, or carried as a named blocker. The sprint does not close and the PR is not merged
+without this entry.
+
+### B07 — Sprint verification, report and the pull request `READY` (depends: B01–B06)
+
+**Layer: docs.** Full protocol sequence over the final skill set (nine skills); sprint report
+`docs/develop/reports/s10.md` — what was added, what was deliberately *not* built (the
+requirement lists, the isolation machinery, the workspace fixture) and why, the verification
+debt that remains (monorepo sandbox `not-run`, covered by field evidence). Pull request
+against `main` from the template: What · Layer (**core**, linking the RFC, + **skill**) ·
+Evidence checklist · `Closes #8`. Merge by **merge commit**, not squash — the branch carries
+one commit per batch by design, as PR #5 did. Opening the PR was authorized in-session on
+2026-09-19; in a later session it is prepared, not executed.
+
+**Acceptance:** all protocol checks pass or are recorded `not-run` with their reason; the
+report exists; the PR is open (or its body and command are ready, with the blocker named),
+CI `validate` green on it. **Merging is the human's**, and waits on two things the PR body
+names: the RFC's "accepted" summary and B06's field entry.

@@ -21,4 +21,8 @@ without asking. ABSENT areas produce open questions, never batches.**
 | Public README (five-minute comprehension) | **DEFINED** | strategy §6–§10, §22-2 | — |
 | Visual identity | **PARTIAL** | strategy §21 gives direction (`/cdev` wordmark + checkpoint line, no generic AI imagery); execution assumed agent-made SVG, human approves the result | Final asset approval |
 | Community structure (field reports, RFC, labels, Discussions content) | **DEFINED** | strategy §12–§14, §22-3 | Custom Discussions categories are web-UI manual |
+| Planner gap closing (per batch, before writing) | **DEFINED** | Issue #8; field evidence `docs/develop/reports/s10-field-evidence.md` (S10-B01); human answers in DECISIONS 2026-09-19 | RFC acceptance gates the merge, not the work |
+| Status skills — system level (`cdev-monorepo-status`) | **DEFINED** | Three field occurrences fix the request and the accepted output shape; DECISIONS 2026-09-19 | — |
+| Status skills — single repo (`cdev-status`) | **PARTIAL** | No field occurrence of a three-axis status in a single repo: the shape is extrapolated from the system-level one (assumption recorded in the evidence file's "not evidenced" section) | First real use may correct the shape |
+| A workspace (multi-repo) sandbox fixture | **ABSENT** | Human decision 2026-09-19: not built; field exercise stands in | Do not build unless asked |
 | Launch | **PARTIAL** | strategy §22-4 fixes channels and message; copy is draftable — publishing itself is always a human act | Human publishes each post |

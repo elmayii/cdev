@@ -5,6 +5,33 @@ Newest-first. Required fields: date+unit · status · done · files · verificat
 
 ---
 
+## 2026-09-19 · Planning — Sprint 10 drafted as PROPOSAL (cdev-planner) · DONE
+
+**Done:** Two read-only subagents mined the maintainer's prompt history and the surviving
+transcripts for the two habits behind issue #8 (planner launches carrying a hand-written
+gap-closing instruction; the three-axis status request). Plan↔git divergence found and
+reconciled with human approval (S09/B01 → `DONE`, commit `c006c63`). Issue #8 opened and
+later corrected (authorized in-session). Sprint 10 written as `PROPOSAL`, seven batches, each
+written only after its own question round with the human — the first draft's B03 (a
+maintained block of ID'd requirements in the plan) was **dropped on the human's review** and
+the design moved the rigor to the reader instead. Clarity map gained four rows; decisions
+recorded per batch. No skill, profile or template touched.
+
+**Files:** docs/develop/SPRINTS.md, DECISIONS.md, PRODUCT.md, AGENT_PROGRESS.md.
+
+**Verification:** `bash scripts/validate.sh` — pass (manifest, placeholders, frontmatter 7/7,
+links) · plan invariants — zero `ACTIVE` sprints until the human ratifies S10 (plan-exhausted
+state, not two actives) · frontmatter / language /
+periphery / sandbox — not-run (no skill touched).
+
+**Blockers:** Sprint 10 is `PROPOSAL` — activating it is the human's ratification. Outward
+acts were authorized for this session only.
+
+**Next:** on ratification, `/cdev:cdev` runs S10 from B01 on
+`feat/8-status-and-gap-closing-planners`.
+
+---
+
 ## 2026-08-16 · First CI workflow (issue #3) · DONE
 
 **Done:** `scripts/validate.sh` (portable bash: node for JSON, git grep, awk — runs locally
