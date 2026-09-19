@@ -24,8 +24,8 @@ pass (product names in skills/ + profiles/: 0; named technologies in skills/: 0)
 `bash scripts/validate.sh` — pass (`cdev@0.2.0`, 9 skills, links) ·
 `claude plugin validate .` — pass (one pre-existing warning: the root pointer file) · plan
 invariants — pass (exactly one `ACTIVE` sprint) · sandbox — per batch: B02 and B03 pass,
-multi-repo skills **not-run** (declared) · CI `validate` on the PR — see the next entry or
-the PR itself; not yet observed when this was written.
+multi-repo skills **not-run** (declared) · CI `validate` on PR #10 — pass on ubuntu, macos
+and windows (run 35453528910, observed after the push of `c9f44dd`).
 
 **Blockers — two human decisions, either order:**
 1. **Run the field exercise** (`docs/develop/reports/s10-field-exercise.md`) and report back.
