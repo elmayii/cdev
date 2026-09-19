@@ -14,7 +14,7 @@ The plugin root ships four load-bearing directories, and they all travel togethe
 
 | Directory | Role |
 |---|---|
-| `skills/` | The seven entry points (auto-discovered by the host) |
+| `skills/` | The nine entry points (auto-discovered by the host) |
 | `profiles/` | The role profiles the loop and the conditioner read |
 | `templates/` | The render base for conditioning, with its placeholder contract |
 | `scripts/` | The bootstrap verifier and the sandbox fixture builder |
@@ -42,17 +42,19 @@ complete copy of the plugin root at:
 
 ## What you get
 
-Seven skills, namespaced by the plugin name:
+Nine skills, namespaced by the plugin name:
 
 | Invocation | What it is |
 |---|---|
 | `/cdev:bootstrap` | Condition one repository (recognition-first, both halves, human gate) |
 | `/cdev:cdev` | The execution loop — dispatcher plus single loop reading the role profiles |
 | `/cdev:cdev-planner` | Single-repo planning: materialize an objective, or gap-analyze |
+| `/cdev:cdev-status` | Read-only status of a sprint on three axes, derived at read time |
 | `/cdev:ockham` | User-invoked plain-language re-telling of dense output |
 | `/cdev:bootstrap-monorepo` | Condition a multi-repo workspace (never touches the children) |
 | `/cdev:cdev-monorepo` | The orchestrating loop over conditioned repositories |
 | `/cdev:cdev-monorepo-planner` | Cross-repo planning and gap analysis |
+| `/cdev:cdev-monorepo-status` | Read-only status of a SYSTEM sprint across its repositories |
 
 The namespace is the point: un-namespaced copies in `~/.claude/skills` collide with anything
 sharing a name; `cdev:*` cannot.

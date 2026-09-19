@@ -436,7 +436,7 @@ as `cdev:cdev-monorepo-status`; `grep` finds the three-axis method stated in `cd
 only, and a path pointer here. Sandbox: `not-run` (declared — no workspace fixture); its
 evidence is the human field exercise of B06.
 
-### B05 — Live docs and version 0.2.0 `READY` (depends: B02, B03, B04)
+### B05 — Live docs and version 0.2.0 `DONE` (depends: B02, B03, B04)
 
 **Layer: periphery / docs.** The surfaces that name the skill set learn there are nine:
 `README.md` (command table and "which command when"), `docs/08-installation.md` (command

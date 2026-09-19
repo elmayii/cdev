@@ -5,6 +5,46 @@ Newest-first. Required fields: date+unit · status · done · files · verificat
 
 ---
 
+## 2026-09-19 · S10-B05 Live docs and version 0.2.0 · DONE
+
+**Done:** The live surfaces that name the skill set now say nine and list both status
+commands: `README.md` (command table, "which command, when", the monorepo block),
+`docs/08-installation.md` ("nine entry points", "Nine skills", two table rows),
+`CONTRIBUTING.md`, and one paragraph in `docs/09-cdev-monorepo.md` after the execution step.
+In the same commit: `.claude-plugin/plugin.json` → `0.2.0` (its description gains "status
+readers") and the CHANGELOG's Unreleased section becomes `## [0.2.0] — 2026-09-19`. Layer:
+periphery / docs. Documents 01–07 untouched (extraction record); walkthrough not extended.
+
+**Left alone on purpose:** `docs/10-usage-recommendations.md` — it lists workloads with a model
+and effort for each, and I have no evidence for what a read-only status warrants; inventing a
+recommendation would be assertion, not evidence. `AGENTS.md:19` says "seven documents" — that
+is the docs series, not the skills, and is correct.
+
+**Files:** README.md, CONTRIBUTING.md, docs/08-installation.md, docs/09-cdev-monorepo.md,
+.claude-plugin/plugin.json, CHANGELOG.md.
+
+**Verification:** stale skill counts on live surfaces — pass (none; one found at doc 08 line
+45 on the first sweep and fixed) · both commands present in README and doc 08 — pass ·
+`plugin.json` version and CHANGELOG heading agree (0.2.0) — pass ·
+`bash scripts/validate.sh` — pass (`manifest ok: cdev@0.2.0`, 9 skills, links) ·
+`claude plugin validate .` — pass · language / periphery / sandbox — not-run (no skill body
+touched).
+
+**Release commands — prepared, NOT executed. After the merge, from `main`, the human's:**
+```
+git checkout main && git pull
+git tag -a v0.2.0 -m "v0.2.0 — status skills, planners that close open decisions per batch"
+git push origin main v0.2.0            # annotated tags need the explicit push
+gh release create v0.2.0 --title "v0.2.0" --notes-file <the 0.2.0 section of CHANGELOG.md>
+# then, in the marketplace clone — ALWAYS after the tag exists on GitHub:
+#   marketplace.json → "ref": "v0.2.0", "sha": "$(git -C ../cdev rev-parse v0.2.0^{commit})"
+#   commit, push; then /plugin marketplace update cdev-marketplace and confirm cdev@0.2.0
+```
+
+**Blockers:** none. **Next:** B06 — the field-exercise script for the human.
+
+---
+
 ## 2026-09-19 · S10-B04 `cdev-monorepo-status` — the three axes for a SYSTEM sprint · DONE (sandbox not-run, declared)
 
 **Done:** New `skills/cdev-monorepo-status/SKILL.md` (layer: new skill). It does not restate

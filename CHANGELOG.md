@@ -4,7 +4,7 @@ All notable changes to the CDev plugin are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow semver. Installed
 copies update only when the version changes.
 
-## [Unreleased]
+## [0.2.0] — 2026-09-19
 
 ### Added
 

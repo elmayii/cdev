@@ -74,10 +74,12 @@ Ten-minute worked example: [the walkthrough](docs/community/walkthrough.md).
 | `/cdev:bootstrap` | Prepare one repository for CDev |
 | `/cdev:cdev-planner` | Turn an objective into executable work, or analyze gaps |
 | `/cdev:cdev` | Run continuous development in a conditioned repository |
+| `/cdev:cdev-status` | Read where the sprint stands — functional, non-functional, user stories — from the repo alone |
 | `/cdev:ockham` | Re-explain dense technical output in plain language |
 | `/cdev:bootstrap-monorepo` | Prepare a workspace coordinating several repositories |
 | `/cdev:cdev-monorepo-planner` | Plan and analyze work across repositories |
 | `/cdev:cdev-monorepo` | Execute coordinated work across conditioned repositories |
+| `/cdev:cdev-monorepo-status` | The same reading for a system sprint, across its repositories |
 
 ## Which command, when?
 
@@ -86,6 +88,7 @@ Ten-minute worked example: [the walkthrough](docs/community/walkthrough.md).
 | A repository, not yet prepared for autonomous work | `/cdev:bootstrap` |
 | You know the objective; the work is not structured yet | `/cdev:cdev-planner` |
 | The plan has executable work | `/cdev:cdev` — it works batch after batch |
+| Several batches have run and you want to know where the sprint stands | `/cdev:cdev-status` — read-only, derived when you ask |
 | The plan ran out | The loop derives next work itself — only inside what your docs specify |
 | Something needs *you* | It stops only for real blockers, and names the exact decision |
 | The product spans several repositories | The `*-monorepo` commands — coordination that never takes a repo's autonomy away |
@@ -110,6 +113,7 @@ because the local plan owns its order. Repositories the change doesn't touch are
 /cdev:bootstrap-monorepo        # condition the workspace over your repos
 /cdev:cdev-monorepo-planner     # system objective → real batches in each repo
 /cdev:cdev-monorepo             # execute, coordinate, verify end to end
+/cdev:cdev-monorepo-status      # where the system sprint stands, repo by repo
 ```
 
 The full mechanism, with a backend → frontend worked example:
