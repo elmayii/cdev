@@ -5,6 +5,42 @@ Newest-first. Required fields: date+unit · status · done · files · verificat
 
 ---
 
+## 2026-09-19 · S10-B07 Sprint verification, report and the pull request · BLOCKED (on B06 and the RFC)
+
+**Done:** Full protocol sequence over the final skill set (nine skills). Sprint report
+`docs/develop/reports/s10.md`: what was added, what was deliberately not built and why (the
+requirement lists, the isolation machinery, the workspace fixture, a written gap threshold),
+what the exercises taught, the verification debt that remains, the contract delta for
+installed copies. **Draft PR #10** opened against `main` from the template — What · Layer
+(core, linking the RFC, + skill) · Evidence · `Closes #8` — with the two things the merge
+waits on as unchecked boxes at the top, and "merge commit, not squash" stated. Opened under
+the human's in-session authorization of 2026-09-19. Draft on purpose: marking it ready is one
+click, and it should not look mergeable while two conditions are open.
+
+**Files:** docs/develop/reports/s10.md.
+
+**Verification:** frontmatter — pass (9/9) · language — pass (0 outside line 3) · periphery —
+pass (product names in skills/ + profiles/: 0; named technologies in skills/: 0) ·
+`bash scripts/validate.sh` — pass (`cdev@0.2.0`, 9 skills, links) ·
+`claude plugin validate .` — pass (one pre-existing warning: the root pointer file) · plan
+invariants — pass (exactly one `ACTIVE` sprint) · sandbox — per batch: B02 and B03 pass,
+multi-repo skills **not-run** (declared) · CI `validate` on the PR — see the next entry or
+the PR itself; not yet observed when this was written.
+
+**Blockers — two human decisions, either order:**
+1. **Run the field exercise** (`docs/develop/reports/s10-field-exercise.md`) and report back.
+   Unblocks B06, then B07.
+2. **Summarize the RFC** in Discussion #9: accepted / rejected / needs-more-field-evidence.
+   Gates the merge only.
+The merge itself, then the tag `v0.2.0`, the GitHub Release and the marketplace pin, are the
+human's (commands in the B05 entry).
+
+**Next:** nothing ungated remains in Sprint 10. Sprint 04 is `PROPOSAL` (needs a human to name
+a target repo). On the human's report: record the field entry, fix on the branch whatever
+broke and have it re-observed, finish the report, close B06 → B07 → the sprint.
+
+---
+
 ## 2026-09-19 · S10-B06 Human field exercise of the monorepo skills · BLOCKED (on the human)
 
 **Done:** `docs/develop/reports/s10-field-exercise.md` — the script. Step 0 proves the session

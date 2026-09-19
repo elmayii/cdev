@@ -479,7 +479,13 @@ saw (held / broke, quoted where it broke); any break is either fixed on the bran
 re-observed, or carried as a named blocker. The sprint does not close and the PR is not merged
 without this entry.
 
-### B07 — Sprint verification, report and the pull request `READY` (depends: B01–B06)
+### B07 — Sprint verification, report and the pull request `BLOCKED` (depends: B01–B06)
+
+*Blocked 2026-09-19 — everything the agent can do is done: full protocol sequence green,
+report written (`reports/s10.md`), draft PR #10 open against `main`. It cannot close before
+its dependency B06. **Minimum human decisions:** (1) run the field exercise and report back
+(B06); (2) write the "accepted" summary on the RFC, Discussion #9. Then: the agent records
+the field entry, finishes the report's debt table, and the merge is the human's.*
 
 **Layer: docs.** Full protocol sequence over the final skill set (nine skills); sprint report
 `docs/develop/reports/s10.md` — what was added, what was deliberately *not* built (the
