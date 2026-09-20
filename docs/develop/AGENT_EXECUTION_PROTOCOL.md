@@ -20,10 +20,13 @@ Run per batch, in order; record pass / fail / not-run per check in the handoff:
    have a fresh subagent follow the skill against a scripted scenario, record the outcome. A
    skill change without a sandbox exercise is `not-run`, and the batch is not `DONE`.
    *Multi-repo skills:* `sandbox.ps1` builds single repositories only. While no workspace
-   fixture exists, a **recorded field exercise by the human** (the branch loaded with
-   `claude --plugin-dir`, run in their own workspace, outcome written into the handoff) stands
-   in for the sandbox exercise of a multi-repo skill; the sandbox check is recorded `not-run`
-   with that reason (human decision, DECISIONS 2026-09-19).
+   fixture exists, a **recorded field exercise** stands in for the sandbox exercise of a
+   multi-repo skill: the branch loaded with `claude --plugin-dir`, run either by the human in
+   their own workspace, or — when the human asks — by the agent on **local clones** of that
+   workspace (never the real trees: clones outside this repository, `origin` removed, deleted
+   afterwards), with the human judging what only they can. Outcome written into the handoff,
+   anonymized; the sandbox check is recorded `not-run` with that reason (human decisions,
+   DECISIONS 2026-09-19 and 2026-09-20).
 
 ## Branches and commits
 

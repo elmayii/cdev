@@ -34,6 +34,12 @@ up every SYSTEM sprint. Two independent numberings: a SYSTEM sprint is never a l
   repository itself**. Where the workspace and a repository disagree about a state, flag the
   divergence and report the repository's. The workspace's state snapshot file is a photograph
   and decides nothing: never read a state from it.
+- **Read narrowly, here above all — slices, never fewer sources.** A reference names the local
+  sprint and the local batch: read that batch **and its handoff entries** in the repository —
+  not the repository's whole plan or log, and nothing of a repository the SYSTEM sprint does
+  not reference. The sprint's contracts and the decisions about it are still read: "met"
+  rests on a handoff entry, and a contract's acceptance is a requirement. One pass, one
+  reader.
 
 ## What the report adds
 

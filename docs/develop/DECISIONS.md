@@ -2,6 +2,31 @@
 
 Newest-first. Every assumption made under PARTIAL clarity lands here, dated.
 
+## 2026-09-20 — S10-B06: the agent runs the field exercise, on clones (human-directed)
+
+Reverses part of 2026-09-19 ("field exercise by the human"): the human asked the agent to run
+the script itself. Done under three constraints the agent set and the human did not object to:
+
+- **The real workspace and its repositories are never written to.** "Modifying the frozen
+  product repositories" is a never-elevated gate, the real trees carried uncommitted work, and
+  the script's discard step (`git clean -fd`) would have been destructive there. The exercise
+  ran on local clones (`--no-hardlinks`) **outside this public repository**, in the agent's
+  temporary scratchpad, with `origin` removed from every clone — otherwise a push from a clone
+  would have written into the real repository. Clones deleted afterwards.
+- **Real skill loading, not a subagent reading a file:** headless Claude Code sessions with
+  `--plugin-dir` on the branch; the status run with a read-only tool allow-list, so a write
+  attempt would have been denied and logged.
+- **What the agent cannot substitute stays with the human:** whether every requirement and
+  story in the status is one they recognise (B7), whether it is the status they used to ask
+  for by hand (B9), and the form tool (A4, not observable headless). B06 stays `BLOCKED` on
+  those, a much smaller ask than the original.
+
+Limitation recorded: clones see only what is committed on the checked-out branches; the
+human's uncommitted work is invisible to them.
+
+Protocol §4's local line is amended accordingly. Product data seen during the exercise stays
+in the scratchpad; nothing of it is committed here, and the handoff entry is anonymized.
+
 ## 2026-09-19 — Sprint 10 planned: gap-closing planners + status skills (planner, human present)
 
 Planned by closing gaps with the human batch by batch, through the host's question form —

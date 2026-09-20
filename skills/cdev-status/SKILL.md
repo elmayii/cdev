@@ -44,6 +44,12 @@ chain, and says where each item came from.
 
 Where a later record changes an earlier decision, the newest wins and is the one cited.
 
+**Read narrowly — slices, never fewer sources.** Plans and handoff logs grow for months:
+locate the sprint in scope and read that sprint, the decisions about it and the handoff
+entries of its batches — not the whole files. Every source in the list above is still read;
+what shrinks is how much of each. The reading is one pass by one reader, and its cost should
+not grow with the age of the repository. Whatever you did not open, name in the method note.
+
 ## Engineer the three axes, in this order
 
 1. **Functional requirements** — what the sprint's objective and its batches commit the system

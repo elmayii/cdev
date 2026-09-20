@@ -5,6 +5,81 @@ Newest-first. Required fields: date+unit · status · done · files · verificat
 
 ---
 
+## 2026-09-20 · S10-B06 Field exercise — run by the agent on clones of a real workspace · still BLOCKED (on the human's judgment)
+
+**Why the agent ran it:** the human asked. Constraints and their reasons are in DECISIONS
+2026-09-20: real trees never written to (a never-elevated gate; they carried uncommitted work;
+the script's `git clean -fd` would have been destructive there) → two sets of local clones,
+`--no-hardlinks`, **outside this public repository**, `origin` removed from every clone, real
+workspace HEAD and dirty count identical before and after. Real skill loading: headless Claude
+Code sessions with `--plugin-dir` on the branch. Product anonymized below; the raw outputs
+stay in the agent's scratchpad and are not committed.
+
+**Part A — `cdev-monorepo-planner`, launched bare (no "ask me" line), throwaway objective
+touching two repositories, the agent answering as the human between resumed turns:**
+- A1 pointer followed — **held** (the transcript shows a Read of `cdev-planner/SKILL.md`; the
+  pointer exists only on the branch, so this also proves the branch loaded, not the installed
+  0.1.1).
+- A2 grouping before any write — **held**. A3 questions per SYSTEM_BATCH before that batch is
+  written — **held over two rounds**: clone untouched after turn 1; after turn 2 the first
+  SYSTEM_BATCH written (global plan, contract, bidirectional references and handoff notes in
+  the two participating repositories) and the third repository still untouched while the
+  second batch's own round was asked.
+- A4 suggested answers + one recommended — **held**; the form tool — **not-run** (not
+  observable headless; the fallback binding was used).
+- A5 system-level decisions — **held**: which repositories participate, the sync-point
+  artifact, verification level, the accesses the batch needs, a human-only schema step, and a
+  **permission** it said only the human can grant (waiving a repository's live-test rule).
+- A6 no hand-back of the prompt — **held** (it asked what the prompt left genuinely open).
+  A7 gap-free batch unasked — **did not occur**. A8 answers dated in the workspace's
+  DECISIONS — **held** (one dated entry, 44 lines).
+- Beyond the script: it took a free-text answer and **pushed back** where that answer collided
+  with a repository's local protocol, routing the batch toward `BLOCKED` instead of assuming;
+  it corrected one of its own assumptions by citing the workspace protocol.
+- Cost observed: roughly 13 USD for the second turn alone. Planning on a real workspace is
+  expensive with or without the new rule.
+
+**Part B — `cdev-monorepo-status`, cold, read-only tool allow-list:**
+- *Run 1* — **no status produced**: the session hit the human's usage limit (HTTP 429) after
+  about 17 minutes of API time and ~8 USD. Cause found in its transcript: for local truth it
+  fanned out to **three subagents**, each reading a repository's whole plan and log. The skill
+  did not ask for that. Before dying: B1 held, no write attempt, snapshot file not opened.
+- *Fix 1* — "read narrowly" added to both status skills. *Run 2* — **status delivered**:
+  5.5 minutes, **3.92 USD**, zero subagents, reads by slice (locate, then offset/limit), clone
+  clean. B1 held · B2 held (three axes in order, every item sourced to a SYSTEM_BATCH and its
+  local reference) · B3 held, one borderline row (production rollout gates listed as a
+  non-functional item) · B4 held (one estimated figure per axis; the executive reading says
+  ~25 points rest on "met, unverified") · B5 held · **B6 held and led the report**: "the
+  workspace plan says 3 of 8 closed, the repositories say 7 of 8 — the repository's state is
+  the one reported", divergences flagged, none resolved, snapshot file never opened · B8 held.
+- *Defect found by run 2, in my fix:* the status's own method note said it had **not opened
+  the contracts, the global decisions or the local handoffs**. "Narrowly" had been read as
+  fewer sources. *Fix 2:* "slices, never fewer sources", and "name whatever you did not open".
+  Regression on the small sandbox fixture — **pass**: decisions (newest wins) and per-batch
+  handoff verification cited, the method note names what it did not open. **Fix 2 is
+  unexercised on the real workspace** — not re-run, to spare the human's quota (the exercise
+  had already cost roughly 30 USD of it); their own interactive run is that check.
+- Worth the human's attention: the default scope landed on an **old SYSTEM sprint** — the only
+  one still marked `ACTIVE` in the global plan although later ones ran. The skill followed its
+  rule and said so at the top. Length: 1,623 words; the brevity line has little effect.
+- B7 and B9 — **not-run: only the human can make them.**
+
+**Files:** skills/cdev-status/SKILL.md, skills/cdev-monorepo-status/SKILL.md,
+docs/develop/AGENT_EXECUTION_PROTOCOL.md (§4 local line amended), docs/develop/DECISIONS.md,
+docs/develop/SPRINTS.md, docs/develop/reports/s10.md.
+
+**Verification:** frontmatter — pass (9/9) · language — pass · periphery — pass ·
+`bash scripts/validate.sh` — pass · sandbox (`cdev-status`, regression after fix 2) — pass ·
+field exercise — as above.
+
+**Blockers:** the human's B7 and B9 on the produced status (path given in-session; it holds
+product data and is not in this repository), optionally A4 interactively. The merge still
+also waits on the RFC's summary.
+
+**Next:** on the human's judgment, close B06 → B07 → the sprint.
+
+---
+
 ## 2026-09-19 · S10-B07 Sprint verification, report and the pull request · BLOCKED (on B06 and the RFC)
 
 **Done:** Full protocol sequence over the final skill set (nine skills). Sprint report

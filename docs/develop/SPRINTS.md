@@ -455,10 +455,13 @@ commands exist, unexecuted, in the handoff entry.
 
 ### B06 — Human field exercise of the monorepo skills `BLOCKED` (depends: B02, B04)
 
-*Blocked 2026-09-19 — the script exists (`docs/develop/reports/s10-field-exercise.md`); the
-rest is not the agent's to do. **Minimum human decision:** run the script once in your own
-workspace (about one session: a throwaway planning run you then discard, and a cold status
-on your real SYSTEM sprint) and report back held / broke per observation.*
+*Blocked 2026-09-19 — the script exists (`docs/develop/reports/s10-field-exercise.md`).
+2026-09-20: at the human's request the agent ran it on local clones of the real workspace
+(never the real trees) — observations A1–A3, A5, A6, A8 and B1–B6, B8 held; A7 did not occur;
+two defects found and fixed (handoff entry). **Minimum human decision, now much smaller:**
+read the status that run produced and say (B7) whether every requirement and story in it is
+one you recognise as yours, and (B9) whether it is the status you used to ask for by hand;
+optionally run the planner once interactively to see the form tool (A4).*
 
 **Layer: field evidence** — stands in for the sandbox exercise no workspace fixture allows
 (protocol §4, local line added in B02). The agent writes the script: how to load the branch
