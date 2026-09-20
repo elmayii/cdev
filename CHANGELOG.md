@@ -4,6 +4,32 @@ All notable changes to the CDev plugin are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow semver. Installed
 copies update only when the version changes.
 
+## [0.2.0] — 2026-09-19
+
+### Added
+
+- **`cdev-status`** — a read-only reading of where a sprint stands, on three axes: functional
+  requirements, non-functional requirements, user stories. Engineered **at read time** from
+  the raw chain sprint → batch → handoff (plus decisions and git); the plan holds no
+  requirement list to maintain. Every item cites its source; percentages are estimates and
+  say so; `since <batch|date|commit>` adds a delta from git history, nothing persisted; an
+  axis the repository does not support reads "not derivable". Edits nothing, marks nothing.
+- **`cdev-monorepo-status`** — the same three-axis reading for a SYSTEM sprint across its
+  repositories. Applies `cdev-status` by reference and adds only what is system-level:
+  contracts as a source, **local truth** (each repository's own plan and handoff, read in the
+  repository; workspace↔repo divergence flagged, the repository's state reported; the state
+  snapshot never decides), and one compact per-repository table.
+
+### Changed
+
+- **Planners close each batch's open decisions with the human before writing it**
+  (core — [RFC, Discussion #9](https://github.com/elmayii/cdev/discussions/9)). `cdev-planner`
+  shows the batch grouping, then goes batch by batch: questions with suggested answers and one
+  recommended → answers recorded → that batch written → next. No open decision, no question.
+  With no human present, a batch with open decisions is written `BLOCKED` naming each
+  decision — never `READY`. `cdev-monorepo-planner` applies the same rule by reference, per
+  SYSTEM_BATCH.
+
 ## [0.1.1] — 2026-08-15
 
 ### Fixed

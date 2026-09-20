@@ -23,7 +23,7 @@ exactly that material.
 
 ## Repository layout
 
-- `skills/` — the seven Claude Code skills (the current host binding).
+- `skills/` — the nine Claude Code skills (the current host binding).
 - `profiles/` — role profiles: exactly four things each (what "verified" means, what
   "evidence" means, the hardest gate, the self-chosen work order). Never a different loop.
 - `templates/` — the conditioning render base (`PLACEHOLDERS.md` is the contract).

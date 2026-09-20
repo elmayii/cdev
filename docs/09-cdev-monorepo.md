@@ -121,6 +121,10 @@ Independent references in different repositories may run in parallel. Work insid
 repository remains sequential, because its local plan owns the order. Repositories that are not
 referenced by the current system batch are not opened and do not block it.
 
+At any point, `/cdev:cdev-monorepo-status` gives a read-only reading of where the system sprint
+stands: functional requirements, non-functional requirements and user stories at system
+level, then one line per repository — each repository's state read in the repository itself.
+
 ### 5. Exchange durable handoffs
 
 Repositories do not communicate through an agent's conversational memory. A producer publishes

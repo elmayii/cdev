@@ -2,6 +2,85 @@
 
 Newest-first. Every assumption made under PARTIAL clarity lands here, dated.
 
+## 2026-09-20 — S10-B06: the agent runs the field exercise, on clones (human-directed)
+
+Reverses part of 2026-09-19 ("field exercise by the human"): the human asked the agent to run
+the script itself. Done under three constraints the agent set and the human did not object to:
+
+- **The real workspace and its repositories are never written to.** "Modifying the frozen
+  product repositories" is a never-elevated gate, the real trees carried uncommitted work, and
+  the script's discard step (`git clean -fd`) would have been destructive there. The exercise
+  ran on local clones (`--no-hardlinks`) **outside this public repository**, in the agent's
+  temporary scratchpad, with `origin` removed from every clone — otherwise a push from a clone
+  would have written into the real repository. Clones deleted afterwards.
+- **Real skill loading, not a subagent reading a file:** headless Claude Code sessions with
+  `--plugin-dir` on the branch; the status run with a read-only tool allow-list, so a write
+  attempt would have been denied and logged.
+- **What the agent cannot substitute stays with the human:** whether every requirement and
+  story in the status is one they recognise (B7), whether it is the status they used to ask
+  for by hand (B9), and the form tool (A4, not observable headless). B06 stays `BLOCKED` on
+  those, a much smaller ask than the original.
+
+Limitation recorded: clones see only what is committed on the checked-out branches; the
+human's uncommitted work is invisible to them.
+
+Protocol §4's local line is amended accordingly. Product data seen during the exercise stays
+in the scratchpad; nothing of it is committed here, and the handoff entry is anonymized.
+
+## 2026-09-19 — Sprint 10 planned: gap-closing planners + status skills (planner, human present)
+
+Planned by closing gaps with the human batch by batch, through the host's question form —
+the behavior the sprint encodes. **Ratified `PROPOSAL` → `ACTIVE` by the human the same day**,
+after reading the batch list; the planner wrote the state change on that instruction, it did
+not decide it. Human answers, per unit:
+
+- **Sprint.** S09 reconciled to `DONE` as the branch's first commit (PR #5 had merged; the
+  plan had not caught up). Layers: planner change = **core** (RFC + field evidence); status
+  skills = **new skill** (this entry is the required record; read-only, the loop is
+  untouched, so no RFC). One issue (#8), one branch, one PR, one commit per batch. Outward
+  acts (issue, Discussion, branch push, PR) **authorized for this session only**.
+- **B01.** Evidence lives in a repo file, linked from the RFC by commit permalink. Quotes in
+  English marked translated, Spanish original only for the load-bearing few, product
+  anonymized. No RFC category exists → Ideas with an `[RFC]` prefix, and rfc-process.md says
+  so. Work proceeds on the branch; the **merge** waits on the RFC's "accepted" summary.
+- **B02.** No human present → the batch is written `BLOCKED` with each gap's decision and
+  suggested answer; never `READY`, never carried on the recommendation. What counts as a gap:
+  **the planner's judgment, no written threshold** — held conservatively. The rule lives once,
+  in `cdev-planner`; `cdev-monorepo-planner` points at it by path. A question closes
+  something undecided: the human's prompt is the intent and is never handed back for
+  confirmation.
+- **Monorepo skills' evidence.** No workspace fixture will be built. A recorded **field
+  exercise by the human** stands in for the sandbox (protocol §4 gains the line; sandbox is
+  recorded `not-run`), gathered once, in its own batch (B06), on a throwaway objective whose
+  output is discarded — real plans receive nothing from an unmerged skill.
+- **The plan's format does not change** (reverses the planner's first draft, which had a
+  per-sprint block of ID'd requirements and user stories with per-batch coverage). Human's
+  reasoning: sprints and batches already carry the intent in free form; a formalized list
+  must be kept current while a feature is still being discovered, and that maintenance is
+  what drifts. Consistent with doc 07: it would restate the plan (singularity) where field
+  rule 4 says derive on read. Nothing new is asked of the planner beyond gap closing; the
+  execution loop is untouched — status reads SPRINTS → DECISIONS → AGENT_PROGRESS, newest
+  wins. If field use shows decision changes going unrecorded, that is a future RFC with its
+  own evidence.
+- **B03.** Percentages are **estimates**, as accepted in the field, labelled as such. Delta
+  comes from git on request (`since`), nothing persisted. Default scope: the `ACTIVE` sprint.
+  **No isolation machinery**: status is a read operation inside the conversation; CDev is a
+  procedure and does not guard the human against their own use of context.
+- **B04.** System-level axes plus one compact line per repository.
+- **B05.** Version bump to 0.2.0 rides inside the PR; tag, release and marketplace pin after
+  the merge, from `main`, by the human.
+
+Planner's own assumptions (not asked — judged derivable; the human may veto):
+axis order functional → non-functional → user stories (the human's 2026-09-19 statement
+supersedes the August order); `cdev-monorepo-status` points at `cdev-status` by path, by
+analogy with the planners' single-home answer; PR merges by merge commit, not squash, to
+keep one commit per batch (PR #5 precedent); the walkthrough is not extended.
+
+Finding recorded, not acted on: the monorepo skills have never been sandbox-exercised in this
+repository, and S01-B04 closed `DONE` with sandbox `not-run` over skill changes, against
+protocol §4's letter. Standing verification debt; B06's field evidence is the first proof
+any monorepo skill here will have.
+
 ## 2026-08-16 — AGENTS.md is the canonical repo guide (S09-B01, human-directed)
 
 - **Layer: host binding + docs.** Doc 07 §1.2 already says the guide's filename is convention

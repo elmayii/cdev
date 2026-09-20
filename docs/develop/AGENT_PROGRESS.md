@@ -5,6 +5,385 @@ Newest-first. Required fields: date+unit · status · done · files · verificat
 
 ---
 
+## 2026-09-20 · S10-B06 Field exercise — run by the agent on clones of a real workspace · still BLOCKED (on the human's judgment)
+
+**Why the agent ran it:** the human asked. Constraints and their reasons are in DECISIONS
+2026-09-20: real trees never written to (a never-elevated gate; they carried uncommitted work;
+the script's `git clean -fd` would have been destructive there) → two sets of local clones,
+`--no-hardlinks`, **outside this public repository**, `origin` removed from every clone, real
+workspace HEAD and dirty count identical before and after. Real skill loading: headless Claude
+Code sessions with `--plugin-dir` on the branch. Product anonymized below; the raw outputs
+stay in the agent's scratchpad and are not committed.
+
+**Part A — `cdev-monorepo-planner`, launched bare (no "ask me" line), throwaway objective
+touching two repositories, the agent answering as the human between resumed turns:**
+- A1 pointer followed — **held** (the transcript shows a Read of `cdev-planner/SKILL.md`; the
+  pointer exists only on the branch, so this also proves the branch loaded, not the installed
+  0.1.1).
+- A2 grouping before any write — **held**. A3 questions per SYSTEM_BATCH before that batch is
+  written — **held over two rounds**: clone untouched after turn 1; after turn 2 the first
+  SYSTEM_BATCH written (global plan, contract, bidirectional references and handoff notes in
+  the two participating repositories) and the third repository still untouched while the
+  second batch's own round was asked.
+- A4 suggested answers + one recommended — **held**; the form tool — **not-run** (not
+  observable headless; the fallback binding was used).
+- A5 system-level decisions — **held**: which repositories participate, the sync-point
+  artifact, verification level, the accesses the batch needs, a human-only schema step, and a
+  **permission** it said only the human can grant (waiving a repository's live-test rule).
+- A6 no hand-back of the prompt — **held** (it asked what the prompt left genuinely open).
+  A7 gap-free batch unasked — **did not occur**. A8 answers dated in the workspace's
+  DECISIONS — **held** (one dated entry, 44 lines).
+- Beyond the script: it took a free-text answer and **pushed back** where that answer collided
+  with a repository's local protocol, routing the batch toward `BLOCKED` instead of assuming;
+  it corrected one of its own assumptions by citing the workspace protocol.
+- Cost observed: roughly 13 USD for the second turn alone. Planning on a real workspace is
+  expensive with or without the new rule.
+
+**Part B — `cdev-monorepo-status`, cold, read-only tool allow-list:**
+- *Run 1* — **no status produced**: the session hit the human's usage limit (HTTP 429) after
+  about 17 minutes of API time and ~8 USD. Cause found in its transcript: for local truth it
+  fanned out to **three subagents**, each reading a repository's whole plan and log. The skill
+  did not ask for that. Before dying: B1 held, no write attempt, snapshot file not opened.
+- *Fix 1* — "read narrowly" added to both status skills. *Run 2* — **status delivered**:
+  5.5 minutes, **3.92 USD**, zero subagents, reads by slice (locate, then offset/limit), clone
+  clean. B1 held · B2 held (three axes in order, every item sourced to a SYSTEM_BATCH and its
+  local reference) · B3 held, one borderline row (production rollout gates listed as a
+  non-functional item) · B4 held (one estimated figure per axis; the executive reading says
+  ~25 points rest on "met, unverified") · B5 held · **B6 held and led the report**: "the
+  workspace plan says 3 of 8 closed, the repositories say 7 of 8 — the repository's state is
+  the one reported", divergences flagged, none resolved, snapshot file never opened · B8 held.
+- *Defect found by run 2, in my fix:* the status's own method note said it had **not opened
+  the contracts, the global decisions or the local handoffs**. "Narrowly" had been read as
+  fewer sources. *Fix 2:* "slices, never fewer sources", and "name whatever you did not open".
+  Regression on the small sandbox fixture — **pass**: decisions (newest wins) and per-batch
+  handoff verification cited, the method note names what it did not open. **Fix 2 is
+  unexercised on the real workspace** — not re-run, to spare the human's quota (the exercise
+  had already cost roughly 30 USD of it); their own interactive run is that check.
+- Worth the human's attention: the default scope landed on an **old SYSTEM sprint** — the only
+  one still marked `ACTIVE` in the global plan although later ones ran. The skill followed its
+  rule and said so at the top. Length: 1,623 words; the brevity line has little effect.
+- B7 and B9 — **not-run: only the human can make them.**
+
+**Files:** skills/cdev-status/SKILL.md, skills/cdev-monorepo-status/SKILL.md,
+docs/develop/AGENT_EXECUTION_PROTOCOL.md (§4 local line amended), docs/develop/DECISIONS.md,
+docs/develop/SPRINTS.md, docs/develop/reports/s10.md.
+
+**Verification:** frontmatter — pass (9/9) · language — pass · periphery — pass ·
+`bash scripts/validate.sh` — pass · sandbox (`cdev-status`, regression after fix 2) — pass ·
+field exercise — as above.
+
+**Blockers:** the human's B7 and B9 on the produced status (path given in-session; it holds
+product data and is not in this repository), optionally A4 interactively. The merge still
+also waits on the RFC's summary.
+
+**Next:** on the human's judgment, close B06 → B07 → the sprint.
+
+---
+
+## 2026-09-19 · S10-B07 Sprint verification, report and the pull request · BLOCKED (on B06 and the RFC)
+
+**Done:** Full protocol sequence over the final skill set (nine skills). Sprint report
+`docs/develop/reports/s10.md`: what was added, what was deliberately not built and why (the
+requirement lists, the isolation machinery, the workspace fixture, a written gap threshold),
+what the exercises taught, the verification debt that remains, the contract delta for
+installed copies. **Draft PR #10** opened against `main` from the template — What · Layer
+(core, linking the RFC, + skill) · Evidence · `Closes #8` — with the two things the merge
+waits on as unchecked boxes at the top, and "merge commit, not squash" stated. Opened under
+the human's in-session authorization of 2026-09-19. Draft on purpose: marking it ready is one
+click, and it should not look mergeable while two conditions are open.
+
+**Files:** docs/develop/reports/s10.md.
+
+**Verification:** frontmatter — pass (9/9) · language — pass (0 outside line 3) · periphery —
+pass (product names in skills/ + profiles/: 0; named technologies in skills/: 0) ·
+`bash scripts/validate.sh` — pass (`cdev@0.2.0`, 9 skills, links) ·
+`claude plugin validate .` — pass (one pre-existing warning: the root pointer file) · plan
+invariants — pass (exactly one `ACTIVE` sprint) · sandbox — per batch: B02 and B03 pass,
+multi-repo skills **not-run** (declared) · CI `validate` on PR #10 — pass on ubuntu, macos
+and windows (run 35453528910, observed after the push of `c9f44dd`).
+
+**Blockers — two human decisions, either order:**
+1. **Run the field exercise** (`docs/develop/reports/s10-field-exercise.md`) and report back.
+   Unblocks B06, then B07.
+2. **Summarize the RFC** in Discussion #9: accepted / rejected / needs-more-field-evidence.
+   Gates the merge only.
+The merge itself, then the tag `v0.2.0`, the GitHub Release and the marketplace pin, are the
+human's (commands in the B05 entry).
+
+**Next:** nothing ungated remains in Sprint 10. Sprint 04 is `PROPOSAL` (needs a human to name
+a target repo). On the human's report: record the field entry, fix on the branch whatever
+broke and have it re-observed, finish the report, close B06 → B07 → the sprint.
+
+---
+
+## 2026-09-19 · S10-B06 Human field exercise of the monorepo skills · BLOCKED (on the human)
+
+**Done:** `docs/develop/reports/s10-field-exercise.md` — the script. Step 0 proves the session
+is running the branch and not the installed 0.1.1 (checked from this repo: with
+`--plugin-dir` the working tree wins — the skill's base directory is this repository and the
+new sentence is present; the human re-checks from their workspace, because that is a
+different working directory). Part A: `cdev-monorepo-planner` launched **bare** on a throwaway
+two-repository objective, eight observations (pointer followed, grouping first, questions per
+SYSTEM_BATCH before each write, suggested answers + recommended + form tool, system-level
+decisions present, no hand-back of the prompt, gap-free batch unasked, answers dated in
+DECISIONS), then everything discarded with git. Part B: `cdev-monorepo-status` cold, in a
+**fresh session**, on the real SYSTEM sprint, nine observations — including the one only the
+human can make: is there any requirement or story in it they do not recognise as theirs.
+
+**Files:** docs/develop/reports/s10-field-exercise.md.
+
+**Verification:** `bash scripts/validate.sh` — pass · product-name sweep over the script — pass
+· the exercise itself — **not-run** (it is the human's).
+
+**Blockers:** **the human runs the script and reports back** (held / broke per observation,
+B7 and B9 in their own words). This repository's agent never opens that workspace. Until the
+entry exists: the sprint does not close, the PR is not merged, and both multi-repo skills
+remain unproven — `cdev-monorepo-status` has never been seen running by anyone.
+
+**Next:** blocked-but-not-idle — B07's preparable parts: full protocol sequence, sprint
+report, the pull request.
+
+---
+
+## 2026-09-19 · S10-B05 Live docs and version 0.2.0 · DONE
+
+**Done:** The live surfaces that name the skill set now say nine and list both status
+commands: `README.md` (command table, "which command, when", the monorepo block),
+`docs/08-installation.md` ("nine entry points", "Nine skills", two table rows),
+`CONTRIBUTING.md`, and one paragraph in `docs/09-cdev-monorepo.md` after the execution step.
+In the same commit: `.claude-plugin/plugin.json` → `0.2.0` (its description gains "status
+readers") and the CHANGELOG's Unreleased section becomes `## [0.2.0] — 2026-09-19`. Layer:
+periphery / docs. Documents 01–07 untouched (extraction record); walkthrough not extended.
+
+**Left alone on purpose:** `docs/10-usage-recommendations.md` — it lists workloads with a model
+and effort for each, and I have no evidence for what a read-only status warrants; inventing a
+recommendation would be assertion, not evidence. `AGENTS.md:19` says "seven documents" — that
+is the docs series, not the skills, and is correct.
+
+**Files:** README.md, CONTRIBUTING.md, docs/08-installation.md, docs/09-cdev-monorepo.md,
+.claude-plugin/plugin.json, CHANGELOG.md.
+
+**Verification:** stale skill counts on live surfaces — pass (none; one found at doc 08 line
+45 on the first sweep and fixed) · both commands present in README and doc 08 — pass ·
+`plugin.json` version and CHANGELOG heading agree (0.2.0) — pass ·
+`bash scripts/validate.sh` — pass (`manifest ok: cdev@0.2.0`, 9 skills, links) ·
+`claude plugin validate .` — pass · language / periphery / sandbox — not-run (no skill body
+touched).
+
+**Release commands — prepared, NOT executed. After the merge, from `main`, the human's:**
+```
+git checkout main && git pull
+git tag -a v0.2.0 -m "v0.2.0 — status skills, planners that close open decisions per batch"
+git push origin main v0.2.0            # annotated tags need the explicit push
+gh release create v0.2.0 --title "v0.2.0" --notes-file <the 0.2.0 section of CHANGELOG.md>
+# then, in the marketplace clone — ALWAYS after the tag exists on GitHub:
+#   marketplace.json → "ref": "v0.2.0", "sha": "$(git -C ../cdev rev-parse v0.2.0^{commit})"
+#   commit, push; then /plugin marketplace update cdev-marketplace and confirm cdev@0.2.0
+```
+
+**Blockers:** none. **Next:** B06 — the field-exercise script for the human.
+
+---
+
+## 2026-09-19 · S10-B04 `cdev-monorepo-status` — the three axes for a SYSTEM sprint · DONE (sandbox not-run, declared)
+
+**Done:** New `skills/cdev-monorepo-status/SKILL.md` (layer: new skill). It does not restate
+the method: a path pointer into `cdev-status` (resolved to the real path), plus only what the
+system level adds — scope (the `ACTIVE` SYSTEM sprint, two independent numberings), sources
+(SYSTEM_BATCHes and their references, sync points, the contracts under
+`workspace/contracts/`), **local truth** (each affected repository's own plan and handoff,
+read in the repository; divergence flagged, the repository's state reported; the state
+snapshot file never read as a state), one compact per-repository table, "not derivable" by
+repository name, and the system-level risks in the executive reading.
+
+**Files:** skills/cdev-monorepo-status/SKILL.md, CHANGELOG.md.
+
+**Verification:** frontmatter — pass · language — pass · periphery — pass ·
+`bash scripts/validate.sh` — pass (9 skills) · `claude plugin validate .` — pass · single home
+— pass (the method's distinctive text greps in `cdev-status` only; this skill carries the
+path pointer) · **live load** (`claude --plugin-dir . -p`) — pass: all nine skills list,
+`cdev:cdev-status` and `cdev:cdev-monorepo-status` among them. *Correction to B03's entry:* its
+acceptance also asked that `cdev:cdev-status` list; I had recorded only the static validation
+there. The listing was checked here, for both skills.
+· **sandbox — not-run** (declared: no workspace fixture exists; protocol §4 local line). This
+skill has never been seen running. Its evidence is the human field exercise of B06, and the
+sprint does not close without it.
+
+**Blockers:** none for this batch's own acceptance. **Next:** B05 — live docs and 0.2.0.
+
+---
+
+## 2026-09-19 · S10-B03 `cdev-status` — progress on three axes, engineered at read time · DONE
+
+**Done:** New `skills/cdev-status/SKILL.md` (layer: new skill — read-only, loop untouched; record
+in DECISIONS 2026-09-19). Scope (ACTIVE sprint / named / `all` / `since`), the read order over
+the raw chain, the three axes in order with a source on every item, four states (met · met,
+unverified · partial · pending), estimated percentages labelled as such, the report shape
+accepted in the field, the git-derived delta, and the rules: read-only always, "not
+derivable" instead of filling, disagreement flagged never resolved, the human's language.
+
+**Three defects of my own text, found by the first exercise round and fixed in-branch:**
+(1) the skill named the protocol as a source of non-functional requirements, so both runs
+listed the repo's working rules (check sequence, branch convention, gates) as NFRs — 4 of 8
+rows; now: system qualities only, the protocol tells you what "verified" means and is never
+an item. (2) "met" required recorded verification while a rule also defined "met, unverified";
+a run resolved the ambiguity by giving every axis two figures; now an explicit fourth state,
+one figure per axis, and the executive reading says how much rests on unverified items.
+(3) ~1,100-word statuses against compact field specimens; a brevity line added — its effect
+was modest, and much of the length came from the fixture's own plan↔git disagreements.
+
+**Files:** skills/cdev-status/SKILL.md, CHANGELOG.md.
+
+**Verification** (every run a fresh subagent with no planning context; fixture state captured
+after each; all fixtures left with a clean tree — nothing written by the skill):
+- frontmatter — pass · language — pass · periphery — pass · `bash scripts/validate.sh` — pass
+  · `claude plugin validate .` — pass (one pre-existing warning: the root pointer file).
+- **(1) cold start** — pass, twice (before and after the fixes). Three axes in order; every
+  cited path exists; partials carry percentage + reason + owning batch; the decision changed
+  during implementation appears in its newest form citing DECISIONS and warning that the
+  batch text no longer holds; the `DONE`-with-`not-run` batch reads "met, unverified";
+  executive reading and "what is left" present; answered in Spanish to a Spanish prompt.
+  After the fixes: system-only NFRs plus an explicit "no other quality is stated, none is
+  added"; one figure per axis.
+- **(2) `since B01`** — pass. Resolved the bare batch id to the commit that closed it in the
+  sprint in scope (and said so), applied one item list to both states, "(before NN%)" per
+  axis, changed items marked. Without the argument: no delta (run 1).
+- **(3) not derivable** — pass **on the fourth attempt; the first three are recorded, not
+  hidden.** Attempts 1 and 2 did not meet the clause by the letter, and the fault was the
+  fixtures': the premise "a sprint carrying no non-functional signal" was false — the signal
+  sat in the batch text, then in the product notes. In both the skill invented nothing and
+  named what was missing. Attempt 3 met the clause but is **discounted**: the fixture commit
+  I made to remove the signal was titled with the conclusion, and the agent read it in
+  `git log`. Attempt 4, on a fixture with the edit folded into ordinary commits and no hint
+  anywhere: the axis reads "not derivable", three missing things named, Sprint 02's
+  constraints explicitly not carried over, the decision routed to the planner. In no attempt
+  did a run invent a generic quality — not even input sanitising or file size, which an
+  HTML-import feature invites.
+- **(4) unconditioned repo** — pass. Proposed `bootstrap`, refused to read percentages out of
+  the product notes, touched nothing.
+
+**Found by accident, worth keeping:** my status fixture recorded a batch `DONE` whose code was
+never committed. Every run flagged the plan↔handoff↔git disagreement and none resolved it —
+the rule held on a flaw I had not planted.
+
+**Blockers:** none. **Next:** B04 — `cdev-monorepo-status`.
+
+---
+
+## 2026-09-19 · S10-B02 Planners close gaps per batch, before writing · DONE
+
+**Done:** `skills/cdev-planner/SKILL.md` gains § "Closing open decisions (before each batch is
+written)" — the rule's single home — plus a Mode 1 step pointing at it, the PARTIAL line and
+the `READY` promotion made consistent with it. The section names itself apart from Mode 2's
+"gap analysis" (same word, different thing). `skills/cdev-monorepo-planner/SKILL.md` does not
+restate it: a path pointer, applied per SYSTEM_BATCH, plus its own system-level sources of
+open decisions. Both execution loops' planner invocations re-read (field rule 5): no
+contradiction — a batch the planner leaves `BLOCKED` is simply not selected, which is what
+blocked-but-not-idle already does; no loop text changed. Protocol §4 gains the local line on
+multi-repo skills (field exercise stands in for the missing workspace fixture). CHANGELOG
+bullet under Unreleased. Layer: **core** (RFC: Discussion #9).
+
+**Files:** skills/cdev-planner/SKILL.md, skills/cdev-monorepo-planner/SKILL.md,
+docs/develop/AGENT_EXECUTION_PROTOCOL.md, CHANGELOG.md.
+
+**Verification:**
+- frontmatter — pass (7/7) · language — pass (0 outside line 3) · periphery — pass (product
+  0, tech names in skills 0) · `bash scripts/validate.sh` — pass.
+- single home — pass: the rule's text greps in `cdev-planner` only; `cdev-monorepo-planner`
+  carries the path pointer.
+- **sandbox, attended (`cdev-planner`)** — pass. Fresh subagent, hand-conditioned fixture, the
+  driver answering as the human through turn-ending messages (the host-binding fallback: no
+  form tool). Fixture state captured at every stop: T1 grouping shown + sprint-wide questions,
+  **nothing written**; T2 sprint header only; T3 batch 1 written after its answers; T4 batch
+  2; T5 batch 3; T6 batches 4 and 5. Every round: lettered options, one recommended. It did
+  not ask what the product notes settle ("neither is a question"), asked a **permission**
+  question (may the batch edit the product source?), took a free-text answer, honoured an
+  answer that overruled its recommendation, recorded unasked assumptions per batch, and left
+  the ABSENT area unplanned with open questions. `DECISIONS.md` holds one dated entry per
+  batch. *Caveat, recorded honestly:* the planner found open decisions in every batch of the
+  original objective, so the "batch with no gap" clause was exercised by the driver adding a
+  fully specified fifth batch mid-run — it was written with no question and the spec was not
+  handed back for confirmation.
+- **sandbox, unattended** — pass. Same fixture, no human: the undecided batch is `BLOCKED`
+  with two named decisions, a suggested answer each, and "not to be promoted on the
+  suggestions"; nothing `READY` rests on an unanswered decision it judged blocking.
+  *Observation:* this run judged "what counts as the same URL" a non-blocking open question
+  and wrote that batch `READY`; the attended run asked it. Judgment varies between runs —
+  the cost the RFC names for leaving the threshold unwritten.
+- **baseline (`main`'s planner, attended scenario)** — recorded. It asked too, but once: one
+  up-front round (3 items), then all four batches written in one go, and its own report lists
+  five assumptions "the human has NOT seen" — decisions the new rule turns into per-batch
+  questions. That is the difference the rule makes.
+- sandbox, `cdev-monorepo-planner` — **not-run** (no workspace fixture; protocol §4 local
+  line). Its evidence is the human field exercise of B06.
+
+**Fixture flaw found by all three runs:** the hand-conditioned fixture declared a batch `DONE`
+whose work was never in the tree; every planner flagged it before planning and none repaired
+it silently. Accidental, but it exercised Mode 1 step 1.
+
+**Blockers:** none. **Next:** B03 — `cdev-status`.
+
+---
+
+## 2026-09-19 · S10-B01 Field evidence and the RFC · DONE
+
+**Done:** `docs/develop/reports/s10-field-evidence.md` — the two habits as the record shows
+them (planner launches and the hand-typed gap-closing line; the three-axis status and how it
+was really produced), the design the human rejected and why, and a "not evidenced" section.
+Every load-bearing quote was re-read against the private source before writing; counts are
+marked as one mining pass, spot-checked. Branch pushed; RFC opened as Discussion #9 in Ideas,
+`[RFC]`-prefixed, five template headings, evidence linked by commit permalink (`6d06c26`);
+issue #8 carries the linking comment. `docs/community/rfc-process.md` states the interim
+category rule. Layer: docs (the core layer's prerequisite). Outward acts (push, Discussion,
+issue comment) executed under the human's in-session authorization of 2026-09-19.
+
+**Files:** docs/develop/reports/s10-field-evidence.md, docs/community/rfc-process.md.
+
+**Verification:** product-name sweep over the evidence file (protocol §3 patterns plus the
+vendor and place names in the source quotes) — pass, 0 matches · `bash scripts/validate.sh`
+— pass · permalink resolves via the API — pass · Discussion category, prefix and five
+headings read back via the API — pass · frontmatter / language / periphery / sandbox —
+not-run (no skill touched).
+
+**Deviation:** B01 carries two commits, not one — the RFC must link the evidence by
+permalink, so the evidence had to be committed and pushed before the Discussion could exist,
+and this closing record could only follow it.
+
+**Blockers:** none for the work. The PR's merge waits on the human's "accepted" summary in
+Discussion #9.
+
+**Next:** B02 — the gap-closing rule in `cdev-planner`, pointer in `cdev-monorepo-planner`.
+
+---
+
+## 2026-09-19 · Planning — Sprint 10 drafted, then ratified ACTIVE by the human (cdev-planner) · DONE
+
+**Done:** Two read-only subagents mined the maintainer's prompt history and the surviving
+transcripts for the two habits behind issue #8 (planner launches carrying a hand-written
+gap-closing instruction; the three-axis status request). Plan↔git divergence found and
+reconciled with human approval (S09/B01 → `DONE`, commit `c006c63`). Issue #8 opened and
+later corrected (authorized in-session). Sprint 10 written as `PROPOSAL`, seven batches, each
+written only after its own question round with the human — the first draft's B03 (a
+maintained block of ID'd requirements in the plan) was **dropped on the human's review** and
+the design moved the rigor to the reader instead. Clarity map gained four rows; decisions
+recorded per batch. No skill, profile or template touched.
+
+**Files:** docs/develop/SPRINTS.md, DECISIONS.md, PRODUCT.md, AGENT_PROGRESS.md.
+
+**Verification:** `bash scripts/validate.sh` — pass (manifest, placeholders, frontmatter 7/7,
+links) · plan invariants — zero `ACTIVE` sprints until the human ratifies S10 (plan-exhausted
+state, not two actives) · frontmatter / language /
+periphery / sandbox — not-run (no skill touched).
+
+**Blockers:** none for the start — the human ratified Sprint 10 to `ACTIVE` the same day
+(DECISIONS 2026-09-19). Outward acts were authorized for this session only; B06 will block on
+the human's field exercise, and the merge on the RFC's "accepted" summary.
+
+**Next:** `/cdev:cdev` runs S10 from B01 on
+`feat/8-status-and-gap-closing-planners`.
+
+---
+
 ## 2026-08-16 · First CI workflow (issue #3) · DONE
 
 **Done:** `scripts/validate.sh` (portable bash: node for JSON, git grep, awk — runs locally
